@@ -38,7 +38,7 @@ public abstract class BaseAnnotation extends View {
     protected RectF mBbox = null;
 
     private boolean isPreview = false;
-    private boolean isEdited = false;
+    private boolean isEditable = false;
 
 
     public BaseAnnotation(Context context, AnnotationType type, ImageDrawView imageDrawView) {
@@ -302,12 +302,12 @@ public abstract class BaseAnnotation extends View {
         isPreview = preview;
     }
 
-    public boolean isEdited() {
-        return isEdited;
+    public boolean isEditable() {
+        return isEditable;
     }
 
-    public void setEdited(boolean edited) {
-        isEdited = edited;
+    public void setEditable(boolean editable) {
+        isEditable = editable;
     }
 
     /**
