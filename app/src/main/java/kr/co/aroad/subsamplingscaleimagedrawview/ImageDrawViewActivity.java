@@ -2,14 +2,20 @@ package kr.co.aroad.subsamplingscaleimagedrawview;
 
 import android.content.res.Configuration;
 import android.os.Environment;
+import android.support.annotation.IdRes;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 
+import kr.co.aroad.subscaleimagedrawview.annotationtools.BaseAnnotationTool;
 import kr.co.aroad.subscaleimagedrawview.util.AnnotationSetting;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
@@ -18,6 +24,9 @@ public class ImageDrawViewActivity extends AppCompatActivity {
     private ImageDrawViewPager mPager;
     private ImageDrawViewPagerAdapter mAdapter;
     private ArrayList<ImageInfo> mDataset = new ArrayList<>();
+
+    private CheckBox checkInk;
+    private CheckBox checkEllipse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +47,37 @@ public class ImageDrawViewActivity extends AppCompatActivity {
         mPager.addOnPageChangeListener(mOnPageChangeListener);
 
         changeTitle(0);
+
+        checkInk = (CheckBox) findViewById(R.id.ink);
+        checkInk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                checkedAnnotation(compoundButton.getId(), b);
+                if (b == true) {
+                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseAnnotationTool.AnnotationToolType.INK);
+                } else {
+                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseAnnotationTool.AnnotationToolType.NONE);
+                }
+            }
+        });
+
+        checkEllipse = (CheckBox) findViewById(R.id.ellipse);
+        checkEllipse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                checkedAnnotation(compoundButton.getId(), b);
+                if (b == true) {
+                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseAnnotationTool.AnnotationToolType.ELLIPSE);
+                } else {
+                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseAnnotationTool.AnnotationToolType.NONE);
+                }
+            }
+        });
+    }
+
+    private void checkedAnnotation(final int id, boolean checked) {
+        checkInk.setChecked((id == checkInk.getId()) && checked);
+        checkEllipse.setChecked((id == checkEllipse.getId()) && checked);
     }
 
     private void initialise() {

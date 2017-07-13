@@ -18,21 +18,19 @@ package kr.co.aroad.subscaleimagedrawview.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import kr.co.aroad.subscaleimagedrawview.Listener.GestureListener;
 import kr.co.aroad.subscaleimagedrawview.annotations.BaseAnnotation;
+import kr.co.aroad.subscaleimagedrawview.annotationtools.AnnotationToolEllipse;
 import kr.co.aroad.subscaleimagedrawview.annotationtools.AnnotationToolInk;
 import kr.co.aroad.subscaleimagedrawview.annotationtools.BaseAnnotationTool;
 
@@ -40,10 +38,11 @@ import kr.co.aroad.subscaleimagedrawview.annotationtools.BaseAnnotationTool;
  * Created by crazy on 2017-07-11.
  */
 
-public class ImageDrawView extends SubsamplingScaleImageView implements View.OnTouchListener {
+public class ImageDrawView extends SubsamplingScaleImageView implements View.OnTouchListener, GestureListener {
 
-    private BaseAnnotationTool mAnnotationTool = null;
-    private Map<String, BaseAnnotation> mAnnotationMap = new HashMap<>();
+    private ImageDrawView.GestureType gestureType = GestureType.VIEW;
+    private BaseAnnotationTool annotationTool = null;
+    private Map<String, BaseAnnotation> annotationMap = new HashMap<>();
 
     private PointF vPrevious;
     private PointF vStart;
@@ -64,11 +63,10 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
     private void initialise() {
         setOnTouchListener(this);
+        setGestureListener(this);
+
         float density = getResources().getDisplayMetrics().densityDpi;
         strokeWidth = (int)(density/60f);
-
-        mAnnotationTool = new AnnotationToolInk(getContext(), this);
-
     }
 
     @Override
@@ -78,75 +76,35 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
-        if (mAnnotationTool == null) {
+        if (annotationTool != null && gestureType == GestureType.EDIT) {
+            return annotationTouchEvent(event);
+        } else {
             return super.onTouchEvent(event);
         }
+    }
 
+    /**
+     * annotation touch event
+     * @param event
+     * @return boolean
+     */
+    private boolean annotationTouchEvent(@NonNull MotionEvent event) {
+        boolean consumed = false;
         int x = (int)event.getX();
         int y = (int)event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                mAnnotationTool.onTouchBegin(x, y);
+                annotationTool.onTouchBegin(x, y);
                 break;
             case MotionEvent.ACTION_UP:
-                mAnnotationTool.onTouchEnd(x, y);
+                annotationTool.onTouchEnd(x, y);
                 break;
             case MotionEvent.ACTION_MOVE:
-                mAnnotationTool.onTouchMove(x, y);
+                annotationTool.onTouchMove(x, y);
+                consumed = true;
+                break;
         }
-
-        return super.onTouchEvent(event);
-
-//        if (sPoints != null && !drawing) {
-//            return super.onTouchEvent(event);
-//        }
-//        boolean consumed = false;
-//        int touchCount = event.getPointerCount();
-//        switch (event.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//            case MotionEvent.ACTION_POINTER_1_DOWN:
-//                vStart = new PointF(event.getX(), event.getY());
-//                vPrevious = new PointF(event.getX(), event.getY());
-//                break;
-//            case MotionEvent.ACTION_POINTER_2_DOWN:
-//                // Abort any current drawing, user is zooming
-//                vStart = null;
-//                vPrevious = null;
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                PointF sCurrentF = viewToSourceCoord(event.getX(), event.getY());
-//                PointF sCurrent = new PointF(sCurrentF.x, sCurrentF.y);
-//                PointF sStart = vStart == null ? null : new PointF(viewToSourceCoord(vStart).x, viewToSourceCoord(vStart).y);
-//
-//                if (touchCount == 1 && vStart != null) {
-//                    float vDX = Math.abs(event.getX() - vPrevious.x);
-//                    float vDY = Math.abs(event.getY() - vPrevious.y);
-//                    if (vDX >= strokeWidth * 5 || vDY >= strokeWidth * 5) {
-//                        if (sPoints == null) {
-//                            sPoints = new ArrayList<PointF>();
-//                            sPoints.add(sStart);
-//                        }
-//                        sPoints.add(sCurrent);
-//                        vPrevious.x = event.getX();
-//                        vPrevious.y = event.getY();
-//                        drawing = true;
-//                    }
-//                    consumed = true;
-//                    invalidate();
-//                } else if (touchCount == 1) {
-//                    // Consume all one touch drags to prevent odd panning effects handled by the superclass.
-//                    consumed = true;
-//                }
-//                break;
-//            case MotionEvent.ACTION_UP:
-//            case MotionEvent.ACTION_POINTER_UP:
-//                invalidate();
-//                drawing = false;
-//                vPrevious = null;
-//                vStart = null;
-//        }
-//        // Use parent to handle pinch and two-finger pan.
-//        return consumed || super.onTouchEvent(event);
+        return consumed || super.onTouchEvent(event);
     }
 
     @Override
@@ -158,26 +116,8 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
             return;
         }
 
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-
-        if (sPoints != null && sPoints.size() >= 2) {
-            Path vPath = new Path();
-            PointF vPrev = sourceToViewCoord(sPoints.get(0).x, sPoints.get(0).y);
-            vPath.moveTo(vPrev.x, vPrev.y);
-            for (int i = 1; i < sPoints.size(); i++) {
-                PointF vPoint = sourceToViewCoord(sPoints.get(i).x, sPoints.get(i).y);
-                vPath.quadTo(vPrev.x, vPrev.y, (vPoint.x + vPrev.x) / 2, (vPoint.y + vPrev.y) / 2);
-                vPrev = vPoint;
-            }
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeCap(Paint.Cap.ROUND);
-            paint.setStrokeWidth(strokeWidth * 2);
-            paint.setColor(Color.BLACK);
-            canvas.drawPath(vPath, paint);
-            paint.setStrokeWidth(strokeWidth);
-            paint.setColor(Color.argb(255, 51, 181, 229));
-            canvas.drawPath(vPath, paint);
+        for (String key : annotationMap.keySet()) {
+            annotationMap.get(key).invalidate();
         }
     }
 
@@ -191,9 +131,9 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
         final int w = right - left;
         final int h = bottom - top;
 
-        for (String key : mAnnotationMap.keySet()) {
-            mAnnotationMap.get(key).bringToFront();
-            mAnnotationMap.get(key).layout(0, 0, w, h);
+        for (String key : annotationMap.keySet()) {
+            annotationMap.get(key).bringToFront();
+            annotationMap.get(key).layout(0, 0, w, h);
         }
 
         super.onLayout(changed, left, top, right, bottom);
@@ -207,7 +147,7 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
      */
     public void addAnnotation(BaseAnnotation annotation) {
         if (annotation != null) {
-            mAnnotationMap.put(annotation.getUniqId(), annotation);
+            annotationMap.put(annotation.getUniqId(), annotation);
             addView(annotation);
         }
     }
@@ -221,7 +161,81 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
      * @param annotation 삭제할 annotation 뷰
      */
     public void removeAnnotation(BaseAnnotation annotation) {
-        mAnnotationMap.remove(annotation);
+        annotationMap.remove(annotation.getUniqId());
         removeView(annotation);
+    }
+
+    public void changeTool(BaseAnnotationTool.AnnotationToolType toolType) {
+        switch (toolType) {
+            case NONE:
+                annotationTool = null;
+                gestureType = GestureType.VIEW;
+                break;
+            case PHOTO:
+                break;
+            case TEXT:
+                break;
+            case DIMENSION:
+                break;
+            case CLOUD:
+                break;
+            case INK:
+                annotationTool = new AnnotationToolInk(getContext(), this);
+                gestureType = GestureType.EDIT;
+                break;
+            case LINE:
+                break;
+            case RECTANGLE:
+                break;
+            case ELLIPSE:
+                annotationTool = new AnnotationToolEllipse(getContext(), this);
+                gestureType = GestureType.EDIT;
+                break;
+            case ERASER:
+                break;
+            case TRANSFORM:
+                break;
+            default:
+                annotationTool = null;
+                gestureType = GestureType.VIEW;
+        }
+    }
+
+    @Override
+    public void onLongPress(MotionEvent event) {
+        int x = (int)event.getX();
+        int y = (int)event.getY();
+
+        if (annotationTool != null) {
+            annotationTool.longPress(x, y);
+        }
+    }
+
+    @Override
+    public void onSingleTabUp(MotionEvent event) {
+        int x = (int)event.getX();
+        int y = (int)event.getY();
+
+        if (annotationTool != null) {
+            annotationTool.singleTapUp(x, y);
+        }
+    }
+
+    /**
+     * annotation 리스트 반환
+     * @return annotation map
+     */
+    public Map<String, BaseAnnotation> getAnnotationMap() {
+        return annotationMap;
+    }
+
+    /**
+     * 현재 제스쳐의 상태
+     * VIEW : 화면 보기 상태
+     * EDIT : 화면 편집 상태
+     */
+    public static enum GestureType {
+        VIEW,
+        EDIT
     }
 }

@@ -19,8 +19,8 @@ import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 public class AnnotationInk extends BaseAnnotation {
 
-    public AnnotationInk(Context context, AnnotationType type, ImageDrawView imageDrawView) {
-        super(context, type, imageDrawView);
+    public AnnotationInk(Context context, ImageDrawView imageDrawView) {
+        super(context, AnnotationType.INK, imageDrawView);
     }
 
     @Override
@@ -50,11 +50,6 @@ public class AnnotationInk extends BaseAnnotation {
     @Override
     public boolean isInvalidSaveAnnotEx() {
         return true;
-    }
-
-    @Override
-    public String getName() {
-        return "Ink";
     }
 
     @Override

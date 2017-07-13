@@ -3,6 +3,7 @@ package kr.co.aroad.subscaleimagedrawview.annotationtools;
 import android.content.Context;
 import android.graphics.PointF;
 
+import kr.co.aroad.subscaleimagedrawview.annotations.BaseAnnotation;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 /**
@@ -45,6 +46,14 @@ public abstract class BaseAnnotationTool {
         }
     }
 
+    public BaseAnnotation singleTapUp(int x, int y) {
+        return null;
+    }
+
+    public BaseAnnotation longPress(int x, int y) {
+        return null;
+    }
+
     protected abstract void touchBegin(int x, int y);
 
     protected abstract void touchMove(int x, int y);
@@ -79,5 +88,38 @@ public abstract class BaseAnnotationTool {
             return null;
         }
         return mImageDrawView.sourceToViewCoord(sx, sy);
+    }
+
+    /**
+     * point에 위치하는 annotation 찾기
+     * @param point
+     * @return annotation
+     */
+    protected BaseAnnotation getSelectedAnnotation(PointF point) {
+        if (mImageDrawView == null) {
+            return null;
+        }
+
+        PointF pos = viewToSourceCoord(point.x, point.y);
+        for (String key : mImageDrawView.getAnnotationMap().keySet()) {
+            if (mImageDrawView.getAnnotationMap().get(key).isContains(pos.x, pos.y) == true) {
+                return mImageDrawView.getAnnotationMap().get(key);
+            }
+        }
+        return null;
+    }
+
+    public static enum AnnotationToolType {
+        NONE,
+        PHOTO,
+        TEXT,
+        DIMENSION,
+        CLOUD,
+        INK,
+        LINE,
+        RECTANGLE,
+        ELLIPSE,
+        ERASER,
+        TRANSFORM
     }
 }

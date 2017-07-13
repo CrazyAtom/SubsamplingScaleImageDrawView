@@ -1,7 +1,9 @@
 package kr.co.aroad.subscaleimagedrawview.annotationtools;
 
 import android.content.Context;
+import android.graphics.PointF;
 
+import kr.co.aroad.subscaleimagedrawview.annotations.AnnotationEllipse;
 import kr.co.aroad.subscaleimagedrawview.annotations.AnnotationInk;
 import kr.co.aroad.subscaleimagedrawview.annotations.BaseAnnotation;
 import kr.co.aroad.subscaleimagedrawview.util.AnnotationSetting;
@@ -12,31 +14,34 @@ import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
  * Created by crazy on 2017-07-11.
  */
 
-public class AnnotationToolInk extends BaseAnnotationTool {
-    private AnnotationInk mAnnotationInk = null;
+public class AnnotationToolEllipse extends BaseAnnotationTool {
+    private AnnotationEllipse mAnnotationEllipse = null;
+    private PointF mBegin;
+    private PointF mEnd;
 
-
-    public AnnotationToolInk(Context context, ImageDrawView imageDrawView) {
+    public AnnotationToolEllipse(Context context, ImageDrawView imageDrawView) {
         super(context, imageDrawView);
     }
 
     @Override
     protected void touchBegin(int x, int y) {
-        mAnnotationInk = createAnnotation();
-        mAnnotationInk.addPosition(viewToSourceCoord(x, y));
-        mImageDrawView.addAnnotation(mAnnotationInk);
+        mBegin = viewToSourceCoord(x, y);
+        mEnd = mBegin;
+        mAnnotationEllipse = createAnnotation();
+        mImageDrawView.addAnnotation(mAnnotationEllipse);
     }
 
     @Override
     protected void touchMove(int x, int y) {
-        mAnnotationInk.addPosition(viewToSourceCoord(x, y));
-        mAnnotationInk.invalidate();
+        mAnnotationEllipse.setPosition(1, viewToSourceCoord(x, y));
+        mAnnotationEllipse.invalidate();
     }
 
     @Override
     protected void touchEnd(int x, int y) {
+        mEnd = viewToSourceCoord(x, y);
+        mImageDrawView.removeAnnotation(mAnnotationEllipse);
         injectAnnotation();
-        mImageDrawView.removeAnnotation(mAnnotationInk);
     }
 
     @Override
@@ -53,10 +58,7 @@ public class AnnotationToolInk extends BaseAnnotationTool {
      * annotation을 view에 추가
      */
     private void injectAnnotation() {
-        AnnotationInk annotation = createAnnotation();
-        for (int i = 0; i < mAnnotationInk.getPositionSize(); ++i) {
-            annotation.addPosition(mAnnotationInk.getPosition(i));
-        }
+        AnnotationEllipse annotation = createAnnotation();
         mImageDrawView.addAnnotation(annotation);
     }
 
@@ -64,8 +66,10 @@ public class AnnotationToolInk extends BaseAnnotationTool {
      * annotation 생성
      * @return
      */
-    private AnnotationInk createAnnotation() {
-        AnnotationInk annotation = new AnnotationInk(mContext, mImageDrawView);
+    private AnnotationEllipse createAnnotation() {
+        AnnotationEllipse  annotation = new AnnotationEllipse(mContext, mImageDrawView);
+        annotation.addPosition(mBegin);
+        annotation.addPosition(mEnd);
         annotation.setColor(Utillity.getColorString(AnnotationSetting.getInstance().getColor()));
         annotation.setThick(AnnotationSetting.getInstance().getLineWidth());
 

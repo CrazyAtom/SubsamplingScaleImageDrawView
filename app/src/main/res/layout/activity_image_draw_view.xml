@@ -12,5 +12,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true">
+
+        <CheckBox
+            android:id="@+id/ink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ink"/>
+
+        <CheckBox
+            android:id="@+id/ellipse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ellipse"/>
+
+    </LinearLayout>
+
 </RelativeLayout>
 

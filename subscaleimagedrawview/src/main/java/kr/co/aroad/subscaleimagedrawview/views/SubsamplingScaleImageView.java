@@ -48,6 +48,7 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import kr.co.aroad.subscaleimagedrawview.Listener.GestureListener;
 import kr.co.aroad.subscaleimagedrawview.R.styleable;
 import kr.co.aroad.subscaleimagedrawview.decoder.CompatDecoderFactory;
 import kr.co.aroad.subscaleimagedrawview.decoder.DecoderFactory;
@@ -262,6 +263,9 @@ public class SubsamplingScaleImageView extends ViewGroup {
 
     // Long click listener
     private OnLongClickListener onLongClickListener;
+
+    // Gesture listener
+    private GestureListener gestureListener;
 
     // Long click handler
     private Handler handler;
@@ -568,6 +572,22 @@ public class SubsamplingScaleImageView extends ViewGroup {
                     }
                 }
                 return super.onDoubleTapEvent(e);
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                if (gestureListener != null) {
+                    gestureListener.onSingleTabUp(e);
+                }
+                return super.onSingleTapUp(e);
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                if (gestureListener != null) {
+                    gestureListener.onLongPress(e);
+                }
+                super.onLongPress(e);
             }
         });
     }
@@ -2675,6 +2695,13 @@ public class SubsamplingScaleImageView extends ViewGroup {
      */
     public void setOnStateChangedListener(OnStateChangedListener onStateChangedListener) {
         this.onStateChangedListener = onStateChangedListener;
+    }
+
+    /**
+     * Add a listener for guesture events
+     */
+    public void setGestureListener(GestureListener gestureListener) {
+        this.gestureListener = gestureListener;
     }
 
     private void sendStateChanged(float oldScale, PointF oldVTranslate, int origin) {

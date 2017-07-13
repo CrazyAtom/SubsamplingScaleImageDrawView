@@ -371,7 +371,19 @@ public abstract class BaseAnnotation extends View {
      *
      * @return
      */
-    abstract public String getName();
+    public String getName() {
+        return getType().toString(false);
+    }
+
+    /**
+     * 좌표 x, y가 annotation내에 존재 하는지 체크
+     * @param x
+     * @param y
+     * @return true 이면 annotation 내에 존재, false 이면 annotation 내에 존재 하지 않음
+     */
+    public boolean isContains(float x, float y) {
+        return false;
+    }
 
     /**
      * annotation type 정의
