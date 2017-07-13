@@ -382,7 +382,25 @@ public abstract class BaseAnnotation extends View {
      * @return true 이면 annotation 내에 존재, false 이면 annotation 내에 존재 하지 않음
      */
     public boolean isContains(float x, float y) {
-        return false;
+        if(this.mBbox == null) {
+            return false;
+        } else {
+            RectF rect = new RectF(this.mBbox);
+            float temp;
+            if(rect.left > rect.right) {
+                temp = rect.left;
+                rect.left = rect.right;
+                rect.right = temp;
+            }
+
+            if(rect.top > rect.bottom) {
+                temp = rect.top;
+                rect.top = rect.bottom;
+                rect.bottom = temp;
+            }
+
+            return rect.contains(x, y);
+        }
     }
 
     /**
