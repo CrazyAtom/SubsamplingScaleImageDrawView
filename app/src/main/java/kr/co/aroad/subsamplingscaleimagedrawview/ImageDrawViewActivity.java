@@ -26,7 +26,13 @@ public class ImageDrawViewActivity extends AppCompatActivity implements CreateDr
     private ArrayList<ImageInfo> mDataset = new ArrayList<>();
 
     private CheckBox checkInk;
+    private CheckBox checkRectangle;
     private CheckBox checkEllipse;
+    private CheckBox checkLine;
+    private CheckBox checkCloud;
+    private CheckBox checkText;
+    private CheckBox checkPhoto;
+    private CheckBox checkDimension;
     private CheckBox checkEraser;
 
     @Override
@@ -50,48 +56,72 @@ public class ImageDrawViewActivity extends AppCompatActivity implements CreateDr
         changeTitle(0);
 
         checkInk = (CheckBox) findViewById(R.id.ink);
-        checkInk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                checkedAnnotation(compoundButton.getId(), b);
-                if (b == true) {
-                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseDrawTool.DrawToolType.INK);
-                } else {
-                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseDrawTool.DrawToolType.NONE);
-                }
-            }
-        });
-
+        checkInk.setOnCheckedChangeListener(checkedChangeListener);
+        checkRectangle = (CheckBox) findViewById(R.id.rectangle);
+        checkRectangle.setOnCheckedChangeListener(checkedChangeListener);
         checkEllipse = (CheckBox) findViewById(R.id.ellipse);
-        checkEllipse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                checkedAnnotation(compoundButton.getId(), b);
-                if (b == true) {
-                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseDrawTool.DrawToolType.ELLIPSE);
-                } else {
-                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseDrawTool.DrawToolType.NONE);
-                }
-            }
-        });
-
+        checkEllipse.setOnCheckedChangeListener(checkedChangeListener);
+        checkLine = (CheckBox) findViewById(R.id.line);
+        checkLine.setOnCheckedChangeListener(checkedChangeListener);
+        checkCloud = (CheckBox) findViewById(R.id.cloud);
+        checkCloud.setOnCheckedChangeListener(checkedChangeListener);
+        checkText = (CheckBox) findViewById(R.id.text);
+        checkText.setOnCheckedChangeListener(checkedChangeListener);
+        checkPhoto = (CheckBox) findViewById(R.id.photo);
+        checkPhoto.setOnCheckedChangeListener(checkedChangeListener);
+        checkDimension = (CheckBox) findViewById(R.id.dimension);
+        checkDimension.setOnCheckedChangeListener(checkedChangeListener);
         checkEraser = (CheckBox) findViewById(R.id.free_eraser);
-        checkEraser.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                checkedAnnotation(compoundButton.getId(), b);
-                if (b == true) {
-                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseDrawTool.DrawToolType.ERASER);
-                } else {
-                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseDrawTool.DrawToolType.NONE);
-                }
+        checkEraser.setOnCheckedChangeListener(checkedChangeListener);
+    }
+
+    CompoundButton.OnCheckedChangeListener checkedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            checkedAnnotation(compoundButton.getId(), b);
+            final ImageDrawView imageDrawView = mAdapter.getImageView(mPager.getCurrentItem());
+            if (b == true) {
+                imageDrawView.changeTool(getToolTypeById(compoundButton.getId()));
+            } else {
+                imageDrawView.changeTool(BaseDrawTool.DrawToolType.NONE);
             }
-        });
+        }
+    };
+
+    private BaseDrawTool.DrawToolType getToolTypeById(final int id) {
+        switch (id) {
+            case R.id.ink:
+                return BaseDrawTool.DrawToolType.INK;
+            case R.id.rectangle:
+                return BaseDrawTool.DrawToolType.RECTANGLE;
+            case R.id.ellipse:
+                return BaseDrawTool.DrawToolType.ELLIPSE;
+            case R.id.line:
+                return BaseDrawTool.DrawToolType.LINE;
+            case R.id.cloud:
+                return BaseDrawTool.DrawToolType.CLOUD;
+            case R.id.text:
+                return BaseDrawTool.DrawToolType.TEXT;
+            case R.id.photo:
+                return BaseDrawTool.DrawToolType.PHOTO;
+            case R.id.dimension:
+                return BaseDrawTool.DrawToolType.DIMENSION;
+            case R.id.free_eraser:
+                return BaseDrawTool.DrawToolType.ERASER;
+            default:
+                return BaseDrawTool.DrawToolType.INK;
+        }
     }
 
     private void checkedAnnotation(final int id, boolean checked) {
         checkInk.setChecked((id == checkInk.getId()) && checked);
+        checkRectangle.setChecked((id == checkRectangle.getId()) && checked);
         checkEllipse.setChecked((id == checkEllipse.getId()) && checked);
+        checkLine.setChecked((id == checkLine.getId()) && checked);
+        checkCloud.setChecked((id == checkCloud.getId()) && checked);
+        checkText.setChecked((id == checkText.getId()) && checked);
+        checkPhoto.setChecked((id == checkPhoto.getId()) && checked);
+        checkDimension.setChecked((id == checkDimension.getId()) && checked);
         checkEraser.setChecked((id == checkEraser.getId()) && checked);
     }
 

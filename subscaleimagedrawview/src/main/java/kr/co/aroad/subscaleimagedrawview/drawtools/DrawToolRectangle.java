@@ -13,39 +13,34 @@ import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
  * Created by crazy on 2017-07-11.
  */
 
-public class DrawToolInk extends BaseDrawTool {
+public class DrawToolRectangle extends BaseDrawTool {
 
-    public DrawToolInk(@NonNull ImageDrawView imageDrawView) {
+    private PointF mBegin;
+    private PointF mEnd;
+
+    public DrawToolRectangle(@NonNull ImageDrawView imageDrawView) {
         super(imageDrawView);
     }
 
     @Override
     protected void touchBegin(int x, int y) {
+        mBegin = viewToSourceCoord(x, y);
+        mEnd = mBegin;
         previewDrawView = createDrawView();
-        previewDrawView.addPosition(viewToSourceCoord(x, y));
         imageDrawView.addDrawView(previewDrawView);
     }
 
     @Override
     protected void touchMove(int x, int y) {
-        previewDrawView.addPosition(viewToSourceCoord(x, y));
+        previewDrawView.setPosition(1, viewToSourceCoord(x, y));
         previewDrawView.invalidate();
     }
 
     @Override
     protected void touchEnd(int x, int y) {
-        boolean valid = true;
-        for (int i = 0; i < previewDrawView.getPositionSize(); i++) {
-            PointF vc = sourceToViewCoord(previewDrawView.getPosition(i).x, previewDrawView.getPosition(i).y);
-            if (isInsideView(vc.x, vc.y, vc.x, vc.y) == false) {
-                valid = false;
-                break;
-            }
-        }
-        if (valid == true) {
-            injectAnnotation();
-        }
+        mEnd = viewToSourceCoord(x, y);
         imageDrawView.removeDrawView(previewDrawView);
+        injectAnnotation();
         checkContinueTool();
     }
 
@@ -61,7 +56,9 @@ public class DrawToolInk extends BaseDrawTool {
 
     @Override
     protected BaseDrawView createDrawView() {
-        BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView, BaseDrawView.DrawViewType.INK);
+        BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView, BaseDrawView.DrawViewType.RECTANGLE);
+        drawView.addPosition(mBegin);
+        drawView.addPosition(mEnd);
         drawView.setColor(Utillity.getColorString(DrawViewSetting.getInstance().getColor()));
         drawView.setThick(DrawViewSetting.getInstance().getLineWidth());
 
@@ -73,9 +70,6 @@ public class DrawToolInk extends BaseDrawTool {
      */
     private void injectAnnotation() {
         BaseDrawView annotation = createDrawView();
-        for (int i = 0; i < previewDrawView.getPositionSize(); ++i) {
-            annotation.addPosition(previewDrawView.getPosition(i));
-        }
         imageDrawView.addDrawView(annotation);
     }
 }

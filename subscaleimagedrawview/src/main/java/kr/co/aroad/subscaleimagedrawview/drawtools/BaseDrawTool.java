@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
 import kr.co.aroad.subscaleimagedrawview.listener.ToolControllViewListener;
+import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 /**
@@ -104,6 +105,17 @@ public abstract class BaseDrawTool {
 
     public void setToolControllViewListener(ToolControllViewListener toolControllViewListener) {
         this.toolControllViewListener = toolControllViewListener;
+    }
+
+    /**
+     * tool을 연속으로 수행할지 여부 확인하여 연속 수행이 아니면 tool 해제
+     */
+    public void checkContinueTool() {
+        if (DrawViewSetting.getInstance().isContinuous() == false) {
+            if (toolControllViewListener != null) {
+                toolControllViewListener.changeDefaultTool();
+            }
+        }
     }
 
     /**

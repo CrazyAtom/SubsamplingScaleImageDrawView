@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
 import kr.co.aroad.subscaleimagedrawview.drawviews.DrawViewEllipse;
 import kr.co.aroad.subscaleimagedrawview.drawviews.DrawViewInk;
+import kr.co.aroad.subscaleimagedrawview.drawviews.DrawViewRectangle;
 import kr.co.aroad.subscaleimagedrawview.listener.CreateDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
@@ -32,8 +33,20 @@ public class DrawViewFactory {
         switch (type) {
             case INK:
                 return new DrawViewInk(imageDrawView, createDrawViewListener);
+            case RECTANGLE:
+                return new DrawViewRectangle(imageDrawView, createDrawViewListener);
             case ELLIPSE:
                 return new DrawViewEllipse(imageDrawView, createDrawViewListener);
+//            case LINE:
+//                return new DrawViewLine(imageDrawView, createDrawViewListener);
+//            case CLOUD:
+//                return new DrawViewCloud(imageDrawView, createDrawViewListener);
+//            case TEXT:
+//                return new DrawViewText(imageDrawView, createDrawViewListener);
+//            case PHOTO:
+//                return new DrawViewPhoto(imageDrawView, createDrawViewListener);
+//            case DIMENSION:
+//                return new DrawViewDimension(imageDrawView, createDrawViewListener);
             default:
                 return null;
         }

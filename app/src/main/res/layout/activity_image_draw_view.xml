@@ -26,10 +26,46 @@
             android:text="ink"/>
 
         <CheckBox
+            android:id="@+id/rectangle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="rectangle"/>
+
+        <CheckBox
             android:id="@+id/ellipse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ellipse"/>
+
+        <CheckBox
+            android:id="@+id/line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="line"/>
+
+        <CheckBox
+            android:id="@+id/cloud"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cloud"/>
+
+        <CheckBox
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="text"/>
+
+        <CheckBox
+            android:id="@+id/photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="photo"/>
+
+        <CheckBox
+            android:id="@+id/dimension"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="dimension"/>
 
         <CheckBox
             android:id="@+id/free_eraser"
