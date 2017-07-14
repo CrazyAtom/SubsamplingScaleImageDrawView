@@ -2,24 +2,24 @@ package kr.co.aroad.subsamplingscaleimagedrawview;
 
 import android.content.res.Configuration;
 import android.os.Environment;
-import android.support.annotation.IdRes;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.RadioGroup;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 
-import kr.co.aroad.subscaleimagedrawview.annotationtools.BaseAnnotationTool;
-import kr.co.aroad.subscaleimagedrawview.util.AnnotationSetting;
+import kr.co.aroad.subscaleimagedrawview.drawtools.BaseDrawTool;
+import kr.co.aroad.subscaleimagedrawview.listener.CreateDrawViewListener;
+import kr.co.aroad.subscaleimagedrawview.util.DrawViewFactory;
+import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
+import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
-public class ImageDrawViewActivity extends AppCompatActivity {
+public class ImageDrawViewActivity extends AppCompatActivity implements CreateDrawViewListener {
 
     private ImageDrawViewPager mPager;
     private ImageDrawViewPagerAdapter mAdapter;
@@ -27,6 +27,7 @@ public class ImageDrawViewActivity extends AppCompatActivity {
 
     private CheckBox checkInk;
     private CheckBox checkEllipse;
+    private CheckBox checkEraser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +55,9 @@ public class ImageDrawViewActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 checkedAnnotation(compoundButton.getId(), b);
                 if (b == true) {
-                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseAnnotationTool.AnnotationToolType.INK);
+                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseDrawTool.DrawToolType.INK);
                 } else {
-                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseAnnotationTool.AnnotationToolType.NONE);
+                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseDrawTool.DrawToolType.NONE);
                 }
             }
         });
@@ -67,9 +68,22 @@ public class ImageDrawViewActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 checkedAnnotation(compoundButton.getId(), b);
                 if (b == true) {
-                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseAnnotationTool.AnnotationToolType.ELLIPSE);
+                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseDrawTool.DrawToolType.ELLIPSE);
                 } else {
-                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseAnnotationTool.AnnotationToolType.NONE);
+                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseDrawTool.DrawToolType.NONE);
+                }
+            }
+        });
+
+        checkEraser = (CheckBox) findViewById(R.id.free_eraser);
+        checkEraser.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                checkedAnnotation(compoundButton.getId(), b);
+                if (b == true) {
+                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseDrawTool.DrawToolType.ERASER);
+                } else {
+                    mAdapter.getImageView(mPager.getCurrentItem()).changeTool(BaseDrawTool.DrawToolType.NONE);
                 }
             }
         });
@@ -78,10 +92,12 @@ public class ImageDrawViewActivity extends AppCompatActivity {
     private void checkedAnnotation(final int id, boolean checked) {
         checkInk.setChecked((id == checkInk.getId()) && checked);
         checkEllipse.setChecked((id == checkEllipse.getId()) && checked);
+        checkEraser.setChecked((id == checkEraser.getId()) && checked);
     }
 
     private void initialise() {
-        AnnotationSetting.init(getApplicationContext());
+        DrawViewSetting.init(getApplicationContext());
+        DrawViewFactory.getInstance().setListener(this);
 
         mDataset.clear();
         File downloadFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -150,4 +166,9 @@ public class ImageDrawViewActivity extends AppCompatActivity {
             super.onPageScrollStateChanged(state);
         }
     };
+
+    @Override
+    public String newUUID() {
+        return this.getClass().getSimpleName() + Utillity.getUUID();
+    }
 }

@@ -8,28 +8,28 @@ import android.graphics.Color;
  * Created by crazy on 2017-07-11.
  */
 
-public class AnnotationSetting {
+public class DrawViewSetting {
 
-    private static AnnotationSetting instance;
+    private static DrawViewSetting instance;
 
-    public enum AnnotExDimensionType {
+    public enum DrawViewDimensionType {
         LINE,
         CURVE;
 
-        AnnotExDimensionType() {
+        DrawViewDimensionType() {
         }
     }
 
-    public enum AnnotExDimensionUnit {
+    public enum DrawViewDimensionUnit {
         MM,
         CM,
         M,
         KM;
 
-        AnnotExDimensionUnit() {
+        DrawViewDimensionUnit() {
         }
 
-        public static String toString(AnnotExDimensionUnit type) {
+        public static String toString(DrawViewDimensionUnit type) {
             switch (type) {
                 case MM:
                     return "mm";
@@ -43,7 +43,7 @@ public class AnnotationSetting {
             return "mm";
         }
 
-        public static AnnotExDimensionUnit toType(String type) {
+        public static DrawViewDimensionUnit toType(String type) {
             switch (type) {
                 case "mm":
                     return MM;
@@ -63,19 +63,19 @@ public class AnnotationSetting {
     private static final String COLOR_KEY = "Color";
     private static final String LINE_WIDTH_KEY = "LineWidth";
     private static final String CONTINUOUS_KEY = "Continuous";
-    private static final String FREE_TEXT_SIZE_KEY = "FreeTextSize";
+    private static final String TEXT_SIZE_KEY = "TextSize";
 
 
-    public static AnnotationSetting getInstance() {
+    public static DrawViewSetting getInstance() {
         return instance;
     }
 
     public static void init(Context context) {
-        instance = new AnnotationSetting(context);
+        instance = new DrawViewSetting(context);
     }
 
-    private AnnotationSetting(Context context) {
-        this.mPreferences = context.getSharedPreferences("annotation_setting", 0);
+    private DrawViewSetting(Context context) {
+        this.mPreferences = context.getSharedPreferences("drawview_setting", 0);
     }
 
     /**
@@ -120,7 +120,7 @@ public class AnnotationSetting {
 
 
     /**
-     * 마크업 연속 생성 설정
+     * 연속 생성 설정
      *
      * @param continuous
      */
@@ -131,7 +131,7 @@ public class AnnotationSetting {
     }
 
     /**
-     * 마크업 연속 생성
+     * 연속 생성 설정 여부
      *
      * @return
      */
@@ -144,9 +144,9 @@ public class AnnotationSetting {
      *
      * @param width
      */
-    public void setFreeTextSize(int width) {
+    public void setTextSize(int width) {
         SharedPreferences.Editor editor = this.mPreferences.edit();
-        editor.putInt(FREE_TEXT_SIZE_KEY, width);
+        editor.putInt(TEXT_SIZE_KEY, width);
         editor.commit();
     }
 
@@ -155,7 +155,7 @@ public class AnnotationSetting {
      *
      * @return
      */
-    public int getFreeTextSize() {
-        return mPreferences.getInt(FREE_TEXT_SIZE_KEY, 20);
+    public int getTextSize() {
+        return mPreferences.getInt(TEXT_SIZE_KEY, 20);
     }
 }

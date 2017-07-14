@@ -42,7 +42,7 @@ public class ImageDrawViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.image_draw_view, container, false);
-        ImageDrawView imageView = view.findViewById(R.id.view);
+        ImageDrawView imageView = (ImageDrawView) view.findViewById(R.id.view);
         container.addView(view);
         mImageViewSparseArray.put(position, imageView);
 

@@ -1,16 +1,17 @@
-package kr.co.aroad.subscaleimagedrawview.annotationtools;
+package kr.co.aroad.subscaleimagedrawview.drawtools;
 
 import android.content.Context;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
 
-import kr.co.aroad.subscaleimagedrawview.annotations.BaseAnnotation;
+import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
-public class PinViewRect extends PinView {
+public class EditPinViewRect extends BaseEditPinView {
 
-    public PinViewRect(Context context, ImageDrawView imageDrawView, BaseAnnotation annotation) {
-        super(context, imageDrawView, annotation);
+    public EditPinViewRect(@NonNull ImageDrawView imageDrawView, @NonNull BaseDrawView drawView) {
+        super(imageDrawView, drawView);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class PinViewRect extends PinView {
             }
         }
 
-        if (boundaryBox.width() <= BaseAnnotation.MINIMUM_LENGTH || boundaryBox.height() <= BaseAnnotation.MINIMUM_LENGTH) {
+        if (boundaryBox.width() <= BaseDrawView.MINIMUM_LENGTH || boundaryBox.height() <= BaseDrawView.MINIMUM_LENGTH) {
             return;
         }
 
@@ -70,7 +71,7 @@ public class PinViewRect extends PinView {
 
     @Override
     public void initPinList() {
-        RectF rect = annotation.getBbox();
+        RectF rect = drawView.getBoundaryBox();
         pinList.clear();
         pinList.add(new Pin(new PointF(rect.left, rect.top), Pin.RectPos.LEFT_TOP));
         pinList.add(new Pin(new PointF((rect.left + rect.right) / 2.0F, rect.top), Pin.RectPos.TOP));

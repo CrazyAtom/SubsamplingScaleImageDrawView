@@ -48,7 +48,7 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import kr.co.aroad.subscaleimagedrawview.Listener.GestureListener;
+import kr.co.aroad.subscaleimagedrawview.listener.GestureListener;
 import kr.co.aroad.subscaleimagedrawview.R.styleable;
 import kr.co.aroad.subscaleimagedrawview.decoder.CompatDecoderFactory;
 import kr.co.aroad.subscaleimagedrawview.decoder.DecoderFactory;

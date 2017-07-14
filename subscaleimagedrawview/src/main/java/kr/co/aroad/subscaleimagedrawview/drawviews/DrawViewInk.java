@@ -1,4 +1,4 @@
-package kr.co.aroad.subscaleimagedrawview.annotations;
+package kr.co.aroad.subscaleimagedrawview.drawviews;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,24 +8,27 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
+import kr.co.aroad.subscaleimagedrawview.listener.CreateDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 /**
  * Created by crazy on 2017-07-11.
  */
 
-public class AnnotationInk extends BaseAnnotation {
+public class DrawViewInk extends BaseDrawView {
 
-    public AnnotationInk(Context context, ImageDrawView imageDrawView) {
-        super(context, AnnotationType.INK, imageDrawView);
+    public DrawViewInk(@NonNull ImageDrawView imageDrawView, @Nullable CreateDrawViewListener createDrawViewListener) {
+        super(DrawViewType.INK, imageDrawView, createDrawViewListener);
     }
 
     @Override
-    public void updateAnnotEx(RectF newBbox) {
-        final RectF originalBbox = getBbox();
+    public void update(RectF newBbox) {
+        final RectF originalBbox = getBoundaryBox();
 
         final float scaleX = newBbox.width() / originalBbox.width();
         final float scaleY = newBbox.height() / originalBbox.height();
@@ -39,7 +42,7 @@ public class AnnotationInk extends BaseAnnotation {
             points.add(newPoint);
         }
 
-        updateAnnotEx(points);
+        update(points);
     }
 
     @Override
@@ -66,7 +69,7 @@ public class AnnotationInk extends BaseAnnotation {
                 path.quadTo(vPrev.x, vPrev.y, (vPoint.x + vPrev.x) / 2, (vPoint.y + vPrev.y) / 2);
                 vPrev = vPoint;
             }
-            canvas.drawPath(path, this.mPaint);
+            canvas.drawPath(path, this.paint);
         }
 
         super.onDraw(canvas);
@@ -82,7 +85,7 @@ public class AnnotationInk extends BaseAnnotation {
             rect.bottom += offset;
         }
 
-        setBbox(rect);
+        setBoundaryBox(rect);
     }
 
     /**
@@ -90,13 +93,13 @@ public class AnnotationInk extends BaseAnnotation {
      *
      */
     private void loadPaint() {
-        mPaint.setColor(isPreview() ? Color.parseColor("#4C6C89") : Color.parseColor(mColor));
-        mPaint.setStrokeWidth(mThick);
-        mPaint.setAntiAlias(true);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mPaint.setPathEffect(getDashPathEffect());
+        paint.setColor(isPreview() ? Color.parseColor("#4C6C89") : Color.parseColor(color));
+        paint.setStrokeWidth(thick);
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeJoin(Paint.Join.ROUND);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setPathEffect(getDashPathEffect());
     }
 
     /**
@@ -105,5 +108,10 @@ public class AnnotationInk extends BaseAnnotation {
      */
     private DashPathEffect getDashPathEffect() {
         return isPreview() ? new DashPathEffect(new float[] {40, 20}, 0.0f) : null;
+    }
+
+    @Override
+    public boolean isContains(float x, float y) {
+        return super.isContains(x, y);
     }
 }

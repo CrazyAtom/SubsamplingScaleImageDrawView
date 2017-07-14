@@ -1,20 +1,21 @@
-package kr.co.aroad.subscaleimagedrawview.annotationtools;
+package kr.co.aroad.subscaleimagedrawview.drawtools;
 
 import android.content.Context;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
 
-import kr.co.aroad.subscaleimagedrawview.annotations.BaseAnnotation;
+import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 /**
  * Created by crazy on 2017-06-22.
  */
 
-public class PinViewLine extends PinView {
+public class EditPinViewLine extends BaseEditPinView {
 
-    public PinViewLine(Context context, ImageDrawView imageDrawView, BaseAnnotation annotation) {
-        super(context, imageDrawView, annotation);
+    public EditPinViewLine(@NonNull ImageDrawView imageDrawView, @NonNull BaseDrawView drawView) {
+        super(imageDrawView, drawView);
     }
 
     @Override
@@ -31,13 +32,13 @@ public class PinViewLine extends PinView {
     @Override
     public void initPinList() {
         pinList.clear();
-        for (int i = 0; i < annotation.getPositionSize(); i++) {
-            pinList.add(new Pin(annotation.getPosition(i)));
+        for (int i = 0; i < drawView.getPositionSize(); i++) {
+            pinList.add(new Pin(drawView.getPosition(i)));
         }
     }
 
     @Override
     public RectF getBoundaryBox() {
-        return annotation.getBbox();
+        return drawView.getBoundaryBox();
     }
 }

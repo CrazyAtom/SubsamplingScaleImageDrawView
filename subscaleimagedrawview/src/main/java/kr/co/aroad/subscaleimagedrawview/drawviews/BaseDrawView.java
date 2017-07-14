@@ -1,4 +1,4 @@
-package kr.co.aroad.subscaleimagedrawview.annotations;
+package kr.co.aroad.subscaleimagedrawview.drawviews;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,65 +7,78 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.UUID;
 
+import kr.co.aroad.subscaleimagedrawview.listener.CreateDrawViewListener;
+import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 /**
  * Created by crazy on 2017-07-11.
  */
 
-public abstract class BaseAnnotation extends View {
+public abstract class BaseDrawView extends View {
 
     public static final float MINIMUM_LENGTH = 30.0f;
 
-    private AnnotationType mType;
-    private String mUniqId = UUID.randomUUID().toString().replace("-", "");
+    private DrawViewType type;
+    private String uniqId;
 
-    private ArrayList<PointF> mPoints = new ArrayList<>();
-    protected ImageDrawView mImageDrawView;
-    protected Paint mPaint = new Paint();
+    private ArrayList<PointF> pointList = new ArrayList<>();
+    protected ImageDrawView imageDrawView;
+    protected Paint paint = new Paint();
 
-    protected int mThick = 4;
-    protected String mColor = "#" + Integer.toHexString(Color.BLACK);
+    protected int thick;
+    protected String color;
 
-    protected boolean mShowBBox = false;
-    protected RectF mBbox = null;
+    protected boolean showBoundaryBox = false;
+    protected RectF boundaryBox = null;
 
     private boolean isPreview = false;
     private boolean isEditable = false;
 
 
-    public BaseAnnotation(Context context, AnnotationType type, ImageDrawView imageDrawView) {
-        super(context);
-        mType = type;
-        mImageDrawView = imageDrawView;
+    public BaseDrawView(DrawViewType type, @NonNull ImageDrawView imageDrawView, @Nullable CreateDrawViewListener createDrawViewListener) {
+        super(imageDrawView.getContext());
+        this.type = type;
+        this.imageDrawView = imageDrawView;
+
+        this.type = type;
+        this.imageDrawView = imageDrawView;
+        if (createDrawViewListener != null) {
+            setUniqId(createDrawViewListener.newUUID());
+        } else {
+            setUniqId(Utillity.getUUID());
+        }
+        setThick(4);
+        setColor(Utillity.getColorString(Color.BLACK));
     }
 
     protected void initPosition() {
-        mPoints.clear();
+        this.pointList.clear();
     }
 
-    public AnnotationType getType() {
-        return mType;
+    public DrawViewType getType() {
+        return this.type;
     }
 
     public String getUniqId() {
-        return mUniqId;
+        return this.uniqId;
     }
 
     public void setUniqId(String uniqId) {
-        mUniqId = uniqId;
+        this.uniqId = uniqId;
     }
 
     public PointF getPosition(int index) {
         try {
-            return mPoints.get(index);
+            return this.pointList.get(index);
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
             return null;
@@ -73,55 +86,55 @@ public abstract class BaseAnnotation extends View {
     }
 
     public void setPoints(ArrayList<PointF> points) {
-        mPoints = points;
+        this.pointList = points;
     }
 
     public void setPosition(int index, PointF position) {
         try {
-            mPoints.set(index, position);
+            this.pointList.set(index, position);
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
     }
 
     public void addPosition(PointF position) {
-        mPoints.add(new PointF(position.x, position.y));
+        this.pointList.add(new PointF(position.x, position.y));
     }
 
     public int getPositionSize() {
-        return mPoints.size();
+        return this.pointList.size();
     }
 
     public int getThick() {
-        return mThick;
+        return this.thick;
     }
 
     public void setThick(int thick) {
-        mThick = thick;
+        this.thick = thick;
     }
 
     public String getColor() {
-        return mColor;
+        return this.color;
     }
 
     public void setColor(String color) {
-        mColor = color;
+        this.color = color;
     }
 
-    public boolean isShowBBox() {
-        return mShowBBox;
+    public boolean isShowBoundaryBox() {
+        return this.showBoundaryBox;
     }
 
-    public void setShowBBox(boolean showBBox) {
-        mShowBBox = showBBox;
+    public void setShowBoundaryBox(boolean show) {
+        this.showBoundaryBox = show;
     }
 
-    public RectF getBbox() {
-        return mBbox;
+    public RectF getBoundaryBox() {
+        return this.boundaryBox;
     }
 
-    public void setBbox(RectF bbox) {
-        mBbox = bbox;
+    public void setBoundaryBox(RectF box) {
+        this.boundaryBox = box;
     }
 
     /**
@@ -130,7 +143,7 @@ public abstract class BaseAnnotation extends View {
      * @return
      */
     protected float getMaxX() {
-        return Collections.max(mPoints, new Comparator<PointF>() {
+        return Collections.max(this.pointList, new Comparator<PointF>() {
             @Override
             public int compare(PointF o1, PointF o2) {
                 return Float.compare(o1.x, o2.x);
@@ -144,7 +157,7 @@ public abstract class BaseAnnotation extends View {
      * @return
      */
     protected float getMaxY() {
-        return Collections.max(mPoints, new Comparator<PointF>() {
+        return Collections.max(this.pointList, new Comparator<PointF>() {
             @Override
             public int compare(PointF o1, PointF o2) {
                 return Float.compare(o1.y, o2.y);
@@ -158,7 +171,7 @@ public abstract class BaseAnnotation extends View {
      * @return
      */
     protected float getMinX() {
-        return Collections.min(mPoints, new Comparator<PointF>() {
+        return Collections.min(this.pointList, new Comparator<PointF>() {
             @Override
             public int compare(PointF o1, PointF o2) {
                 return Float.compare(o1.x, o2.x);
@@ -172,7 +185,7 @@ public abstract class BaseAnnotation extends View {
      * @return
      */
     protected float getMinY() {
-        return Collections.min(mPoints, new Comparator<PointF>() {
+        return Collections.min(this.pointList, new Comparator<PointF>() {
             @Override
             public int compare(PointF o1, PointF o2) {
                 return Float.compare(o1.y, o2.y);
@@ -238,7 +251,7 @@ public abstract class BaseAnnotation extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (mShowBBox == true) {
+        if (this.showBoundaryBox == true) {
             drawBBox(canvas);
         }
     }
@@ -249,7 +262,7 @@ public abstract class BaseAnnotation extends View {
      * @param canvas
      */
     protected void drawBBox(Canvas canvas) {
-        if (mBbox != null) {
+        if (this.boundaryBox != null) {
             Paint paint = new Paint();
             paint.setStrokeWidth(8.0f);
             paint.setAntiAlias(true);
@@ -258,7 +271,7 @@ public abstract class BaseAnnotation extends View {
             DashPathEffect dashPathEffect = new DashPathEffect(new float[] {10.0f, 5.0f}, 1.0f);
             paint.setPathEffect(dashPathEffect);
             RectF vRect = new RectF();
-            mImageDrawView.sourceToViewRect(mBbox, vRect);
+            this.imageDrawView.sourceToViewRect(this.boundaryBox, vRect);
             canvas.drawRect(vRect, paint);
         }
     }
@@ -270,15 +283,15 @@ public abstract class BaseAnnotation extends View {
      * @return 화면 또는 소스 좌표 rect
      */
     protected RectF getRect(boolean toView) {
-        float left = getMinX(mPoints);
-        float right = getMaxX(mPoints);
-        float top = getMinY(mPoints);
-        float bottom = getMaxY(mPoints);
-        RectF sRect = new RectF(left, top, right, bottom);
+        final float left = getMinX(this.pointList);
+        final float right = getMaxX(this.pointList);
+        final float top = getMinY(this.pointList);
+        final float bottom = getMaxY(this.pointList);
+        final RectF sRect = new RectF(left, top, right, bottom);
 
         if (toView) {
-            RectF vRect = new RectF();
-            return mImageDrawView.sourceToViewRect(sRect, vRect);
+            final RectF vRect = new RectF();
+            return this.imageDrawView.sourceToViewRect(sRect, vRect);
         } else {
             return sRect;
         }
@@ -290,7 +303,7 @@ public abstract class BaseAnnotation extends View {
      * @return true이면 미리보기, false이면 미리보기 아님
      */
     public boolean isPreview() {
-        return isPreview;
+        return this.isPreview;
     }
 
     /**
@@ -299,15 +312,15 @@ public abstract class BaseAnnotation extends View {
      * @param preview
      */
     public void setPreview(boolean preview) {
-        isPreview = preview;
+        this.isPreview = preview;
     }
 
     public boolean isEditable() {
-        return isEditable;
+        return this.isEditable;
     }
 
     public void setEditable(boolean editable) {
-        isEditable = editable;
+        this.isEditable = editable;
     }
 
     /**
@@ -315,9 +328,9 @@ public abstract class BaseAnnotation extends View {
      *
      * @param points
      */
-    public void updateAnnotEx(ArrayList<PointF> points) {
+    public void update(ArrayList<PointF> points) {
         initPosition();
-        mPoints.addAll(points);
+        this.pointList.addAll(points);
         invalidate();
     }
 
@@ -328,10 +341,10 @@ public abstract class BaseAnnotation extends View {
      * @return
      */
     protected final PointF viewToSourceCoord(float vx, float vy) {
-        if (mImageDrawView == null) {
+        if (this.imageDrawView == null) {
             return null;
         }
-        return mImageDrawView.viewToSourceCoord(vx, vy);
+        return this.imageDrawView.viewToSourceCoord(vx, vy);
     }
 
     /**
@@ -341,21 +354,21 @@ public abstract class BaseAnnotation extends View {
      * @return
      */
     protected final PointF sourceToViewCoord(float sx, float sy) {
-        if (mImageDrawView == null) {
+        if (this.imageDrawView == null) {
             return null;
         }
-        return mImageDrawView.sourceToViewCoord(sx, sy);
+        return this.imageDrawView.sourceToViewCoord(sx, sy);
     }
 
     /**
-     * bondary box 정보를 이용하여 annotation 갱신
+     * bondary box 정보를 이용하여 drawView 갱신
      *
      * @param newBbox
      */
-    abstract public void updateAnnotEx(RectF newBbox);
+    abstract public void update(RectF newBbox);
 
     /**
-     * annotation 정보 팝업
+     * drawView 정보 팝업
      * @param context
      */
     abstract public void showContentsBox(Context context);
@@ -367,7 +380,7 @@ public abstract class BaseAnnotation extends View {
     abstract public boolean isInvalidSaveAnnotEx();
 
     /**
-     * annotation 이름
+     * drawView 이름
      *
      * @return
      */
@@ -379,13 +392,13 @@ public abstract class BaseAnnotation extends View {
      * 좌표 x, y가 annotation내에 존재 하는지 체크
      * @param x
      * @param y
-     * @return true 이면 annotation 내에 존재, false 이면 annotation 내에 존재 하지 않음
+     * @return true 이면 drawView 내에 존재, false 이면 drawView 내에 존재 하지 않음
      */
     public boolean isContains(float x, float y) {
-        if(this.mBbox == null) {
+        if(this.boundaryBox == null) {
             return false;
         } else {
-            RectF rect = new RectF(this.mBbox);
+            RectF rect = new RectF(this.boundaryBox);
             float temp;
             if(rect.left > rect.right) {
                 temp = rect.left;
@@ -404,9 +417,9 @@ public abstract class BaseAnnotation extends View {
     }
 
     /**
-     * annotation type 정의
+     * drawView type 정의
      */
-    public static enum AnnotationType {
+    public static enum DrawViewType {
         PHOTO,
         TEXT,
         DIMENSION,
@@ -414,10 +427,9 @@ public abstract class BaseAnnotation extends View {
         INK,
         LINE,
         RECTANGLE,
-        ELLIPSE,
-        ERASER;
+        ELLIPSE;
 
-        private AnnotationType() {
+        private DrawViewType() {
         }
 
         public String toString(boolean isSimple) {

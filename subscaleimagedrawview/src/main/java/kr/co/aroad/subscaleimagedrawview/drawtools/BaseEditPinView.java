@@ -1,12 +1,12 @@
-package kr.co.aroad.subscaleimagedrawview.annotationtools;
+package kr.co.aroad.subscaleimagedrawview.drawtools;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import kr.co.aroad.subscaleimagedrawview.annotations.BaseAnnotation;
+import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
@@ -22,7 +22,7 @@ import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
  * Created by crazy on 2017-06-22.
  */
 
-public abstract class PinView extends View {
+public abstract class BaseEditPinView extends View {
 
     protected static class Pin {
         protected enum RectPos {
@@ -51,17 +51,16 @@ public abstract class PinView extends View {
         }
     }
 
-    protected float scale = 1;
     protected ImageDrawView imageDrawView;
     protected ArrayList<Pin> pinList = new ArrayList<>();
-    protected BaseAnnotation annotation;
+    protected BaseDrawView drawView;
     private Paint paint = new Paint();
     private float phase = 0.0f;
 
-    public PinView(Context context, ImageDrawView imageDrawView, BaseAnnotation annotation) {
-        super(context);
+    public BaseEditPinView(@NonNull ImageDrawView imageDrawView, @NonNull BaseDrawView drawView) {
+        super(imageDrawView.getContext());
         this.imageDrawView = imageDrawView;
-        this.annotation = annotation;
+        this.drawView = drawView;
         this.initPinList();
     }
 
@@ -85,7 +84,9 @@ public abstract class PinView extends View {
             paint.setColor(Color.DKGRAY);
             DashPathEffect dashPathEffect = new DashPathEffect(new float[] {10.0f, 5.0f}, phase);
             paint.setPathEffect(dashPathEffect);
-            canvas.drawRect(boundary.left * scale, boundary.top * scale, boundary.right * scale, boundary.bottom * scale, this.paint);
+            RectF vRect = new RectF();
+            imageDrawView.sourceToViewRect(boundary, vRect);
+            canvas.drawRect(vRect, this.paint);
 
             phase = (phase < 10.0f) ? phase + 1.0f : 0.0f;
             this.postInvalidateOnAnimation();
@@ -94,7 +95,7 @@ public abstract class PinView extends View {
         // pin
         paint.setPathEffect(null);
         for (Pin pin : pinList) {
-            RectF pinRect = getRectPin(new PointF(pin.point.x * this.scale, pin.point.y * this.scale));
+            RectF pinRect = getRectPin(imageDrawView.sourceToViewCoord(pin.point.x, pin.point.y));
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(pin.state ? Color.RED : Color.WHITE);
             canvas.drawOval(pinRect, paint);
@@ -141,8 +142,9 @@ public abstract class PinView extends View {
 
         Pin findPin = null;
         float dist = Float.MAX_VALUE;
+        final float pinSize = getPIN_SIZE() / imageDrawView.getScale();
         for (Pin pin : pinList) {
-            RectF rect = new RectF(pin.point.x - getPIN_SIZE() / scale, pin.point.y - getPIN_SIZE() / scale, pin.point.x + getPIN_SIZE() / scale, pin.point.y + getPIN_SIZE() / scale);
+            RectF rect = new RectF(pin.point.x - pinSize, pin.point.y - pinSize, pin.point.x + pinSize, pin.point.y + pinSize);
             if (rect.contains(x, y)) {
                 if (Utillity.getDistance(pin.point, new PointF(x, y)) < dist) {
                     dist = Utillity.getDistance(pin.point, new PointF(x, y));

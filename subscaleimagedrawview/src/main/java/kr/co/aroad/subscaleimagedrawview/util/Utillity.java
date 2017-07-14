@@ -3,6 +3,7 @@ package kr.co.aroad.subscaleimagedrawview.util;
 import android.graphics.PointF;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by crazy on 2017-07-11.
@@ -17,6 +18,14 @@ public class Utillity {
      */
     public static String getColorString(int idxColor) {
         return "#" + Integer.toHexString(idxColor);
+    }
+
+    /**
+     * 하이픈(-)이 제거된 UUID
+     * @return
+     */
+    public static String getUUID() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
     /**

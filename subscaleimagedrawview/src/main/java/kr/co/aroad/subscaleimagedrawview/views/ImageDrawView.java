@@ -28,11 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import kr.co.aroad.subscaleimagedrawview.Listener.GestureListener;
-import kr.co.aroad.subscaleimagedrawview.annotations.BaseAnnotation;
-import kr.co.aroad.subscaleimagedrawview.annotationtools.AnnotationToolEllipse;
-import kr.co.aroad.subscaleimagedrawview.annotationtools.AnnotationToolInk;
-import kr.co.aroad.subscaleimagedrawview.annotationtools.BaseAnnotationTool;
+import kr.co.aroad.subscaleimagedrawview.listener.GestureListener;
+import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
+import kr.co.aroad.subscaleimagedrawview.drawtools.*;
 
 /**
  * Created by crazy on 2017-07-11.
@@ -41,8 +39,9 @@ import kr.co.aroad.subscaleimagedrawview.annotationtools.BaseAnnotationTool;
 public class ImageDrawView extends SubsamplingScaleImageView implements View.OnTouchListener, GestureListener {
 
     private ImageDrawView.GestureType gestureType = GestureType.VIEW;
-    private BaseAnnotationTool annotationTool = null;
-    private Map<String, BaseAnnotation> annotationMap = new HashMap<>();
+    private BaseDrawTool drawTool = null;
+    private Map<String, BaseDrawView> drawViewMap = new HashMap<>();
+    private boolean isEditedDrawView = false;
 
     private PointF vPrevious;
     private PointF vStart;
@@ -76,31 +75,31 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
-        if (annotationTool != null && gestureType == GestureType.EDIT) {
-            return annotationTouchEvent(event);
+        if (this.drawTool != null && this.gestureType == GestureType.EDIT) {
+            return drawViewTouchEvent(event);
         } else {
             return super.onTouchEvent(event);
         }
     }
 
     /**
-     * annotation touch event
+     * drawView touch event
      * @param event
      * @return boolean
      */
-    private boolean annotationTouchEvent(@NonNull MotionEvent event) {
+    private boolean drawViewTouchEvent(@NonNull MotionEvent event) {
         boolean consumed = false;
         int x = (int)event.getX();
         int y = (int)event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                annotationTool.onTouchBegin(x, y);
+                this.drawTool.onTouchBegin(x, y);
                 break;
             case MotionEvent.ACTION_UP:
-                annotationTool.onTouchEnd(x, y);
+                this.drawTool.onTouchEnd(x, y);
                 break;
             case MotionEvent.ACTION_MOVE:
-                annotationTool.onTouchMove(x, y);
+                this.drawTool.onTouchMove(x, y);
                 consumed = true;
                 break;
         }
@@ -116,8 +115,8 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
             return;
         }
 
-        for (String key : annotationMap.keySet()) {
-            annotationMap.get(key).invalidate();
+        for (String key : this.drawViewMap.keySet()) {
+            this.drawViewMap.get(key).invalidate();
         }
     }
 
@@ -131,45 +130,47 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
         final int w = right - left;
         final int h = bottom - top;
 
-        for (String key : annotationMap.keySet()) {
-            annotationMap.get(key).bringToFront();
-            annotationMap.get(key).layout(0, 0, w, h);
+        for (String key : this.drawViewMap.keySet()) {
+            this.drawViewMap.get(key).bringToFront();
+            this.drawViewMap.get(key).layout(0, 0, w, h);
         }
 
         super.onLayout(changed, left, top, right, bottom);
     }
 
     /**
-     * annotation 추가
-     *  - annotation 리스트에 추가
-     *  - annotation child view 추가
-     * @param annotation 추가할 annotation 뷰
+     * drawView 추가
+     *  - drawView 리스트에 추가
+     *  - drawView child view 추가
+     * @param drawView 추가할 drawView 뷰
      */
-    public void addAnnotation(BaseAnnotation annotation) {
-        if (annotation != null) {
-            annotationMap.put(annotation.getUniqId(), annotation);
-            addView(annotation);
-        }
+    public void addDrawView(@NonNull BaseDrawView drawView) {
+        this.drawViewMap.put(drawView.getUniqId(), drawView);
+        addView(drawView);
     }
 
     /**
-     * annotation 삭제
-     *  - annotation 리스트에서 삭제
-     *  - annotation child view 삭제
+     * drawView 삭제
+     *  - drawView 리스트에서 삭제
+     *  - drawView child view 삭제
      *  - 삭제 리스트에 추가 (database에 저장 할때 삭제 플래그 처리를 위해)
      *
-     * @param annotation 삭제할 annotation 뷰
+     * @param drawView 삭제할 drawView 뷰
      */
-    public void removeAnnotation(BaseAnnotation annotation) {
-        annotationMap.remove(annotation.getUniqId());
-        removeView(annotation);
+    public void removeDrawView(@NonNull BaseDrawView drawView) {
+        this.drawViewMap.remove(drawView.getUniqId());
+        removeView(drawView);
     }
 
-    public void changeTool(BaseAnnotationTool.AnnotationToolType toolType) {
+    public void changeTool(BaseDrawTool.DrawToolType toolType) {
+        if (drawTool != null) {
+            drawTool.exit();
+        }
+
         switch (toolType) {
             case NONE:
-                annotationTool = null;
-                gestureType = GestureType.VIEW;
+                this.drawTool = null;
+                this.gestureType = GestureType.VIEW;
                 break;
             case PHOTO:
                 break;
@@ -180,53 +181,111 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
             case CLOUD:
                 break;
             case INK:
-                annotationTool = new AnnotationToolInk(getContext(), this);
-                gestureType = GestureType.EDIT;
+                this.drawTool = new DrawToolInk(this);
+                this.gestureType = GestureType.EDIT;
                 break;
             case LINE:
                 break;
             case RECTANGLE:
                 break;
             case ELLIPSE:
-                annotationTool = new AnnotationToolEllipse(getContext(), this);
-                gestureType = GestureType.EDIT;
+                this.drawTool = new DrawToolEllipse(this);
+                this.gestureType = GestureType.EDIT;
                 break;
             case ERASER:
+                this.drawTool = new DrawToolFreeEraser(this);
+                this.gestureType = GestureType.EDIT;
                 break;
             case TRANSFORM:
+                this.drawTool = new DrawToolTransform(this);
+                this.gestureType = GestureType.EDIT;
                 break;
             default:
-                annotationTool = null;
-                gestureType = GestureType.VIEW;
+                this.drawTool = null;
+                this.gestureType = GestureType.VIEW;
+                break;
         }
     }
 
     @Override
-    public void onLongPress(MotionEvent event) {
+    public void onLongPress(@NonNull MotionEvent event) {
         int x = (int)event.getX();
         int y = (int)event.getY();
 
-        if (annotationTool != null) {
-            annotationTool.longPress(x, y);
+        // VIEW 상태에서 drawView 위치에 터치 하면 편집 tool로 변경하고 longPress
+        if (this.gestureType == GestureType.VIEW) {
+            BaseDrawView selectedAnnotation = getSelectedDrawView(new PointF(x, y));
+            if (selectedAnnotation != null) {
+                changeTool(BaseDrawTool.DrawToolType.TRANSFORM);
+                ((DrawToolTransform) this.drawTool).setSelectedDrawView(selectedAnnotation);
+                this.drawTool.longPress(x, y);
+            }
+            // EDIT 상태에서는 tool의 longPress
+        } else {
+            if (this.drawTool != null) {
+                this.drawTool.longPress(x, y);
+            }
         }
     }
 
     @Override
-    public void onSingleTabUp(MotionEvent event) {
+    public void onSingleTabUp(@NonNull MotionEvent event) {
         int x = (int)event.getX();
         int y = (int)event.getY();
 
-        if (annotationTool != null) {
-            annotationTool.singleTapUp(x, y);
+        // VIEW 상태에서 drawView 위치에 터치 하면 편집 tool로 변경하고 singleTapUp
+        if (this.gestureType == GestureType.VIEW) {
+            BaseDrawView selectedAnnotation = getSelectedDrawView(new PointF(x, y));
+            if (selectedAnnotation != null) {
+                changeTool(BaseDrawTool.DrawToolType.TRANSFORM);
+                ((DrawToolTransform) this.drawTool).setSelectedDrawView(selectedAnnotation);
+                this.drawTool.singleTapUp(x, y);
+            }
+        // EDIT 상태에서는 tool의 singleTapUp
+        } else {
+            if (this.drawTool != null) {
+                this.drawTool.singleTapUp(x, y);
+            }
         }
     }
 
     /**
-     * annotation 리스트 반환
-     * @return annotation map
+     * point에 위치하는 drawView 찾기
+     * @param point
+     * @return drawView
      */
-    public Map<String, BaseAnnotation> getAnnotationMap() {
-        return annotationMap;
+    protected BaseDrawView getSelectedDrawView(PointF point) {
+        PointF sc = viewToSourceCoord(point.x, point.y);
+        for (String key : this.drawViewMap.keySet()) {
+            if (this.drawViewMap.get(key).isContains(sc.x, sc.y) == true) {
+                return this.drawViewMap.get(key);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * drawView 리스트 반환
+     * @return drawView map
+     */
+    public Map<String, BaseDrawView> getDrawViewMap() {
+        return this.drawViewMap;
+    }
+
+    /**
+     * drawView 편집 여부
+     * @return boolean
+     */
+    public boolean isEditedDrawView() {
+        return this.isEditedDrawView;
+    }
+
+    /**
+     * drawView 편집 여부 설정
+     * @param editedDrawView boolean
+     */
+    public void setEditedDrawView(boolean editedDrawView) {
+        this.isEditedDrawView = editedDrawView;
     }
 
     /**

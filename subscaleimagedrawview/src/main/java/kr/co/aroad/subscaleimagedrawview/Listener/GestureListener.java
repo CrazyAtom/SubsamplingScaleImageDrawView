@@ -1,5 +1,6 @@
-package kr.co.aroad.subscaleimagedrawview.Listener;
+package kr.co.aroad.subscaleimagedrawview.listener;
 
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 
 /**
@@ -7,6 +8,6 @@ import android.view.MotionEvent;
  */
 
 public interface GestureListener {
-    void onLongPress(MotionEvent event);
-    void onSingleTabUp(MotionEvent event);
+    void onLongPress(@NonNull MotionEvent event);
+    void onSingleTabUp(@NonNull MotionEvent event);
 }
