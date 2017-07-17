@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:layout_gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="측정기준 설정"
+        android:textSize="18dp"
+        android:textColor="@color/light_blue"
+        android:textStyle="bold"
+        android:includeFontPadding="false"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="측정기준이 되는 길이의 단위를 설정 해주세요."
+        android:textSize="16dp"
+        android:textColor="@color/dark_gray"
+        android:includeFontPadding="false"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+
+        <EditText
+            android:id="@+id/dim_base_comp_len"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dark_blue"
+            android:textSize="15dp"
+            android:maxLines="1"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:gravity="center_horizontal"
+            android:includeFontPadding="false">
+            <requestFocus/>
+        </EditText>
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/dim_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="12dp"
+            android:textSize="15dp"
+            android:maxLines="1"
+            app:ms_background_color="@color/white"
+            app:ms_text_color="@color/dark_gray"
+            android:includeFontPadding="false"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/background_white_lightblue"
+            android:text="취소"
+            android:textColor="@drawable/color_lightblue_white"
+            android:textSize="17dp"
+            android:textStyle="bold"
+            style="?android:attr/borderlessButtonStyle"/>
+
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/background_lightblue_white"
+            android:text="확인"
+            android:textColor="@drawable/color_white_lightblue"
+            android:textSize="17dp"
+            android:textStyle="bold"
+            style="?android:attr/borderlessButtonStyle"/>
+
+    </LinearLayout>
+
+</LinearLayout>
