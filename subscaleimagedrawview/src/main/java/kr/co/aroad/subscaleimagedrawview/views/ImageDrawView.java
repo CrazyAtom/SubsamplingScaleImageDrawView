@@ -43,14 +43,6 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     private Map<String, BaseDrawView> drawViewMap = new HashMap<>();
     private boolean isEditedDrawView = false;
 
-    private PointF vPrevious;
-    private PointF vStart;
-    private boolean drawing = false;
-
-    private int strokeWidth;
-
-    private List<PointF> sPoints;
-
     public ImageDrawView(Context context, AttributeSet attr) {
         super(context, attr);
         initialise();
@@ -63,9 +55,6 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     private void initialise() {
         setOnTouchListener(this);
         setGestureListener(this);
-
-        float density = getResources().getDisplayMetrics().densityDpi;
-        strokeWidth = (int)(density/60f);
     }
 
     @Override
@@ -121,7 +110,6 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     }
 
     public void reset() {
-        this.sPoints = null;
         invalidate();
     }
 
@@ -131,7 +119,7 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
         final int h = bottom - top;
 
         for (String key : this.drawViewMap.keySet()) {
-            this.drawViewMap.get(key).bringToFront();
+//            this.drawViewMap.get(key).bringToFront();
             this.drawViewMap.get(key).layout(0, 0, w, h);
         }
 
@@ -175,10 +163,14 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
             case PHOTO:
                 break;
             case TEXT:
+                this.drawTool = new DrawToolText(this);
+                this.gestureType = GestureType.EDIT;
                 break;
             case DIMENSION:
                 break;
             case CLOUD:
+                this.drawTool = new DrawToolCloud(this);
+                this.gestureType = GestureType.EDIT;
                 break;
             case INK:
                 this.drawTool = new DrawToolInk(this);

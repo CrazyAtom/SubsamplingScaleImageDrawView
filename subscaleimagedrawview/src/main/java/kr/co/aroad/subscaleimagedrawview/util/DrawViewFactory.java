@@ -36,10 +36,10 @@ public class DrawViewFactory {
                 return new DrawViewEllipse(imageDrawView, createDrawViewListener);
             case LINE:
                 return new DrawViewLine(imageDrawView, createDrawViewListener);
-//            case CLOUD:
-//                return new DrawViewCloud(imageDrawView, createDrawViewListener);
-//            case TEXT:
-//                return new DrawViewText(imageDrawView, createDrawViewListener);
+            case CLOUD:
+                return new DrawViewCloud(imageDrawView, createDrawViewListener);
+            case TEXT:
+                return new DrawViewText(imageDrawView, createDrawViewListener);
 //            case PHOTO:
 //                return new DrawViewPhoto(imageDrawView, createDrawViewListener);
 //            case DIMENSION:

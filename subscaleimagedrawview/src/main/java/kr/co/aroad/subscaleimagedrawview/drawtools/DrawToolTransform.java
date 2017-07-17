@@ -15,11 +15,11 @@ import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
  * Created by hangilit on 2017. 7. 13..
  */
 
-public class DrawToolTransform extends BaseDrawTool implements DrawViewTransformListener {
+public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListener, DrawViewTransformListener {
 
     private BaseDrawView selectedDrawView;
     private PointF beginPoint;
-    private BaseEditPinView baseEditPinView;
+    private BaseEditPinView editPinView;
 
     public DrawToolTransform(@NonNull ImageDrawView imageDrawView) {
         super(imageDrawView);
@@ -40,7 +40,7 @@ public class DrawToolTransform extends BaseDrawTool implements DrawViewTransform
             this.selectedDrawView.showContentsBox(imageDrawView.getContext());
             exitTransformState();
         } else {
-            onTouchBegin(x, y);
+            createEditPinView();
         }
 
         return this.selectedDrawView;
@@ -54,76 +54,70 @@ public class DrawToolTransform extends BaseDrawTool implements DrawViewTransform
 
         if (this.selectedDrawView.getType() == BaseDrawView.DrawViewType.PHOTO
                 || this.selectedDrawView.getType() == BaseDrawView.DrawViewType.TEXT) {
-            onTouchBegin(x, y);
+            createEditPinView();
         }
 
         return this.selectedDrawView;
     }
 
-    @Override
-    protected void touchBegin(int x, int y) {
+    /**
+     * 편집을 위한 EditPinView 생성
+     */
+    private void createEditPinView() {
         if (this.selectedDrawView == null) {
             return;
         }
 
-        beginPoint = viewToSourceCoord(x, y);
-        this.selectedDrawView.setEditable(true);
-        if (baseEditPinView == null) {
-            baseEditPinView = newPinView(this.selectedDrawView);
-            baseEditPinView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    PointF sCoord = viewToSourceCoord(motionEvent.getX(), motionEvent.getY());
-                    switch (motionEvent.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            baseEditPinView.setPinPressed(sCoord.x, sCoord.y);
-                            if (baseEditPinView.isPinPressed() == true) {
-                                baseEditPinView.invalidate();
-                            } else if (baseEditPinView.isContains(sCoord.x, sCoord.y) == true) {
-                                beginPoint = viewToSourceCoord(motionEvent.getX(), motionEvent.getY());
-                                setBeginEdited(true);
-                            } else {
-                                exitTransformState();
-                            }
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            if (baseEditPinView.isPinPressed() == true) {
-                                if (isInsideView(motionEvent.getX(), motionEvent.getY(), motionEvent.getX(), motionEvent.getY()) == true) {
-                                    baseEditPinView.setMovePin(new PointF(sCoord.x, sCoord.y));
-                                    baseEditPinView.invalidate();
-                                    if (selectedDrawView.getType() == BaseDrawView.DrawViewType.DIMENSION
-                                            || selectedDrawView.getType() == BaseDrawView.DrawViewType.LINE) {
-                                        selectedDrawView.update(baseEditPinView.getPinPoints());
-                                    } else {
-                                        update(selectedDrawView, baseEditPinView.getBoundaryBox());
-                                    }
-                                }
-                            } else {
-                                onTouchMove((int) motionEvent.getX(), (int) motionEvent.getY());
-                            }
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            exitTransformState();
-                            break;
-                    }
-                    return imageDrawView.onTouchEvent(motionEvent);
-                }
-            });
-            baseEditPinView.setClickable(true);
-            imageDrawView.addView(baseEditPinView);
-            baseEditPinView.layout(0, 0, imageDrawView.getWidth(), imageDrawView.getHeight());
-            baseEditPinView.invalidate();
+        if (this.editPinView == null) {
+            this.editPinView = newPinView(this.selectedDrawView);
+            this.editPinView.setClickable(true);
+            this.editPinView.setOnTouchListener(this);
+
+            imageDrawView.addView(editPinView);
+            this.editPinView.layout(0, 0, imageDrawView.getWidth(), imageDrawView.getHeight());
+            this.editPinView.invalidate();
+        }
+    }
+
+    @Override
+    protected void touchBegin(int x, int y) {
+        PointF sCoord = viewToSourceCoord(x, y);
+        if (this.editPinView != null) {
+            this.editPinView.setPinPressed(sCoord.x, sCoord.y);
+            if (this.editPinView.isPinPressed() == true) {
+                this.editPinView.invalidate();
+            } else if (this.editPinView.isContains(sCoord.x, sCoord.y) == true) {
+                this.beginPoint = viewToSourceCoord(x, y);
+                setBeginEdited(true);
+            } else {
+                exitTransformState();
+            }
         }
     }
 
     @Override
     protected void touchMove(int x, int y) {
-        if (this.selectedDrawView != null && this.selectedDrawView.isEditable() == true && baseEditPinView.isPinPressed() == false) {
-            PointF sc = viewToSourceCoord(x, y);
+        if (this.selectedDrawView == null || this.editPinView == null) {
+            return;
+        }
+
+        PointF sCoord = viewToSourceCoord(x, y);
+        if (this.editPinView.isPinPressed() == true) {
+            if (isInsideView(x, y, x, y) == true) {
+                this.editPinView.setMovePin(new PointF(sCoord.x, sCoord.y));
+                this.editPinView.invalidate();
+                if (selectedDrawView.getType() == BaseDrawView.DrawViewType.DIMENSION
+                        || selectedDrawView.getType() == BaseDrawView.DrawViewType.LINE) {
+                    selectedDrawView.update(this.editPinView.getPinPoints());
+                } else {
+                    update(selectedDrawView, this.editPinView.getBoundaryBox());
+                }
+            }
+        } else {
             RectF sRect = this.selectedDrawView.getBoundaryBox();
-            final float sDistX = sc.x - beginPoint.x;
-            final float sDistY = sc.y - beginPoint.y;
-            beginPoint = sc;
+            final float sDistX = sCoord.x - beginPoint.x;
+            final float sDistY = sCoord.y - beginPoint.y;
+            beginPoint = sCoord;
 
             RectF vRect = new RectF();
             imageDrawView.sourceToViewRect(sRect, vRect);
@@ -132,9 +126,9 @@ public class DrawToolTransform extends BaseDrawTool implements DrawViewTransform
             if (isInsideView(vRect.left + vDistX, vRect.top + vDistY, vRect.right + vDistX, vRect.bottom + vDistY) == true) {
                 update(this.selectedDrawView,
                         new RectF(sRect.left + sDistX, sRect.top + sDistY, sRect.right + sDistX, sRect.bottom + sDistY));
-                if (baseEditPinView != null) {
-                    baseEditPinView.initPinList();
-                    baseEditPinView.invalidate();
+                if (this.editPinView != null) {
+                    this.editPinView.initPinList();
+                    this.editPinView.invalidate();
                 }
             }
         }
@@ -142,7 +136,7 @@ public class DrawToolTransform extends BaseDrawTool implements DrawViewTransform
 
     @Override
     protected void touchEnd(int x, int y) {
-
+        exitTransformState();
     }
 
     @Override
@@ -152,8 +146,8 @@ public class DrawToolTransform extends BaseDrawTool implements DrawViewTransform
 
     @Override
     public void exit() {
-        if (baseEditPinView != null) {
-            imageDrawView.removeView(baseEditPinView);
+        if (this.editPinView != null) {
+            imageDrawView.removeView(this.editPinView);
             imageDrawView.invalidate();
         }
     }
@@ -196,8 +190,8 @@ public class DrawToolTransform extends BaseDrawTool implements DrawViewTransform
      * 편집 상태의 drawView 편집 상태 해제
      */
     private void exitTransformState() {
-        if (baseEditPinView != null) {
-            imageDrawView.removeView(baseEditPinView);
+        if (this.editPinView != null) {
+            imageDrawView.removeView(this.editPinView);
             imageDrawView.invalidate();
         }
 
@@ -223,5 +217,10 @@ public class DrawToolTransform extends BaseDrawTool implements DrawViewTransform
             this.selectedDrawView.setColor(Utillity.getColorString(color));
             this.selectedDrawView.invalidate();
         }
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return imageDrawView.onTouchEvent(motionEvent);
     }
 }

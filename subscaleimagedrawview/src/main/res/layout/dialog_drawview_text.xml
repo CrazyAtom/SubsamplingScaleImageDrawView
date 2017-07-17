@@ -17,13 +17,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#24303E"
+            android:textColor="@color/dark_blue"
             android:textSize="18dp"
             android:textStyle="bold"
             android:text="텍스트"/>
 
         <RadioGroup
-            android:id="@+id/group_freetext_size"
+            android:id="@+id/group_text_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -74,11 +74,11 @@
             android:layout_marginTop="14dp"
             android:layout_gravity="center_horizontal"
             android:textColorHint="#9FA0A0"
-            android:textColor="#000000"
+            android:textColor="@android:color/black"
             android:textSize="16dp"
             android:hint="Text를 입력하세요."
             android:maxLines="1"
-            android:background="@drawable/shape_grey_outline_transparency_solid_noround"/>
+            android:background="@drawable/shape_lightgrey_outline_transparent_solid_noround"/>
 
     </LinearLayout>
 
@@ -86,7 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="14dp"
-        android:background="#24303E"/>
+        android:background="@color/dark_blue"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -104,12 +104,12 @@
             android:textSize="15dp"
             android:textStyle="bold"
             android:textColor="@drawable/color_lightblue_white"
-            android:background="@drawable/shape_grey_outline_transparency_solid_noround"/>
+            android:background="@drawable/shape_lightgrey_outline_transparent_solid_noround"/>
 
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="#24303E"/>
+            android:background="@color/dark_blue"/>
 
         <Button
             android:id="@+id/btn_ok"
