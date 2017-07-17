@@ -235,11 +235,7 @@ public class DrawToolFreeEraser extends BaseDrawTool {
             @Override
             public void onClick(View view) {
                 remove();
-                if (DrawViewSetting.getInstance().isContinuous() == false) {
-                    if (toolControllViewListener != null) {
-                        toolControllViewListener.changeDefaultTool();
-                    }
-                }
+                checkContinueTool();
             }
         });
 

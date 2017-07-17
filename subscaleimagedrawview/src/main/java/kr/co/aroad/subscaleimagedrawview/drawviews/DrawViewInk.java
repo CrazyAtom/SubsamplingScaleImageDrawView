@@ -59,7 +59,7 @@ public class DrawViewInk extends BaseDrawView {
     protected void onDraw(Canvas canvas) {
         if (getPositionSize() >= 2) {
             loadPaint();
-            setBbox();
+            setBoundaryBox();
 
             Path path = new Path();
             PointF vPrev = sourceToViewCoord(getPosition(0).x, getPosition(0).y);
@@ -75,7 +75,7 @@ public class DrawViewInk extends BaseDrawView {
         super.onDraw(canvas);
     }
 
-    protected void setBbox() {
+    protected void setBoundaryBox() {
         RectF rect = new RectF(getMinX(), getMinY(), getMaxX(), getMaxY());
         if (rect.width() <= MINIMUM_LENGTH && rect.height() <= MINIMUM_LENGTH) {
             final float offset = MINIMUM_LENGTH / 2.0f;

@@ -41,6 +41,7 @@ public class DrawToolEllipse extends BaseDrawTool {
         mEnd = viewToSourceCoord(x, y);
         imageDrawView.removeDrawView(previewDrawView);
         injectAnnotation();
+        checkContinueTool();
     }
 
     @Override

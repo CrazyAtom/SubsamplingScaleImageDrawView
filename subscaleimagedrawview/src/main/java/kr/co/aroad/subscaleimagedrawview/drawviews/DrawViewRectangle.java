@@ -8,6 +8,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.TypedValue;
 
 import java.util.ArrayList;
 
@@ -16,13 +17,13 @@ import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 /**
- * Created by crazy on 2017-07-11.
+ * Created by hangilit on 2017. 7. 14..
  */
 
-public class DrawViewEllipse extends BaseDrawView {
+public class DrawViewRectangle extends BaseDrawView {
 
-    public DrawViewEllipse(@NonNull ImageDrawView imageDrawView, @Nullable CreateDrawViewListener createDrawViewListener) {
-        super(DrawViewType.ELLIPSE, imageDrawView, createDrawViewListener);
+    public DrawViewRectangle(@NonNull ImageDrawView imageDrawView, @Nullable CreateDrawViewListener createDrawViewListener) {
+        super(DrawViewType.RECTANGLE, imageDrawView, createDrawViewListener);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class DrawViewEllipse extends BaseDrawView {
             setBoundaryBox();
 
             final RectF rect = getRect(true);
-            canvas.drawOval(rect, paint);
+            canvas.drawRect(rect, paint);
 
             super.onDraw(canvas);
         }
@@ -74,24 +75,23 @@ public class DrawViewEllipse extends BaseDrawView {
 
     @Override
     public boolean isContains(float x, float y) {
-        final float offsetW = boundaryBox.width() / 4;
-        final float offsetH = boundaryBox.height() / 4;
+        final float offset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
 
         // annotation이 여유크기보다 작으면 boundary box로만 판단
-        if (Math.min(boundaryBox.width(), boundaryBox.height()) < Math.min(offsetW, offsetH)) {
+        if (Math.min(boundaryBox.width(), boundaryBox.height()) < offset) {
             return super.isContains(x, y);
         } else {
             ArrayList<PointF> outter = new ArrayList<>();
-            outter.add(new PointF(boundaryBox.left, boundaryBox.top));
-            outter.add(new PointF(boundaryBox.right, boundaryBox.top));
-            outter.add(new PointF(boundaryBox.right, boundaryBox.bottom));
-            outter.add(new PointF(boundaryBox.left, boundaryBox.bottom));
+            outter.add(new PointF(boundaryBox.left - offset, boundaryBox.top - offset));
+            outter.add(new PointF(boundaryBox.right + offset, boundaryBox.top - offset));
+            outter.add(new PointF(boundaryBox.right + offset, boundaryBox.bottom + offset));
+            outter.add(new PointF(boundaryBox.left - offset, boundaryBox.bottom + offset));
 
             ArrayList<PointF> inner = new ArrayList<>();
-            inner.add(new PointF(boundaryBox.left + offsetW, boundaryBox.top + offsetH));
-            inner.add(new PointF(boundaryBox.right - offsetW, boundaryBox.top + offsetH));
-            inner.add(new PointF(boundaryBox.right - offsetW, boundaryBox.bottom - offsetH));
-            inner.add(new PointF(boundaryBox.left + offsetW, boundaryBox.bottom - offsetH));
+            inner.add(new PointF(boundaryBox.left + offset, boundaryBox.top + offset));
+            inner.add(new PointF(boundaryBox.right - offset, boundaryBox.top + offset));
+            inner.add(new PointF(boundaryBox.right - offset, boundaryBox.bottom - offset));
+            inner.add(new PointF(boundaryBox.left + offset, boundaryBox.bottom - offset));
 
             return Utillity.isInside(new PointF(x, y), outter) && !Utillity.isInside(new PointF(x, y), inner);
         }

@@ -185,8 +185,12 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
                 this.gestureType = GestureType.EDIT;
                 break;
             case LINE:
+                this.drawTool = new DrawToolLine(this);
+                this.gestureType = GestureType.EDIT;
                 break;
             case RECTANGLE:
+                this.drawTool = new DrawToolRectangle(this);
+                this.gestureType = GestureType.EDIT;
                 break;
             case ELLIPSE:
                 this.drawTool = new DrawToolEllipse(this);
