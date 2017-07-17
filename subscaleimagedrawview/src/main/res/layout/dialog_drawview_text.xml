@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/shape_darkblue_outline_white_solid_noround">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="14dp"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#24303E"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:text="텍스트"/>
+
+        <RadioGroup
+            android:id="@+id/group_freetext_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:layout_gravity="center_horizontal">
+
+            <RadioButton
+                android:id="@+id/btn_freetext_size1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/button_text_size1"/>
+
+            <RadioButton
+                android:id="@+id/btn_freetext_size2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/button_text_size2"
+                android:layout_marginStart="13dp"/>
+
+            <RadioButton
+                android:id="@+id/btn_freetext_size3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/button_text_size3"
+                android:layout_marginStart="13dp"/>
+
+            <RadioButton
+                android:id="@+id/btn_freetext_size4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/button_text_size4"
+                android:layout_marginStart="13dp"/>
+
+            <RadioButton
+                android:id="@+id/btn_freetext_size5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/button_text_size5"
+                android:layout_marginStart="13dp"/>
+
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/contents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginTop="14dp"
+            android:layout_gravity="center_horizontal"
+            android:textColorHint="#9FA0A0"
+            android:textColor="#000000"
+            android:textSize="16dp"
+            android:hint="Text를 입력하세요."
+            android:maxLines="1"
+            android:background="@drawable/shape_grey_outline_transparency_solid_noround"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="14dp"
+        android:background="#24303E"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="1dp"
+        android:paddingEnd="1dp">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="취소"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:textColor="@drawable/color_lightblue_white"
+            android:background="@drawable/shape_grey_outline_transparency_solid_noround"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#24303E"/>
+
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="확인"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:textColor="@drawable/color_white_lightblue"
+            android:background="@drawable/button_lightblue_white_solid_noround"/>
+
+    </LinearLayout>
+
+</LinearLayout>
