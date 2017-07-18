@@ -9,11 +9,9 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
-import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 /**
@@ -22,8 +20,8 @@ import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 public class DrawViewInk extends BaseDrawView {
 
-    public DrawViewInk(@NonNull ImageDrawView imageDrawView, @Nullable NewDrawViewListener newDrawViewListener) {
-        super(DrawViewType.INK, imageDrawView, newDrawViewListener);
+    public DrawViewInk(@NonNull ImageDrawView imageDrawView) {
+        super(DrawViewType.INK, imageDrawView);
     }
 
     @Override

@@ -25,13 +25,14 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import kr.co.aroad.subscaleimagedrawview.drawviews.DrawViewReferenceDimension;
+import kr.co.aroad.subscaleimagedrawview.listener.AddDrawViewPhotoListener;
 import kr.co.aroad.subscaleimagedrawview.listener.GestureListener;
 import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
 import kr.co.aroad.subscaleimagedrawview.drawtools.*;
+import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 
 /**
  * Created by crazy on 2017-07-11.
@@ -43,6 +44,11 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     private BaseDrawTool drawTool = null;
     private Map<String, BaseDrawView> drawViewMap = new HashMap<>();
     private boolean isEditedDrawView = false;
+
+    // Listener New DrawView
+    private NewDrawViewListener newDrawViewListener;
+    // Listener Add Photo
+    private AddDrawViewPhotoListener addDrawViewPhotoListener;
 
     public ImageDrawView(Context context, AttributeSet attr) {
         super(context, attr);
@@ -162,6 +168,8 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
                 this.gestureType = GestureType.VIEW;
                 break;
             case PHOTO:
+                this.drawTool = new DrawToolPhoto(this);
+                this.gestureType = GestureType.EDIT;
                 break;
             case TEXT:
                 this.drawTool = new DrawToolText(this);
@@ -291,6 +299,30 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
      */
     public void setEditedDrawView(boolean editedDrawView) {
         this.isEditedDrawView = editedDrawView;
+    }
+
+    /**
+     * drawView 생성시 이벤트
+     * @return
+     */
+    public NewDrawViewListener getNewDrawViewListener() {
+        return this.newDrawViewListener;
+    }
+
+    public void setNewDrawViewListener(NewDrawViewListener newDrawViewListener) {
+        this.newDrawViewListener = newDrawViewListener;
+    }
+
+    /**
+     * 사진 추가 이벤트
+     * @return
+     */
+    public AddDrawViewPhotoListener getAddDrawViewPhotoListener() {
+        return this.addDrawViewPhotoListener;
+    }
+
+    public void setAddDrawViewPhotoListener(AddDrawViewPhotoListener addDrawViewPhotoListener) {
+        this.addDrawViewPhotoListener = addDrawViewPhotoListener;
     }
 
     /**

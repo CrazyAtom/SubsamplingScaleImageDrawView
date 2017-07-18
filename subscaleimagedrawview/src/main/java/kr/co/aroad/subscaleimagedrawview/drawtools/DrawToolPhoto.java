@@ -14,11 +14,11 @@ import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
  * Created by crazy on 2017-07-11.
  */
 
-public class DrawToolText extends BaseDrawTool {
+public class DrawToolPhoto extends BaseDrawTool {
 
     private PointF base;
 
-    public DrawToolText(@NonNull ImageDrawView imageDrawView) {
+    public DrawToolPhoto(@NonNull ImageDrawView imageDrawView) {
         super(imageDrawView);
     }
 
@@ -36,6 +36,7 @@ public class DrawToolText extends BaseDrawTool {
     protected void touchEnd(int x, int y) {
         this.base = viewToSourceCoord(x, y);
         injectAnnotation();
+        checkContinueTool();
     }
 
     @Override
@@ -50,7 +51,7 @@ public class DrawToolText extends BaseDrawTool {
 
     @Override
     protected BaseDrawView createDrawView() {
-        BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView, BaseDrawView.DrawViewType.TEXT);
+        BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView, BaseDrawView.DrawViewType.PHOTO);
         drawView.addPosition(this.base);
         drawView.setColor(Utillity.getColorString(DrawViewSetting.getInstance().getColor()));
 
@@ -63,7 +64,6 @@ public class DrawToolText extends BaseDrawTool {
     private void injectAnnotation() {
         if (base != null) {
             DrawViewText drawView = (DrawViewText) createDrawView();
-            drawView.setToolControllViewListener(toolControllViewListener);
             imageDrawView.addDrawView(drawView);
             drawView.showContentsBox(imageDrawView.getContext());
         }

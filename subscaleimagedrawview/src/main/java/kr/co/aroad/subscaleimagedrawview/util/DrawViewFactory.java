@@ -13,7 +13,6 @@ import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 public class DrawViewFactory {
 
     private static DrawViewFactory instance;
-    private NewDrawViewListener newDrawViewListener;
 
     public static DrawViewFactory getInstance() {
         if (instance == null) {
@@ -22,30 +21,26 @@ public class DrawViewFactory {
         return instance;
     }
 
-    public static void setListener(@Nullable NewDrawViewListener newDrawViewListener) {
-        instance.newDrawViewListener = newDrawViewListener;
-    }
-
     public BaseDrawView create(ImageDrawView imageDrawView, BaseDrawView.DrawViewType type) {
         switch (type) {
             case INK:
-                return new DrawViewInk(imageDrawView, newDrawViewListener);
+                return new DrawViewInk(imageDrawView);
             case RECTANGLE:
-                return new DrawViewRectangle(imageDrawView, newDrawViewListener);
+                return new DrawViewRectangle(imageDrawView);
             case ELLIPSE:
-                return new DrawViewEllipse(imageDrawView, newDrawViewListener);
+                return new DrawViewEllipse(imageDrawView);
             case LINE:
-                return new DrawViewLine(imageDrawView, newDrawViewListener);
+                return new DrawViewLine(imageDrawView);
             case CLOUD:
-                return new DrawViewCloud(imageDrawView, newDrawViewListener);
+                return new DrawViewCloud(imageDrawView);
             case TEXT:
-                return new DrawViewText(imageDrawView, newDrawViewListener);
-//            case PHOTO:
-//                return new DrawViewPhoto(imageDrawView, newDrawViewListener);
+                return new DrawViewText(imageDrawView);
+            case PHOTO:
+                return new DrawViewPhoto(imageDrawView);
             case DIMENSION:
-                return new DrawViewDimension(imageDrawView, newDrawViewListener);
+                return new DrawViewDimension(imageDrawView);
             case DIMENSION_REF:
-                return new DrawViewReferenceDimension(imageDrawView, newDrawViewListener);
+                return new DrawViewReferenceDimension(imageDrawView);
             default:
                 return null;
         }

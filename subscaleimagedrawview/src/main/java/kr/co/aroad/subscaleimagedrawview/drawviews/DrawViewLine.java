@@ -7,11 +7,9 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
-import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
@@ -21,8 +19,8 @@ import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 public class DrawViewLine extends BaseDrawView {
 
-    public DrawViewLine(@NonNull ImageDrawView imageDrawView, @Nullable NewDrawViewListener newDrawViewListener) {
-        super(DrawViewType.LINE, imageDrawView, newDrawViewListener);
+    public DrawViewLine(@NonNull ImageDrawView imageDrawView) {
+        super(DrawViewType.LINE, imageDrawView);
     }
 
     @Override

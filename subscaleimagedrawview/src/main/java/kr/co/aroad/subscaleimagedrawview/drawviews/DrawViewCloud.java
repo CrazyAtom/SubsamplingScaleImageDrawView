@@ -7,11 +7,9 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
-import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
@@ -23,8 +21,8 @@ public class DrawViewCloud extends BaseDrawView {
 
     final private float INTERVAL_RATIO = 0.2f;
 
-    public DrawViewCloud(@NonNull ImageDrawView imageDrawView, @Nullable NewDrawViewListener newDrawViewListener) {
-        super(DrawViewType.CLOUD, imageDrawView, newDrawViewListener);
+    public DrawViewCloud(@NonNull ImageDrawView imageDrawView) {
+        super(DrawViewType.CLOUD, imageDrawView);
     }
 
     @Override

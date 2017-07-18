@@ -3,11 +3,9 @@ package kr.co.aroad.subscaleimagedrawview.drawviews;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
-import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
@@ -23,8 +21,8 @@ public class DrawViewReferenceDimension extends DrawViewDimension {
     DrawViewSetting.DrawViewDimensionType dimensionType = DrawViewSetting.DrawViewDimensionType.LINE;
     DrawViewSetting.DrawViewDimensionUnit dimensionUnit = DrawViewSetting.DrawViewDimensionUnit.MM;
 
-    public DrawViewReferenceDimension(@NonNull ImageDrawView imageDrawView, @Nullable NewDrawViewListener newDrawViewListener) {
-        super(imageDrawView, newDrawViewListener);
+    public DrawViewReferenceDimension(@NonNull ImageDrawView imageDrawView) {
+        super(imageDrawView);
         setType(DrawViewType.DIMENSION_REF);
     }
 

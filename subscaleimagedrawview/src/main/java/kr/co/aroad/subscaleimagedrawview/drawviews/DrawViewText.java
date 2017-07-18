@@ -10,7 +10,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -22,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import kr.co.aroad.subscaleimagedrawview.R;
-import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.listener.ToolControllViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
@@ -39,8 +37,8 @@ public class DrawViewText extends BaseDrawView {
     private Dialog dialog;
     protected ToolControllViewListener toolControllViewListener;
 
-    public DrawViewText(@NonNull ImageDrawView imageDrawView, @Nullable NewDrawViewListener newDrawViewListener) {
-        super(DrawViewType.TEXT, imageDrawView, newDrawViewListener);
+    public DrawViewText(@NonNull ImageDrawView imageDrawView) {
+        super(DrawViewType.TEXT, imageDrawView);
 
         this.textSizeMap.clear();
         this.textSizeMap.put(R.id.btn_freetext_size1, 10);

@@ -133,7 +133,6 @@ public class ImageDrawViewActivity extends AppCompatActivity implements NewDrawV
 
     private void initialise() {
         DrawViewSetting.init(getApplicationContext());
-        DrawViewFactory.getInstance().setListener(this);
 
         mDataset.clear();
         File downloadFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
