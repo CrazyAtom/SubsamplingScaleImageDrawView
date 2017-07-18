@@ -1,1 +1,1 @@
-include ':app', ':subscaleimagedrawview'
+include ':app', ':subscaleimagedrawview', ':multiphotopicker'
