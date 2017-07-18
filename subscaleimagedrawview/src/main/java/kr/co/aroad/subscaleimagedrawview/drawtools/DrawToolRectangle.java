@@ -66,10 +66,10 @@ public class DrawToolRectangle extends BaseDrawTool {
     }
 
     /**
-     * annotation을 view에 추가
+     * drawView를 view에 추가
      */
     private void injectAnnotation() {
-        BaseDrawView annotation = createDrawView();
-        imageDrawView.addDrawView(annotation);
+        BaseDrawView drawView = createDrawView();
+        imageDrawView.addDrawView(drawView);
     }
 }

@@ -59,12 +59,12 @@ public class DrawToolText extends BaseDrawTool {
     }
 
     /**
-     * annotation을 view에 추가
+     * drawView를 view에 추가
      */
     private void injectAnnotation() {
-        DrawViewText drawViewText = (DrawViewText) createDrawView();
-        drawViewText.setToolControllViewListener(toolControllViewListener);
-        imageDrawView.addDrawView(drawViewText);
-        drawViewText.showContentsBox(imageDrawView.getContext());
+        DrawViewText drawView = (DrawViewText) createDrawView();
+        drawView.setToolControllViewListener(toolControllViewListener);
+        imageDrawView.addDrawView(drawView);
+        drawView.showContentsBox(imageDrawView.getContext());
     }
 }

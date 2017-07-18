@@ -42,8 +42,10 @@ public class DrawViewFactory {
                 return new DrawViewText(imageDrawView, createDrawViewListener);
 //            case PHOTO:
 //                return new DrawViewPhoto(imageDrawView, createDrawViewListener);
-//            case DIMENSION:
-//                return new DrawViewDimension(imageDrawView, createDrawViewListener);
+            case DIMENSION:
+                return new DrawViewDimension(imageDrawView, createDrawViewListener);
+            case DIMENSION_REF:
+                return new DrawViewReferenceDimension(imageDrawView, createDrawViewListener);
             default:
                 return null;
         }

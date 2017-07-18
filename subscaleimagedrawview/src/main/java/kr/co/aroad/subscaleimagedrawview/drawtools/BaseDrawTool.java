@@ -2,6 +2,7 @@ package kr.co.aroad.subscaleimagedrawview.drawtools;
 
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
+import android.view.inputmethod.InputMethodManager;
 
 import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
 import kr.co.aroad.subscaleimagedrawview.listener.ToolControllViewListener;
@@ -131,11 +132,25 @@ public abstract class BaseDrawTool {
                 && top > 0.0f && bottom < this.imageDrawView.getHeight());
     }
 
+    /**
+     * 소프트키보드 show/hide
+     * @param show boolean
+     */
+    protected void toggleSoftInput(final boolean show) {
+        InputMethodManager manager = (InputMethodManager) imageDrawView.getContext().getSystemService(imageDrawView.getContext().INPUT_METHOD_SERVICE);
+        if (show == true) {
+            manager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        } else {
+            manager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        }
+    }
+
     public static enum DrawToolType {
         NONE,
         PHOTO,
         TEXT,
         DIMENSION,
+        DIMENSION_REF,
         CLOUD,
         INK,
         LINE,

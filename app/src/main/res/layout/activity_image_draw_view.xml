@@ -62,6 +62,12 @@
             android:text="photo"/>
 
         <CheckBox
+            android:id="@+id/dimension_ref"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="base dimension"/>
+
+        <CheckBox
             android:id="@+id/dimension"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

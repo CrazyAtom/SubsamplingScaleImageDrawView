@@ -32,6 +32,7 @@ public class ImageDrawViewActivity extends AppCompatActivity implements CreateDr
     private CheckBox checkCloud;
     private CheckBox checkText;
     private CheckBox checkPhoto;
+    private CheckBox checkBaseDimension;
     private CheckBox checkDimension;
     private CheckBox checkEraser;
 
@@ -69,6 +70,8 @@ public class ImageDrawViewActivity extends AppCompatActivity implements CreateDr
         checkText.setOnCheckedChangeListener(checkedChangeListener);
         checkPhoto = (CheckBox) findViewById(R.id.photo);
         checkPhoto.setOnCheckedChangeListener(checkedChangeListener);
+        checkBaseDimension = (CheckBox) findViewById(R.id.dimension_ref);
+        checkBaseDimension.setOnCheckedChangeListener(checkedChangeListener);
         checkDimension = (CheckBox) findViewById(R.id.dimension);
         checkDimension.setOnCheckedChangeListener(checkedChangeListener);
         checkEraser = (CheckBox) findViewById(R.id.free_eraser);
@@ -104,6 +107,8 @@ public class ImageDrawViewActivity extends AppCompatActivity implements CreateDr
                 return BaseDrawTool.DrawToolType.TEXT;
             case R.id.photo:
                 return BaseDrawTool.DrawToolType.PHOTO;
+            case R.id.dimension_ref:
+                return BaseDrawTool.DrawToolType.DIMENSION_REF;
             case R.id.dimension:
                 return BaseDrawTool.DrawToolType.DIMENSION;
             case R.id.free_eraser:
@@ -121,6 +126,7 @@ public class ImageDrawViewActivity extends AppCompatActivity implements CreateDr
         checkCloud.setChecked((id == checkCloud.getId()) && checked);
         checkText.setChecked((id == checkText.getId()) && checked);
         checkPhoto.setChecked((id == checkPhoto.getId()) && checked);
+        checkBaseDimension.setChecked((id == checkBaseDimension.getId()) && checked);
         checkDimension.setChecked((id == checkDimension.getId()) && checked);
         checkEraser.setChecked((id == checkEraser.getId()) && checked);
     }

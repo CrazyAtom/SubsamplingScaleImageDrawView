@@ -69,6 +69,10 @@ public abstract class BaseDrawView extends View {
         return this.type;
     }
 
+    public void setType(DrawViewType type) {
+        this.type = type;
+    }
+
     public String getUniqId() {
         return this.uniqId;
     }
@@ -437,6 +441,7 @@ public abstract class BaseDrawView extends View {
         PHOTO,
         TEXT,
         DIMENSION,
+        DIMENSION_REF,
         CLOUD,
         INK,
         LINE,
@@ -453,6 +458,8 @@ public abstract class BaseDrawView extends View {
                 case TEXT:
                     return isSimple ? "T" : "Text";
                 case DIMENSION:
+                    return isSimple ? "D" : "Dimension";
+                case DIMENSION_REF:
                     return isSimple ? "D" : "Dimension";
                 case CLOUD:
                     return isSimple ? "C" : "Cloud";

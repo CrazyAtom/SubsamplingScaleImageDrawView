@@ -96,26 +96,15 @@ public class DrawViewLine extends BaseDrawView {
     @Override
     public boolean isContains(float x, float y) {
         if (getPositionSize() >= 2) {
+            final PointF dirVert = Utillity.getUnitVertDirenction(getPosition(0), getPosition(1));
             ArrayList<PointF> polygon = new ArrayList<>();
-            polygon.add(Utillity.getOffset(getPosition(0), getDirVert(), (MINIMUM_LENGTH / 2)));
-            polygon.add(Utillity.getOffset(getPosition(1), getDirVert(), (MINIMUM_LENGTH / 2)));
-            polygon.add(Utillity.getOffset(getPosition(1), getDirVert(), -(MINIMUM_LENGTH / 2)));
-            polygon.add(Utillity.getOffset(getPosition(0), getDirVert(), -(MINIMUM_LENGTH / 2)));
+            polygon.add(Utillity.getOffset(getPosition(0), dirVert, (MINIMUM_LENGTH / 2)));
+            polygon.add(Utillity.getOffset(getPosition(1), dirVert, (MINIMUM_LENGTH / 2)));
+            polygon.add(Utillity.getOffset(getPosition(1), dirVert, -(MINIMUM_LENGTH / 2)));
+            polygon.add(Utillity.getOffset(getPosition(0), dirVert, -(MINIMUM_LENGTH / 2)));
             return Utillity.isInside(new PointF(x, y), polygon);
         } else {
             return super.isContains(x, y);
         }
-    }
-
-    /**
-     * 직선 방향의 수직 방향
-     * @return
-     */
-    private PointF getDirVert() {
-        PointF dir = Utillity.getUnitDirection(getPosition(0), getPosition(1));
-        if (dir.x > 0) {
-            return new PointF(dir.y, -dir.x);
-        }
-        return new PointF(-dir.y, dir.x);
     }
 }

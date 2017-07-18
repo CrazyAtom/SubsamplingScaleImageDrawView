@@ -69,13 +69,13 @@ public class DrawToolInk extends BaseDrawTool {
     }
 
     /**
-     * annotation을 view에 추가
+     * drawView를 view에 추가
      */
     private void injectAnnotation() {
-        BaseDrawView annotation = createDrawView();
+        BaseDrawView drawView = createDrawView();
         for (int i = 0; i < previewDrawView.getPositionSize(); ++i) {
-            annotation.addPosition(previewDrawView.getPosition(i));
+            drawView.addPosition(previewDrawView.getPosition(i));
         }
-        imageDrawView.addDrawView(annotation);
+        imageDrawView.addDrawView(drawView);
     }
 }

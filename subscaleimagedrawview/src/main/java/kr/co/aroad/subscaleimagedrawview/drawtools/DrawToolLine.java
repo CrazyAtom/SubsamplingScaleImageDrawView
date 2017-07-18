@@ -66,12 +66,12 @@ public class DrawToolLine extends BaseDrawTool {
     }
 
     /**
-     * annotation을 view에 추가
+     * drawView를 view에 추가
      */
     private void injectAnnotation() {
         if (this.begin != this.end) {
-            BaseDrawView annotation = createDrawView();
-            imageDrawView.addDrawView(annotation);
+            BaseDrawView drawView = createDrawView();
+            imageDrawView.addDrawView(drawView);
         }
     }
 }

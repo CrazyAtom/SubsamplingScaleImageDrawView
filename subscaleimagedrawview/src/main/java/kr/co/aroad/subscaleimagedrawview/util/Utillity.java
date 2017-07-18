@@ -54,6 +54,20 @@ public class Utillity {
     }
 
     /**
+     * 두 좌표간의 방향의 수직 방향
+     * @param pt1
+     * @param pt2
+     * @return PointF
+     */
+    public static PointF getUnitVertDirenction(final PointF pt1, final PointF pt2) {
+        PointF dir = getUnitDirection(pt1, pt2);
+        if (dir.x > 0) {
+            return new PointF(dir.y, -dir.x);
+        }
+        return new PointF(-dir.y, dir.x);
+    }
+
+    /**
      * PointF 정규화
      * @param pt
      * @return PointF

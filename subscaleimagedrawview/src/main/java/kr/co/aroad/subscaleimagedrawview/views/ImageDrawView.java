@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import kr.co.aroad.subscaleimagedrawview.drawviews.DrawViewReferenceDimension;
 import kr.co.aroad.subscaleimagedrawview.listener.GestureListener;
 import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
 import kr.co.aroad.subscaleimagedrawview.drawtools.*;
@@ -166,7 +167,15 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
                 this.drawTool = new DrawToolText(this);
                 this.gestureType = GestureType.EDIT;
                 break;
+            case DIMENSION_REF:
+                this.drawTool = new DrawToolDimension(this);
+                ((DrawToolDimension) drawTool).setReferenceDrawMode(true);
+                this.gestureType = GestureType.EDIT;
+                break;
             case DIMENSION:
+                this.drawTool = new DrawToolDimension(this);
+                ((DrawToolDimension) drawTool).setReferenceDrawMode(false);
+                this.gestureType = GestureType.EDIT;
                 break;
             case CLOUD:
                 this.drawTool = new DrawToolCloud(this);
@@ -292,5 +301,18 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     public static enum GestureType {
         VIEW,
         EDIT
+    }
+
+    /**
+     * view에 설정된 기준 치수선
+     * @return
+     */
+    public DrawViewReferenceDimension getReferenceDimension() {
+        for (String key : drawViewMap.keySet()) {
+            if (drawViewMap.get(key) instanceof DrawViewReferenceDimension) {
+                return (DrawViewReferenceDimension) drawViewMap.get(key);
+            }
+        }
+        return null;
     }
 }
