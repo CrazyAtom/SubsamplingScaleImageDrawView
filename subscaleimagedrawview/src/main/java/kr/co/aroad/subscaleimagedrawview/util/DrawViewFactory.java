@@ -3,7 +3,7 @@ package kr.co.aroad.subscaleimagedrawview.util;
 import android.support.annotation.Nullable;
 
 import kr.co.aroad.subscaleimagedrawview.drawviews.*;
-import kr.co.aroad.subscaleimagedrawview.listener.CreateDrawViewListener;
+import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 /**
@@ -13,7 +13,7 @@ import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 public class DrawViewFactory {
 
     private static DrawViewFactory instance;
-    private CreateDrawViewListener createDrawViewListener;
+    private NewDrawViewListener newDrawViewListener;
 
     public static DrawViewFactory getInstance() {
         if (instance == null) {
@@ -22,30 +22,30 @@ public class DrawViewFactory {
         return instance;
     }
 
-    public static void setListener(@Nullable CreateDrawViewListener createDrawViewListener) {
-        instance.createDrawViewListener = createDrawViewListener;
+    public static void setListener(@Nullable NewDrawViewListener newDrawViewListener) {
+        instance.newDrawViewListener = newDrawViewListener;
     }
 
     public BaseDrawView create(ImageDrawView imageDrawView, BaseDrawView.DrawViewType type) {
         switch (type) {
             case INK:
-                return new DrawViewInk(imageDrawView, createDrawViewListener);
+                return new DrawViewInk(imageDrawView, newDrawViewListener);
             case RECTANGLE:
-                return new DrawViewRectangle(imageDrawView, createDrawViewListener);
+                return new DrawViewRectangle(imageDrawView, newDrawViewListener);
             case ELLIPSE:
-                return new DrawViewEllipse(imageDrawView, createDrawViewListener);
+                return new DrawViewEllipse(imageDrawView, newDrawViewListener);
             case LINE:
-                return new DrawViewLine(imageDrawView, createDrawViewListener);
+                return new DrawViewLine(imageDrawView, newDrawViewListener);
             case CLOUD:
-                return new DrawViewCloud(imageDrawView, createDrawViewListener);
+                return new DrawViewCloud(imageDrawView, newDrawViewListener);
             case TEXT:
-                return new DrawViewText(imageDrawView, createDrawViewListener);
+                return new DrawViewText(imageDrawView, newDrawViewListener);
 //            case PHOTO:
-//                return new DrawViewPhoto(imageDrawView, createDrawViewListener);
+//                return new DrawViewPhoto(imageDrawView, newDrawViewListener);
             case DIMENSION:
-                return new DrawViewDimension(imageDrawView, createDrawViewListener);
+                return new DrawViewDimension(imageDrawView, newDrawViewListener);
             case DIMENSION_REF:
-                return new DrawViewReferenceDimension(imageDrawView, createDrawViewListener);
+                return new DrawViewReferenceDimension(imageDrawView, newDrawViewListener);
             default:
                 return null;
         }

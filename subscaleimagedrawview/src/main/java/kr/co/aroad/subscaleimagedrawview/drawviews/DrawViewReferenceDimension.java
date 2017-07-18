@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
-import kr.co.aroad.subscaleimagedrawview.listener.CreateDrawViewListener;
+import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
@@ -23,8 +23,8 @@ public class DrawViewReferenceDimension extends DrawViewDimension {
     DrawViewSetting.DrawViewDimensionType dimensionType = DrawViewSetting.DrawViewDimensionType.LINE;
     DrawViewSetting.DrawViewDimensionUnit dimensionUnit = DrawViewSetting.DrawViewDimensionUnit.MM;
 
-    public DrawViewReferenceDimension(@NonNull ImageDrawView imageDrawView, @Nullable CreateDrawViewListener createDrawViewListener) {
-        super(imageDrawView, createDrawViewListener);
+    public DrawViewReferenceDimension(@NonNull ImageDrawView imageDrawView, @Nullable NewDrawViewListener newDrawViewListener) {
+        super(imageDrawView, newDrawViewListener);
         setType(DrawViewType.DIMENSION_REF);
     }
 

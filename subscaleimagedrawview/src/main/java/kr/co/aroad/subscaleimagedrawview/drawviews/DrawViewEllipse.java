@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
-import kr.co.aroad.subscaleimagedrawview.listener.CreateDrawViewListener;
+import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
@@ -21,8 +21,8 @@ import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 public class DrawViewEllipse extends BaseDrawView {
 
-    public DrawViewEllipse(@NonNull ImageDrawView imageDrawView, @Nullable CreateDrawViewListener createDrawViewListener) {
-        super(DrawViewType.ELLIPSE, imageDrawView, createDrawViewListener);
+    public DrawViewEllipse(@NonNull ImageDrawView imageDrawView, @Nullable NewDrawViewListener newDrawViewListener) {
+        super(DrawViewType.ELLIPSE, imageDrawView, newDrawViewListener);
     }
 
     @Override

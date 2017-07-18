@@ -13,7 +13,7 @@ import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
-import kr.co.aroad.subscaleimagedrawview.listener.CreateDrawViewListener;
+import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 /**
@@ -22,8 +22,8 @@ import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 public class DrawViewInk extends BaseDrawView {
 
-    public DrawViewInk(@NonNull ImageDrawView imageDrawView, @Nullable CreateDrawViewListener createDrawViewListener) {
-        super(DrawViewType.INK, imageDrawView, createDrawViewListener);
+    public DrawViewInk(@NonNull ImageDrawView imageDrawView, @Nullable NewDrawViewListener newDrawViewListener) {
+        super(DrawViewType.INK, imageDrawView, newDrawViewListener);
     }
 
     @Override

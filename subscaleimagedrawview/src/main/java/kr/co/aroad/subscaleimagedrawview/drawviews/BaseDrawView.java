@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import kr.co.aroad.subscaleimagedrawview.listener.CreateDrawViewListener;
+import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
@@ -45,15 +45,15 @@ public abstract class BaseDrawView extends View {
     private boolean isEditable = false;
 
 
-    public BaseDrawView(DrawViewType type, @NonNull ImageDrawView imageDrawView, @Nullable CreateDrawViewListener createDrawViewListener) {
+    public BaseDrawView(DrawViewType type, @NonNull ImageDrawView imageDrawView, @Nullable NewDrawViewListener newDrawViewListener) {
         super(imageDrawView.getContext());
         this.type = type;
         this.imageDrawView = imageDrawView;
 
         this.type = type;
         this.imageDrawView = imageDrawView;
-        if (createDrawViewListener != null) {
-            setUniqId(createDrawViewListener.newUUID());
+        if (newDrawViewListener != null) {
+            setUniqId(newDrawViewListener.newUUID());
         } else {
             setUniqId(Utillity.getUUID());
         }

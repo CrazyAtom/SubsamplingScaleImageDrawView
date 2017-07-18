@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import kr.co.aroad.subscaleimagedrawview.R;
-import kr.co.aroad.subscaleimagedrawview.listener.CreateDrawViewListener;
+import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.listener.ToolControllViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
@@ -39,8 +39,8 @@ public class DrawViewText extends BaseDrawView {
     private Dialog dialog;
     protected ToolControllViewListener toolControllViewListener;
 
-    public DrawViewText(@NonNull ImageDrawView imageDrawView, @Nullable CreateDrawViewListener createDrawViewListener) {
-        super(DrawViewType.TEXT, imageDrawView, createDrawViewListener);
+    public DrawViewText(@NonNull ImageDrawView imageDrawView, @Nullable NewDrawViewListener newDrawViewListener) {
+        super(DrawViewType.TEXT, imageDrawView, newDrawViewListener);
 
         this.textSizeMap.clear();
         this.textSizeMap.put(R.id.btn_freetext_size1, 10);

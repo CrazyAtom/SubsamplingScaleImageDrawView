@@ -12,7 +12,7 @@ import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
-import kr.co.aroad.subscaleimagedrawview.listener.CreateDrawViewListener;
+import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
@@ -27,8 +27,8 @@ public class DrawViewDimension extends BaseDrawView {
     public enum state { PREVIEW_BEGIN, PREVIEW_END, COMPLETE }
     private state currentState = DrawViewDimension.state.COMPLETE;
 
-    public DrawViewDimension(@NonNull ImageDrawView imageDrawView, @Nullable CreateDrawViewListener createDrawViewListener) {
-        super(DrawViewType.DIMENSION, imageDrawView, createDrawViewListener);
+    public DrawViewDimension(@NonNull ImageDrawView imageDrawView, @Nullable NewDrawViewListener newDrawViewListener) {
+        super(DrawViewType.DIMENSION, imageDrawView, newDrawViewListener);
         color = Utillity.getColorString(Color.RED);
     }
 

@@ -13,13 +13,13 @@ import java.io.FileFilter;
 import java.util.ArrayList;
 
 import kr.co.aroad.subscaleimagedrawview.drawtools.BaseDrawTool;
-import kr.co.aroad.subscaleimagedrawview.listener.CreateDrawViewListener;
+import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewFactory;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
-public class ImageDrawViewActivity extends AppCompatActivity implements CreateDrawViewListener {
+public class ImageDrawViewActivity extends AppCompatActivity implements NewDrawViewListener {
 
     private ImageDrawViewPager mPager;
     private ImageDrawViewPagerAdapter mAdapter;
