@@ -17,9 +17,12 @@ limitations under the License.
 package kr.co.aroad.subscaleimagedrawview.views;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,6 +32,7 @@ import java.util.Map;
 
 import kr.co.aroad.subscaleimagedrawview.drawviews.DrawViewReferenceDimension;
 import kr.co.aroad.subscaleimagedrawview.listener.AddDrawViewPhotoListener;
+import kr.co.aroad.subscaleimagedrawview.listener.CompleteCallback;
 import kr.co.aroad.subscaleimagedrawview.listener.GestureListener;
 import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
 import kr.co.aroad.subscaleimagedrawview.drawtools.*;
@@ -227,19 +231,19 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
     @Override
     public void onLongPress(@NonNull MotionEvent event) {
-        int x = (int)event.getX();
-        int y = (int)event.getY();
+        final int x = (int)event.getX();
+        final int y = (int)event.getY();
 
-        // VIEW 상태에서 drawView 위치에 터치 하면 편집 tool로 변경하고 longPress
-        if (this.gestureType == GestureType.VIEW) {
-            BaseDrawView selectedAnnotation = getSelectedDrawView(new PointF(x, y));
-            if (selectedAnnotation != null) {
-                changeTool(BaseDrawTool.DrawToolType.TRANSFORM);
-                ((DrawToolTransform) this.drawTool).setSelectedDrawView(selectedAnnotation);
-                this.drawTool.longPress(x, y);
-            }
-            // EDIT 상태에서는 tool의 longPress
+        if (gestureType == GestureType.VIEW) {
+            // VIEW 상태에서 drawView 위치에 터치 하면 편집 tool로 변경하고 longPress
+            selectDrawViewProcess(x, y, new CompleteCallback() {
+                @Override
+                public void complete(Intent intent) {
+                    drawTool.longPress(x, y);
+                }
+            });
         } else {
+            // EDIT 상태에서는 tool의 longPress
             if (this.drawTool != null) {
                 this.drawTool.longPress(x, y);
             }
@@ -248,21 +252,65 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
     @Override
     public void onSingleTabUp(@NonNull MotionEvent event) {
-        int x = (int)event.getX();
-        int y = (int)event.getY();
+        final int x = (int)event.getX();
+        final int y = (int)event.getY();
 
-        // VIEW 상태에서 drawView 위치에 터치 하면 편집 tool로 변경하고 singleTapUp
-        if (this.gestureType == GestureType.VIEW) {
-            BaseDrawView selectedAnnotation = getSelectedDrawView(new PointF(x, y));
-            if (selectedAnnotation != null) {
-                changeTool(BaseDrawTool.DrawToolType.TRANSFORM);
-                ((DrawToolTransform) this.drawTool).setSelectedDrawView(selectedAnnotation);
-                this.drawTool.singleTapUp(x, y);
-            }
-        // EDIT 상태에서는 tool의 singleTapUp
+        if (gestureType == GestureType.VIEW) {
+            // VIEW 상태에서 drawView 위치에 터치 하면 편집 tool로 변경하고 singleTapUp
+            selectDrawViewProcess(x, y, new CompleteCallback() {
+                @Override
+                public void complete(Intent intent) {
+                    drawTool.singleTapUp(x, y);
+                }
+            });
         } else {
+            // EDIT 상태에서는 tool의 singleTapUp
             if (this.drawTool != null) {
                 this.drawTool.singleTapUp(x, y);
+            }
+        }
+    }
+
+    /**
+     * 터치 위치에 선택 가능한 drawView 선택
+     * 선택 가능한 drawView가 다수일 경우 리스트를 출력하는 다이얼로그 팝업
+     * @param x
+     * @param y
+     * @param callback
+     */
+    private void selectDrawViewProcess(final int x, final int y, final CompleteCallback callback) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                getContext());
+
+        final DrawViewArrayAdapter adapter = new DrawViewArrayAdapter(getContext(),
+                android.R.layout.select_dialog_item);
+
+        PointF sc = viewToSourceCoord(x, y);
+        for (String key : this.drawViewMap.keySet()) {
+            if (this.drawViewMap.get(key).isContains(sc.x, sc.y) == true) {
+                adapter.add(this.drawViewMap.get(key));
+            }
+        }
+
+        if (adapter.getCount() > 0) {
+            if (adapter.getCount() == 1) {
+                changeTool(BaseDrawTool.DrawToolType.TRANSFORM);
+                ((DrawToolTransform) drawTool).setSelectedDrawView(adapter.getItem(0));
+                if (callback != null) {
+                    callback.complete(null);
+                }
+            } else {
+                builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        changeTool(BaseDrawTool.DrawToolType.TRANSFORM);
+                        ((DrawToolTransform) drawTool).setSelectedDrawView(adapter.getItem(i));
+                        if (callback != null) {
+                            callback.complete(null);
+                        }
+                    }
+                });
+                builder.show();
             }
         }
     }
