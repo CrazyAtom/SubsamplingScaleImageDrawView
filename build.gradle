@@ -21,3 +21,17 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext {
+    license = [
+            id  : 'Apache',
+            name: 'Apache License Version 2.0',
+            url : 'http://www.apache.org/licenses'
+    ]
+
+    androidCompileSdkVersion = 25
+    androidBuildToolsVersion = '25.0.0'
+    minSdkVersion = 21
+    targetSdkVersion = 25
+    glideVersion = '3.8.0'
+}

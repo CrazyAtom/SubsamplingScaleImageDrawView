@@ -63,9 +63,11 @@ public class DrawToolPhoto extends BaseDrawTool {
      */
     private void injectAnnotation() {
         if (base != null) {
-            DrawViewText drawView = (DrawViewText) createDrawView();
-            imageDrawView.addDrawView(drawView);
-            drawView.showContentsBox(imageDrawView.getContext());
+            BaseDrawView drawView = createDrawView();
+            if (drawView != null) {
+                imageDrawView.addDrawView(drawView);
+                drawView.showContentsBox(imageDrawView.getContext());
+            }
         }
     }
 }

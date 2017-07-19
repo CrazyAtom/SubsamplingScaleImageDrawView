@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.view.inputmethod.InputMethodManager;
 
 import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
+import kr.co.aroad.subscaleimagedrawview.listener.ShowSnackbarListener;
 import kr.co.aroad.subscaleimagedrawview.listener.ToolControllViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
@@ -19,6 +20,7 @@ public abstract class BaseDrawTool {
     protected BaseDrawView previewDrawView;
     private boolean isBeginEdited = false;
     protected ToolControllViewListener toolControllViewListener;
+    protected ShowSnackbarListener showSnackbarListener;
 
     public BaseDrawTool(@NonNull ImageDrawView imageDrawView) {
         this.imageDrawView = imageDrawView;
@@ -108,11 +110,16 @@ public abstract class BaseDrawTool {
         this.toolControllViewListener = toolControllViewListener;
     }
 
+    public void setShowSnackbarListener(ShowSnackbarListener showSnackbarListener) {
+        this.showSnackbarListener = showSnackbarListener;
+    }
+
     /**
      * tool을 연속으로 수행할지 여부 확인하여 연속 수행이 아니면 tool 해제
      */
     public void checkContinueTool() {
         if (DrawViewSetting.getInstance().isContinuous() == false) {
+            imageDrawView.changeTool(DrawToolType.NONE);
             if (toolControllViewListener != null) {
                 toolControllViewListener.changeDefaultTool();
             }

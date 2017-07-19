@@ -16,9 +16,7 @@ import java.util.Map;
 
 import kr.co.aroad.subscaleimagedrawview.R;
 import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
-import kr.co.aroad.subscaleimagedrawview.listener.ShowSnackbarListener;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewFactory;
-import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
@@ -36,15 +34,10 @@ public class DrawToolFreeEraser extends BaseDrawTool {
     private Button btnSelectAll;
     private Button btnSelectedDelete;
     private boolean stateSelectedAll = false;
-    private ShowSnackbarListener showSnackbarListener;
 
     public DrawToolFreeEraser(@NonNull ImageDrawView imageDrawView) {
         super(imageDrawView);
         makeToolSnackbar();
-    }
-
-    public void setShowSnackbarListener(ShowSnackbarListener showSnackbarListener) {
-        this.showSnackbarListener = showSnackbarListener;
     }
 
     @Override

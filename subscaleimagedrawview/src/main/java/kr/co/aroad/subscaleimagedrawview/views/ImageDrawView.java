@@ -33,6 +33,7 @@ import kr.co.aroad.subscaleimagedrawview.listener.GestureListener;
 import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
 import kr.co.aroad.subscaleimagedrawview.drawtools.*;
 import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
+import kr.co.aroad.subscaleimagedrawview.listener.ShowSnackbarListener;
 
 /**
  * Created by crazy on 2017-07-11.
@@ -40,15 +41,19 @@ import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 
 public class ImageDrawView extends SubsamplingScaleImageView implements View.OnTouchListener, GestureListener {
 
+    private static final String TAG = ImageDrawView.class.getSimpleName();
+
     private ImageDrawView.GestureType gestureType = GestureType.VIEW;
     private BaseDrawTool drawTool = null;
     private Map<String, BaseDrawView> drawViewMap = new HashMap<>();
     private boolean isEditedDrawView = false;
 
-    // Listener New DrawView
+    // Listener New DrawView Event
     private NewDrawViewListener newDrawViewListener;
-    // Listener Add Photo
+    // Listener Add Photo Event
     private AddDrawViewPhotoListener addDrawViewPhotoListener;
+    // Listener Show Snackbar Event
+    private ShowSnackbarListener showSnackbarListener;
 
     public ImageDrawView(Context context, AttributeSet attr) {
         super(context, attr);
@@ -323,6 +328,18 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
     public void setAddDrawViewPhotoListener(AddDrawViewPhotoListener addDrawViewPhotoListener) {
         this.addDrawViewPhotoListener = addDrawViewPhotoListener;
+    }
+
+    /**
+     * Snackbar 이벤트
+     * @return
+     */
+    public ShowSnackbarListener getShowSnackbarListener() {
+        return showSnackbarListener;
+    }
+
+    public void setShowSnackbarListener(ShowSnackbarListener showSnackbarListener) {
+        this.showSnackbarListener = showSnackbarListener;
     }
 
     /**

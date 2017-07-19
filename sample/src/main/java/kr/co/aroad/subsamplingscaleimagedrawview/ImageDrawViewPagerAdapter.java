@@ -96,8 +96,10 @@ public class ImageDrawViewPagerAdapter extends PagerAdapter {
         final ImageInfo imageInfo = mDataset.get(position);
         if (imageInfo != null) {
             final ImageDrawView imageDrawView = getImageView(position);
-            imageDrawView.setImage(ImageSource.uri(imageInfo.path).dimensions(imageInfo.getWidth(), imageInfo.getHeight()),
-                    ImageSource.uri(imageInfo.preview_path));
+//            imageDrawView.setImage(
+//                    ImageSource.uri(imageInfo.path).dimensions(imageInfo.getWidth(), imageInfo.getHeight()).tiling(false),
+//                    ImageSource.uri(imageInfo.preview_path));
+            imageDrawView.setImage(ImageSource.uri(imageInfo.path).tiling(false));
         }
     }
 }

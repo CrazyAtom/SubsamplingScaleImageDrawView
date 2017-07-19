@@ -35,7 +35,6 @@ public class DrawViewText extends BaseDrawView {
     private String content = "";
     private int textSizeKey = R.id.btn_freetext_size2;
     private Dialog dialog;
-    protected ToolControllViewListener toolControllViewListener;
 
     public DrawViewText(@NonNull ImageDrawView imageDrawView) {
         super(DrawViewType.TEXT, imageDrawView);
@@ -188,14 +187,6 @@ public class DrawViewText extends BaseDrawView {
         }
         toggleSoftInput(false);
 
-        if (DrawViewSetting.getInstance().isContinuous() == false) {
-            if (toolControllViewListener != null) {
-                toolControllViewListener.changeDefaultTool();
-            }
-        }
-    }
-
-    public void setToolControllViewListener(ToolControllViewListener toolControllViewListener) {
-        this.toolControllViewListener = toolControllViewListener;
+        checkContinueTool();
     }
 }

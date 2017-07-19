@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import kr.co.aroad.subscaleimagedrawview.drawtools.BaseDrawTool;
+import kr.co.aroad.subscaleimagedrawview.listener.ToolControllViewListener;
+import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
@@ -41,6 +44,8 @@ public abstract class BaseDrawView extends View {
 
     private boolean isPreview = false;
     private boolean isEditable = false;
+
+    protected ToolControllViewListener toolControllViewListener;
 
 
     public BaseDrawView(DrawViewType type, @NonNull ImageDrawView imageDrawView) {
@@ -138,6 +143,10 @@ public abstract class BaseDrawView extends View {
 
     public void setBoundaryBox(RectF box) {
         this.boundaryBox = box;
+    }
+
+    public void setToolControllViewListener(ToolControllViewListener toolControllViewListener) {
+        this.toolControllViewListener = toolControllViewListener;
     }
 
     /**
@@ -429,6 +438,18 @@ public abstract class BaseDrawView extends View {
             manager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         } else {
             manager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        }
+    }
+
+    /**
+     * tool을 연속으로 수행할지 여부 확인하여 연속 수행이 아니면 tool 해제
+     */
+    public void checkContinueTool() {
+        if (DrawViewSetting.getInstance().isContinuous() == false) {
+            imageDrawView.changeTool(BaseDrawTool.DrawToolType.NONE);
+            if (toolControllViewListener != null) {
+                toolControllViewListener.changeDefaultTool();
+            }
         }
     }
 
