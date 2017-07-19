@@ -48,7 +48,7 @@ public class Utillity {
         PointF dir = new PointF(pt2.x - pt1.x, pt2.y - pt1.y);
         if (dir.length() == 0) {
             dir.x = 1;
-            dir.y = 0;
+            dir.y = 1;
         }
         return getNormalize(dir);
     }

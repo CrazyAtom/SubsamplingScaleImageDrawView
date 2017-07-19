@@ -44,6 +44,10 @@ public class DrawViewEllipse extends BaseDrawView {
     @Override
     protected void onDraw(Canvas canvas) {
         if (getPositionSize() >= 2) {
+            if (getRect(false).width() <= MINIMUM_LENGTH && getRect(false).height() <= MINIMUM_LENGTH) {
+                PointF dir = Utillity.getUnitDirection(getPosition(0), getPosition(1));
+                setPosition(1, Utillity.getOffset(getPosition(0), dir, MINIMUM_LENGTH));
+            }
             loadPaint();
             setBoundaryBox();
 

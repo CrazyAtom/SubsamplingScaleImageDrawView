@@ -22,6 +22,7 @@ import java.util.Map;
 
 import kr.co.aroad.subscaleimagedrawview.R;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
+import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 /**
@@ -39,11 +40,11 @@ public class DrawViewText extends BaseDrawView {
         super(DrawViewType.TEXT, imageDrawView);
 
         this.textSizeMap.clear();
-        this.textSizeMap.put(R.id.btn_freetext_size1, 10);
-        this.textSizeMap.put(R.id.btn_freetext_size2, 20);
-        this.textSizeMap.put(R.id.btn_freetext_size3, 30);
-        this.textSizeMap.put(R.id.btn_freetext_size4, 40);
-        this.textSizeMap.put(R.id.btn_freetext_size5, 50);
+        this.textSizeMap.put(R.id.btn_freetext_size1, 20);
+        this.textSizeMap.put(R.id.btn_freetext_size2, 40);
+        this.textSizeMap.put(R.id.btn_freetext_size3, 60);
+        this.textSizeMap.put(R.id.btn_freetext_size4, 80);
+        this.textSizeMap.put(R.id.btn_freetext_size5, 100);
     }
 
     @Override
@@ -105,12 +106,30 @@ public class DrawViewText extends BaseDrawView {
 
     @Override
     public boolean isContains(float x, float y) {
+        if (boundaryBox.width() < MINIMUM_LENGTH) {
+            final float offset = MINIMUM_LENGTH / 2;
+            ArrayList<PointF> boundary = new ArrayList<>();
+            boundary.add(new PointF(boundaryBox.left + offset, boundaryBox.top + offset));
+            boundary.add(new PointF(boundaryBox.right - offset, boundaryBox.top + offset));
+            boundary.add(new PointF(boundaryBox.right - offset, boundaryBox.bottom - offset));
+            boundary.add(new PointF(boundaryBox.left + offset, boundaryBox.bottom - offset));
+            return Utillity.isInside(new PointF(x, y), boundary);
+        }
         return super.isContains(x, y);
     }
 
     @Override
     public int getThick() {
         return this.textSizeMap.get(textSizeKey);
+    }
+
+    @Override
+    public void setThick(int thick) {
+        for (int key : textSizeMap.keySet()) {
+            if (textSizeMap.get(key) == thick) {
+                textSizeKey = key;
+            }
+        }
     }
 
     public String getContent() {

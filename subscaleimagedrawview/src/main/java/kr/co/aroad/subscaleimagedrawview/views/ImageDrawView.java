@@ -81,7 +81,15 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
         if (this.drawTool != null && this.gestureType == GestureType.EDIT) {
-            return drawViewTouchEvent(event);
+            if (event.getPointerCount() >= 2) {
+                if (drawTool.getToolControllViewListener() != null) {
+                    drawTool.getToolControllViewListener().changeDefaultTool();
+                }
+                changeTool(BaseDrawTool.DrawToolType.NONE);
+                return super.onTouchEvent(event);
+            } else {
+                return drawViewTouchEvent(event);
+            }
         } else {
             return super.onTouchEvent(event);
         }

@@ -110,8 +110,16 @@ public abstract class BaseDrawTool {
         this.toolControllViewListener = toolControllViewListener;
     }
 
+    public ToolControllViewListener getToolControllViewListener() {
+        return toolControllViewListener;
+    }
+
     public void setShowSnackbarListener(ShowSnackbarListener showSnackbarListener) {
         this.showSnackbarListener = showSnackbarListener;
+    }
+
+    public ShowSnackbarListener getShowSnackbarListener() {
+        return showSnackbarListener;
     }
 
     /**

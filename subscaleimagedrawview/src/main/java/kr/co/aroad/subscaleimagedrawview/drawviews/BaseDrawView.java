@@ -27,7 +27,7 @@ import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 public abstract class BaseDrawView extends View {
 
-    public static final float MINIMUM_LENGTH = 30.0f;
+    public static final float MINIMUM_LENGTH = 100.0f;
 
     private DrawViewType type;
     private String uniqId;
@@ -47,7 +47,6 @@ public abstract class BaseDrawView extends View {
 
     protected ToolControllViewListener toolControllViewListener;
 
-
     public BaseDrawView(DrawViewType type, @NonNull ImageDrawView imageDrawView) {
         super(imageDrawView.getContext());
         this.type = type;
@@ -60,8 +59,9 @@ public abstract class BaseDrawView extends View {
         } else {
             setUniqId(Utillity.getUUID());
         }
-        setThick(4);
-        setColor(Utillity.getColorString(Color.BLACK));
+
+        this.thick = 4;
+        color = Utillity.getColorString(Color.BLACK);
     }
 
     protected void initPosition() {
