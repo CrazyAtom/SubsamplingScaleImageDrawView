@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import kr.co.aroad.subscaleimagedrawview.R;
-import kr.co.aroad.subscaleimagedrawview.listener.ToolControllViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
