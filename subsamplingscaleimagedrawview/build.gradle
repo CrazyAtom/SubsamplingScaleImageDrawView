@@ -1,4 +1,16 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+publish {
+    userOrg = 'crazyatom'
+    groupId = 'com.github.crazyatom'
+    artifactId = 'subsampling-scale-image-draw-view'
+    publishVersion = '1.0.0'
+    desc = 'Android Subsampling Scale Image Draw View'
+    website = 'https://github.com/CrazyAtom/SubsamplingScaleImageDrawView'
+    issueTracker = "https://github.com/CrazyAtom/SubsamplingScaleImageDrawView/issues"
+    repository = "https://github.com/CrazyAtom/SubsamplingScaleImageDrawView.git"
+}
 
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
@@ -31,3 +43,4 @@ dependencies {
     compile 'com.jaredrummler:material-spinner:1.1.0'
     testCompile 'junit:junit:4.12'
 }
+

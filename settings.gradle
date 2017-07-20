@@ -1,1 +1,1 @@
-include ':sample', ':subscaleimagedrawview'
+include ':sample', ':subsamplingscaleimagedrawview'

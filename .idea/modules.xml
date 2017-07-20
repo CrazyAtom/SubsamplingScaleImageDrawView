@@ -3,8 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SubsamplingScaleImageDrawView.iml" filepath="$PROJECT_DIR$/SubsamplingScaleImageDrawView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SubsamplingScaleImageDrawView.iml" filepath="$PROJECT_DIR$/SubsamplingScaleImageDrawView.iml" />
       <module fileurl="file://$PROJECT_DIR$/multiphotopicker/multiphotopicker.iml" filepath="$PROJECT_DIR$/multiphotopicker/multiphotopicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/subsamplingscaleimagedrawview/subsamplingscaleimagedrawview.iml" filepath="$PROJECT_DIR$/subsamplingscaleimagedrawview/subsamplingscaleimagedrawview.iml" />
       <module fileurl="file://$PROJECT_DIR$/subscaleimagedrawview/subscaleimagedrawview.iml" filepath="$PROJECT_DIR$/subscaleimagedrawview/subscaleimagedrawview.iml" />
     </modules>
   </component>
