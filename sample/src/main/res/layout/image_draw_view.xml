@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <kr.co.aroad.subscaleimagedrawview.views.ImageDrawView
+    <com.github.crazyatom.subscaleimagedrawview.views.ImageDrawView
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
