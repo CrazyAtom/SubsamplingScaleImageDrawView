@@ -76,6 +76,11 @@ public class DrawViewText extends BaseDrawView {
     }
 
     @Override
+    public String getName(boolean isSimple) {
+        return isSimple ? "T" : getResources().getString(R.string.text);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         if (getPositionSize() >= 1) {
             loadPaint();

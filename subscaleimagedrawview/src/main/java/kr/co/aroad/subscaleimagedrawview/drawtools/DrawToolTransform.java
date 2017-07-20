@@ -106,7 +106,8 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
             if (isInsideView(x, y, x, y) == true) {
                 this.editPinView.setMovePin(new PointF(sCoord.x, sCoord.y));
                 this.editPinView.invalidate();
-                if (selectedDrawView.getType() == BaseDrawView.DrawViewType.DIMENSION
+                if (selectedDrawView.getType() == BaseDrawView.DrawViewType.DIMENSION_REF
+                        || selectedDrawView.getType() == BaseDrawView.DrawViewType.DIMENSION
                         || selectedDrawView.getType() == BaseDrawView.DrawViewType.LINE) {
                     selectedDrawView.update(this.editPinView.getPinPoints());
                 } else {
@@ -164,6 +165,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
      */
     private BaseEditPinView newPinView(BaseDrawView annotation) {
         switch (annotation.getType()) {
+            case DIMENSION_REF:
             case DIMENSION:
             case LINE:
                 return new EditPinViewLine(imageDrawView, annotation);

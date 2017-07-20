@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
+import kr.co.aroad.subscaleimagedrawview.R;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
 /**
@@ -51,6 +52,11 @@ public class DrawViewInk extends BaseDrawView {
     @Override
     public boolean isInvalidSaveAnnotEx() {
         return true;
+    }
+
+    @Override
+    public String getName(boolean isSimple) {
+        return isSimple ? "I" : getResources().getString(R.string.ink);
     }
 
     @Override

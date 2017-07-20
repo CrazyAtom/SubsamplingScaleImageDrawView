@@ -3,4 +3,12 @@
     <string name="delete">삭제</string>
     <string name="select_all">모두선택</string>
     <string name="deselect_all">모두취소</string>
+    <string name="photo">사진</string>
+    <string name="text">문자</string>
+    <string name="dimension">치수</string>
+    <string name="cloud">클라우드</string>
+    <string name="ink">펜</string>
+    <string name="line">직선</string>
+    <string name="rectangle">사각형</string>
+    <string name="ellipse">타원</string>
 </resources>

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import kr.co.aroad.subscaleimagedrawview.R;
 import kr.co.aroad.subscaleimagedrawview.drawtools.BaseDrawTool;
 import kr.co.aroad.subscaleimagedrawview.listener.ToolControllViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
@@ -38,6 +39,7 @@ public abstract class BaseDrawView extends View {
 
     protected int thick;
     protected String color;
+    private float phase = 0.0f;
 
     protected boolean showBoundaryBox = false;
     protected RectF boundaryBox = null;
@@ -280,11 +282,14 @@ public abstract class BaseDrawView extends View {
             paint.setAntiAlias(true);
             paint.setStyle(Paint.Style.STROKE);
             paint.setColor(Color.DKGRAY);
-            DashPathEffect dashPathEffect = new DashPathEffect(new float[] {10.0f, 5.0f}, 1.0f);
+            DashPathEffect dashPathEffect = new DashPathEffect(new float[] {10.0f, 5.0f}, phase);
             paint.setPathEffect(dashPathEffect);
             RectF vRect = new RectF();
             this.imageDrawView.sourceToViewRect(this.boundaryBox, vRect);
             canvas.drawRect(vRect, paint);
+
+            phase = (phase < 10.0f) ? phase + 1.0f : 0.0f;
+            this.postInvalidateOnAnimation();
         }
     }
 
@@ -396,9 +401,7 @@ public abstract class BaseDrawView extends View {
      *
      * @return
      */
-    public String getName() {
-        return getType().toString(false);
-    }
+    public abstract String getName(boolean isSimple);
 
     /**
      * 좌표 x, y가 annotation내에 존재 하는지 체크
@@ -468,31 +471,6 @@ public abstract class BaseDrawView extends View {
         ELLIPSE;
 
         private DrawViewType() {
-        }
-
-        public String toString(boolean isSimple) {
-            switch (this) {
-                case PHOTO:
-                    return isSimple ? "P" : "Photo";
-                case TEXT:
-                    return isSimple ? "T" : "Text";
-                case DIMENSION:
-                    return isSimple ? "D" : "Dimension";
-                case DIMENSION_REF:
-                    return isSimple ? "D" : "Dimension";
-                case CLOUD:
-                    return isSimple ? "C" : "Cloud";
-                case INK:
-                    return isSimple ? "I" : "Ink";
-                case LINE:
-                    return isSimple ? "L" : "Line";
-                case RECTANGLE:
-                    return isSimple ? "R" : "Rectangle";
-                case ELLIPSE:
-                    return isSimple ? "E" : "Ellipse";
-                default:
-                    return "";
-            }
         }
     }
 }

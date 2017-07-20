@@ -81,7 +81,7 @@ public abstract class BaseEditPinView extends View {
         final RectF boundary = getBoundaryBox();
         if (boundary != null) {
             paint.setStyle(Paint.Style.STROKE);
-            paint.setColor(Color.DKGRAY);
+            paint.setColor(Color.argb(20, 0, 0, 0));
             DashPathEffect dashPathEffect = new DashPathEffect(new float[] {10.0f, 5.0f}, phase);
             paint.setPathEffect(dashPathEffect);
             RectF vRect = new RectF();
@@ -118,7 +118,7 @@ public abstract class BaseEditPinView extends View {
      * @return
      */
     public int getPIN_SIZE() {
-        return (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics()));
+        return (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()));
     }
 
     /**
@@ -142,7 +142,7 @@ public abstract class BaseEditPinView extends View {
 
         Pin findPin = null;
         float dist = Float.MAX_VALUE;
-        final float pinSize = getPIN_SIZE() / imageDrawView.getScale();
+        final float pinSize = (getPIN_SIZE() * 2f) / imageDrawView.getScale();
         for (Pin pin : pinList) {
             RectF rect = new RectF(pin.point.x - pinSize, pin.point.y - pinSize, pin.point.x + pinSize, pin.point.y + pinSize);
             if (rect.contains(x, y)) {

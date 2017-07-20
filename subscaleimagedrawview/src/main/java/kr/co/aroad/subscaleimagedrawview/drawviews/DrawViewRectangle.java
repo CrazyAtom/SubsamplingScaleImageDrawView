@@ -11,6 +11,7 @@ import android.util.TypedValue;
 
 import java.util.ArrayList;
 
+import kr.co.aroad.subscaleimagedrawview.R;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
@@ -40,6 +41,11 @@ public class DrawViewRectangle extends BaseDrawView {
     @Override
     public boolean isInvalidSaveAnnotEx() {
         return true;
+    }
+
+    @Override
+    public String getName(boolean isSimple) {
+        return isSimple ? "R" : getResources().getString(R.string.rectangle);
     }
 
     @Override
@@ -78,25 +84,27 @@ public class DrawViewRectangle extends BaseDrawView {
 
     @Override
     public boolean isContains(float x, float y) {
-        final float offset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-
-        // annotation이 여유크기보다 작으면 boundary box로만 판단
-        if (Math.min(boundaryBox.width(), boundaryBox.height()) < offset) {
-            return super.isContains(x, y);
-        } else {
-            ArrayList<PointF> outter = new ArrayList<>();
-            outter.add(new PointF(boundaryBox.left - offset, boundaryBox.top - offset));
-            outter.add(new PointF(boundaryBox.right + offset, boundaryBox.top - offset));
-            outter.add(new PointF(boundaryBox.right + offset, boundaryBox.bottom + offset));
-            outter.add(new PointF(boundaryBox.left - offset, boundaryBox.bottom + offset));
-
-            ArrayList<PointF> inner = new ArrayList<>();
-            inner.add(new PointF(boundaryBox.left + offset, boundaryBox.top + offset));
-            inner.add(new PointF(boundaryBox.right - offset, boundaryBox.top + offset));
-            inner.add(new PointF(boundaryBox.right - offset, boundaryBox.bottom - offset));
-            inner.add(new PointF(boundaryBox.left + offset, boundaryBox.bottom - offset));
-
-            return Utillity.isInside(new PointF(x, y), outter) && !Utillity.isInside(new PointF(x, y), inner);
-        }
+        return super.isContains(x, y);
+        // 내부 영역 제거가 필요 할때 사용하자
+//        final float offset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
+//
+//        // annotation이 여유크기보다 작으면 boundary box로만 판단
+//        if (Math.min(boundaryBox.width(), boundaryBox.height()) < offset) {
+//            return super.isContains(x, y);
+//        } else {
+//            ArrayList<PointF> outter = new ArrayList<>();
+//            outter.add(new PointF(boundaryBox.left - offset, boundaryBox.top - offset));
+//            outter.add(new PointF(boundaryBox.right + offset, boundaryBox.top - offset));
+//            outter.add(new PointF(boundaryBox.right + offset, boundaryBox.bottom + offset));
+//            outter.add(new PointF(boundaryBox.left - offset, boundaryBox.bottom + offset));
+//
+//            ArrayList<PointF> inner = new ArrayList<>();
+//            inner.add(new PointF(boundaryBox.left + offset, boundaryBox.top + offset));
+//            inner.add(new PointF(boundaryBox.right - offset, boundaryBox.top + offset));
+//            inner.add(new PointF(boundaryBox.right - offset, boundaryBox.bottom - offset));
+//            inner.add(new PointF(boundaryBox.left + offset, boundaryBox.bottom - offset));
+//
+//            return Utillity.isInside(new PointF(x, y), outter) && !Utillity.isInside(new PointF(x, y), inner);
+//        }
     }
 }

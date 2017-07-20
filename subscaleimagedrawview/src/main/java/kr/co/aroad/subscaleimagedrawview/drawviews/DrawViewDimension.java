@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
+import kr.co.aroad.subscaleimagedrawview.R;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
@@ -55,6 +56,11 @@ public class DrawViewDimension extends BaseDrawView {
     @Override
     public boolean isInvalidSaveAnnotEx() {
         return false;
+    }
+
+    @Override
+    public String getName(boolean isSimple) {
+        return isSimple ? "D" : getResources().getString(R.string.dimension);
     }
 
     @Override
@@ -254,15 +260,6 @@ public class DrawViewDimension extends BaseDrawView {
             return drawViewReferenceDimension.getDimensionRatioFactor();
         } else {
             return 0.0f;
-        }
-    }
-
-    private DrawViewSetting.DrawViewDimensionUnit getUnit() {
-        DrawViewReferenceDimension drawViewReferenceDimension = imageDrawView.getReferenceDimension();
-        if (drawViewReferenceDimension != null) {
-            return drawViewReferenceDimension.getDimensionUnit();
-        } else {
-            return DrawViewSetting.DrawViewDimensionUnit.MM;
         }
     }
 }

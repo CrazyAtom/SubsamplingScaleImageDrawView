@@ -40,7 +40,7 @@ public class DrawViewArrayAdapter extends ArrayAdapter<BaseDrawView> {
         if (drawView != null) {
             LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             TextView textView = (TextView) layoutInflater.inflate(resource, null);
-            textView.setText(drawView.getName());
+            textView.setText(drawView.getName(false));
             return textView;
         }
         return convertView;

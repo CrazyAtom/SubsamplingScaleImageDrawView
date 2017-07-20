@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
+import kr.co.aroad.subscaleimagedrawview.R;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
@@ -48,6 +49,11 @@ public class DrawViewLine extends BaseDrawView {
     @Override
     public boolean isInvalidSaveAnnotEx() {
         return true;
+    }
+
+    @Override
+    public String getName(boolean isSimple) {
+        return isSimple ? "L" : getResources().getString(R.string.line);
     }
 
     @Override

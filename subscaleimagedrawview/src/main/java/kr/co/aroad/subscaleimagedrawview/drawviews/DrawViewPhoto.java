@@ -52,6 +52,11 @@ public class DrawViewPhoto extends BaseDrawView {
     }
 
     @Override
+    public String getName(boolean isSimple) {
+        return isSimple ? "P" : getResources().getString(R.string.photo);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         if (getPositionSize() >= 1) {
             final Bitmap bitmap = createBitmap();
