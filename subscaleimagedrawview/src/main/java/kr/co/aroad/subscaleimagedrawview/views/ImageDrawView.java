@@ -38,6 +38,7 @@ import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
 import kr.co.aroad.subscaleimagedrawview.drawtools.*;
 import kr.co.aroad.subscaleimagedrawview.listener.NewDrawViewListener;
 import kr.co.aroad.subscaleimagedrawview.listener.ShowSnackbarListener;
+import kr.co.aroad.subscaleimagedrawview.listener.DrawToolControllViewListener;
 
 /**
  * Created by crazy on 2017-07-11.
@@ -54,6 +55,8 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
     // Listener New DrawView Event
     private NewDrawViewListener newDrawViewListener;
+    // Listener draw tool controll view Event
+    private DrawToolControllViewListener drawToolControllViewListener;
     // Listener Add Photo Event
     private AddDrawViewPhotoListener addDrawViewPhotoListener;
     // Listener Show Snackbar Event
@@ -82,8 +85,8 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     public boolean onTouchEvent(@NonNull MotionEvent event) {
         if (this.drawTool != null && this.gestureType == GestureType.EDIT) {
             if (event.getPointerCount() >= 2) {
-                if (drawTool.getToolControllViewListener() != null) {
-                    drawTool.getToolControllViewListener().changeDefaultTool();
+                if (drawTool.getDrawToolControllViewListener() != null) {
+                    drawTool.getDrawToolControllViewListener().changeDefaultDrawTool();
                 }
                 changeTool(BaseDrawTool.DrawToolType.NONE);
                 return super.onTouchEvent(event);
@@ -235,6 +238,11 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
                 this.gestureType = GestureType.VIEW;
                 break;
         }
+
+        if (this.drawTool != null) {
+            this.drawTool.setDrawToolControllViewListener(getDrawToolControllViewListener());
+            this.drawTool.setShowSnackbarListener(getShowSnackbarListener());
+        }
     }
 
     @Override
@@ -372,6 +380,18 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
     public void setNewDrawViewListener(NewDrawViewListener newDrawViewListener) {
         this.newDrawViewListener = newDrawViewListener;
+    }
+
+    /**
+     * drawTool 변경 이벤트
+     * @return
+     */
+    public DrawToolControllViewListener getDrawToolControllViewListener() {
+        return drawToolControllViewListener;
+    }
+
+    public void setDrawToolControllViewListener(DrawToolControllViewListener drawToolControllViewListener) {
+        this.drawToolControllViewListener = drawToolControllViewListener;
     }
 
     /**

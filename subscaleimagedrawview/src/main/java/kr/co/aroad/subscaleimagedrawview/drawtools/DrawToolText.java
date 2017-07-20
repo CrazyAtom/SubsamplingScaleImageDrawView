@@ -63,7 +63,7 @@ public class DrawToolText extends BaseDrawTool {
     private void injectAnnotation() {
         if (base != null) {
             DrawViewText drawView = (DrawViewText) createDrawView();
-            drawView.setToolControllViewListener(toolControllViewListener);
+            drawView.setDrawToolControllViewListener(drawToolControllViewListener);
             imageDrawView.addDrawView(drawView);
             drawView.showContentsBox(imageDrawView.getContext());
         }

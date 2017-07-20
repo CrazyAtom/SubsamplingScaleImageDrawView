@@ -5,7 +5,7 @@ package kr.co.aroad.subscaleimagedrawview.listener;
  * tool controll view에서 처리되어야 할 동작
  */
 
-public interface ToolControllViewListener {
+public interface DrawToolControllViewListener {
     // 기본 그리기 도구로 변경
-    void changeDefaultTool();
+    void changeDefaultDrawTool();
 }

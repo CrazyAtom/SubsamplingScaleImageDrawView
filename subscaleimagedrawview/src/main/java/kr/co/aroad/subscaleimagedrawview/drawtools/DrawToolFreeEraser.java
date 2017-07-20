@@ -143,8 +143,8 @@ public class DrawToolFreeEraser extends BaseDrawTool {
 
         if (imageDrawView.getDrawViewMap().isEmpty() == true) {
             Snackbar.make(imageDrawView, "모두 삭제 되었습니다", Snackbar.LENGTH_SHORT).show();
-            if (toolControllViewListener != null) {
-                toolControllViewListener.changeDefaultTool();
+            if (drawToolControllViewListener != null) {
+                drawToolControllViewListener.changeDefaultDrawTool();
             }
         }
 

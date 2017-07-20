@@ -6,7 +6,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import kr.co.aroad.subscaleimagedrawview.drawviews.BaseDrawView;
 import kr.co.aroad.subscaleimagedrawview.listener.ShowSnackbarListener;
-import kr.co.aroad.subscaleimagedrawview.listener.ToolControllViewListener;
+import kr.co.aroad.subscaleimagedrawview.listener.DrawToolControllViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
 
@@ -19,7 +19,7 @@ public abstract class BaseDrawTool {
     protected ImageDrawView imageDrawView;
     protected BaseDrawView previewDrawView;
     private boolean isBeginEdited = false;
-    protected ToolControllViewListener toolControllViewListener;
+    protected DrawToolControllViewListener drawToolControllViewListener;
     protected ShowSnackbarListener showSnackbarListener;
 
     public BaseDrawTool(@NonNull ImageDrawView imageDrawView) {
@@ -106,12 +106,12 @@ public abstract class BaseDrawTool {
         return this.imageDrawView.sourceToViewCoord(sx, sy);
     }
 
-    public void setToolControllViewListener(ToolControllViewListener toolControllViewListener) {
-        this.toolControllViewListener = toolControllViewListener;
+    public void setDrawToolControllViewListener(DrawToolControllViewListener drawToolControllViewListener) {
+        this.drawToolControllViewListener = drawToolControllViewListener;
     }
 
-    public ToolControllViewListener getToolControllViewListener() {
-        return toolControllViewListener;
+    public DrawToolControllViewListener getDrawToolControllViewListener() {
+        return drawToolControllViewListener;
     }
 
     public void setShowSnackbarListener(ShowSnackbarListener showSnackbarListener) {
@@ -128,8 +128,8 @@ public abstract class BaseDrawTool {
     public void checkContinueTool() {
         if (DrawViewSetting.getInstance().isContinuous() == false) {
             imageDrawView.changeTool(DrawToolType.NONE);
-            if (toolControllViewListener != null) {
-                toolControllViewListener.changeDefaultTool();
+            if (drawToolControllViewListener != null) {
+                drawToolControllViewListener.changeDefaultDrawTool();
             }
         }
     }

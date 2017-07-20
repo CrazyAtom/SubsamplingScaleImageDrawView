@@ -15,9 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import kr.co.aroad.subscaleimagedrawview.R;
 import kr.co.aroad.subscaleimagedrawview.drawtools.BaseDrawTool;
-import kr.co.aroad.subscaleimagedrawview.listener.ToolControllViewListener;
+import kr.co.aroad.subscaleimagedrawview.listener.DrawToolControllViewListener;
 import kr.co.aroad.subscaleimagedrawview.util.DrawViewSetting;
 import kr.co.aroad.subscaleimagedrawview.util.Utillity;
 import kr.co.aroad.subscaleimagedrawview.views.ImageDrawView;
@@ -47,7 +46,7 @@ public abstract class BaseDrawView extends View {
     private boolean isPreview = false;
     private boolean isEditable = false;
 
-    protected ToolControllViewListener toolControllViewListener;
+    protected DrawToolControllViewListener drawToolControllViewListener;
 
     public BaseDrawView(DrawViewType type, @NonNull ImageDrawView imageDrawView) {
         super(imageDrawView.getContext());
@@ -147,8 +146,8 @@ public abstract class BaseDrawView extends View {
         this.boundaryBox = box;
     }
 
-    public void setToolControllViewListener(ToolControllViewListener toolControllViewListener) {
-        this.toolControllViewListener = toolControllViewListener;
+    public void setDrawToolControllViewListener(DrawToolControllViewListener drawToolControllViewListener) {
+        this.drawToolControllViewListener = drawToolControllViewListener;
     }
 
     /**
@@ -450,8 +449,8 @@ public abstract class BaseDrawView extends View {
     public void checkContinueTool() {
         if (DrawViewSetting.getInstance().isContinuous() == false) {
             imageDrawView.changeTool(BaseDrawTool.DrawToolType.NONE);
-            if (toolControllViewListener != null) {
-                toolControllViewListener.changeDefaultTool();
+            if (drawToolControllViewListener != null) {
+                drawToolControllViewListener.changeDefaultDrawTool();
             }
         }
     }
