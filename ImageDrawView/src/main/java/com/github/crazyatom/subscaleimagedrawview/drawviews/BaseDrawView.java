@@ -17,6 +17,7 @@ import java.util.Comparator;
 
 import com.github.crazyatom.subscaleimagedrawview.drawtools.BaseDrawTool;
 import com.github.crazyatom.subscaleimagedrawview.listener.DrawToolControllViewListener;
+import com.github.crazyatom.subscaleimagedrawview.util.DrawViewFactory;
 import com.github.crazyatom.subscaleimagedrawview.util.DrawViewSetting;
 import com.github.crazyatom.subscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subscaleimagedrawview.views.ImageDrawView;
@@ -55,8 +56,8 @@ public abstract class BaseDrawView extends View {
 
         this.type = type;
         this.imageDrawView = imageDrawView;
-        if (this.imageDrawView.getNewDrawViewListener() != null) {
-            setUniqId(this.imageDrawView.getNewDrawViewListener().newUUID());
+        if (DrawViewFactory.getInstance().getNewDrawViewListener() != null) {
+            setUniqId(DrawViewFactory.getInstance().getNewDrawViewListener().newUUID());
         } else {
             setUniqId(Utillity.getUUID());
         }

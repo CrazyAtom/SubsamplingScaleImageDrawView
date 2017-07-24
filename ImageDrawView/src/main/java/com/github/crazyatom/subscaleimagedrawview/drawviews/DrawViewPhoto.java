@@ -14,6 +14,7 @@ import android.util.TypedValue;
 import java.util.ArrayList;
 
 import com.github.crazyatom.subscaleimagedrawview.R;
+import com.github.crazyatom.subscaleimagedrawview.util.DrawViewFactory;
 import com.github.crazyatom.subscaleimagedrawview.util.DrawViewSetting;
 import com.github.crazyatom.subscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subscaleimagedrawview.views.ImageDrawView;
@@ -40,9 +41,9 @@ public class DrawViewPhoto extends BaseDrawView {
 
     @Override
     public void showContentsBox(Context context) {
-        // 사진 입력 화면 호출
-        if (imageDrawView.getAddDrawViewPhotoListener() != null) {
-            imageDrawView.getAddDrawViewPhotoListener().showAddPhotoWindow(this.getUniqId());
+        // call managed photo window
+        if (DrawViewFactory.getInstance().getAddDrawViewPhotoListener() != null) {
+            DrawViewFactory.getInstance().getAddDrawViewPhotoListener().showAddPhotoWindow(this.getUniqId());
         }
     }
 

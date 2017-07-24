@@ -53,12 +53,8 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     private Map<String, BaseDrawView> drawViewMap = new HashMap<>();
     private boolean isEditedDrawView = false;
 
-    // Listener New DrawView Event
-    private NewDrawViewListener newDrawViewListener;
     // Listener draw tool controll view Event
     private DrawToolControllViewListener drawToolControllViewListener;
-    // Listener Add Photo Event
-    private AddDrawViewPhotoListener addDrawViewPhotoListener;
     // Listener Show Snackbar Event
     private ShowSnackbarListener showSnackbarListener;
 
@@ -371,18 +367,6 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     }
 
     /**
-     * drawView 생성시 이벤트
-     * @return
-     */
-    public NewDrawViewListener getNewDrawViewListener() {
-        return this.newDrawViewListener;
-    }
-
-    public void setNewDrawViewListener(NewDrawViewListener newDrawViewListener) {
-        this.newDrawViewListener = newDrawViewListener;
-    }
-
-    /**
      * drawTool 변경 이벤트
      * @return
      */
@@ -392,18 +376,6 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
     public void setDrawToolControllViewListener(DrawToolControllViewListener drawToolControllViewListener) {
         this.drawToolControllViewListener = drawToolControllViewListener;
-    }
-
-    /**
-     * 사진 추가 이벤트
-     * @return
-     */
-    public AddDrawViewPhotoListener getAddDrawViewPhotoListener() {
-        return this.addDrawViewPhotoListener;
-    }
-
-    public void setAddDrawViewPhotoListener(AddDrawViewPhotoListener addDrawViewPhotoListener) {
-        this.addDrawViewPhotoListener = addDrawViewPhotoListener;
     }
 
     /**

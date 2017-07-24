@@ -1,6 +1,8 @@
 package com.github.crazyatom.subscaleimagedrawview.util;
 
 import com.github.crazyatom.subscaleimagedrawview.drawviews.*;
+import com.github.crazyatom.subscaleimagedrawview.listener.AddDrawViewPhotoListener;
+import com.github.crazyatom.subscaleimagedrawview.listener.NewDrawViewListener;
 import com.github.crazyatom.subscaleimagedrawview.views.ImageDrawView;
 
 /**
@@ -10,12 +12,40 @@ import com.github.crazyatom.subscaleimagedrawview.views.ImageDrawView;
 public class DrawViewFactory {
 
     private static DrawViewFactory instance;
+    // Listener New DrawView Event
+    private NewDrawViewListener newDrawViewListener;
+    // Listener Add Photo DrawView Event
+    private AddDrawViewPhotoListener addDrawViewPhotoListener;
 
     public static DrawViewFactory getInstance() {
         if (instance == null) {
             instance = new DrawViewFactory();
         }
         return instance;
+    }
+
+    /**
+     * new DrawView Event
+     * @return
+     */
+    public NewDrawViewListener getNewDrawViewListener() {
+        return newDrawViewListener;
+    }
+
+    public void setNewDrawViewListener(NewDrawViewListener newDrawViewListener) {
+        this.newDrawViewListener = newDrawViewListener;
+    }
+
+    /**
+     * Add Photo DrawView Event
+     * @return
+     */
+    public AddDrawViewPhotoListener getAddDrawViewPhotoListener() {
+        return addDrawViewPhotoListener;
+    }
+
+    public void setAddDrawViewPhotoListener(AddDrawViewPhotoListener addDrawViewPhotoListener) {
+        this.addDrawViewPhotoListener = addDrawViewPhotoListener;
     }
 
     public BaseDrawView create(ImageDrawView imageDrawView, BaseDrawView.DrawViewType type) {
