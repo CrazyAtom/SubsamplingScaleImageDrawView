@@ -139,8 +139,25 @@ public class DrawToolDimension extends BaseDrawTool {
             return;
         }
 
-        snackbar = Snackbar.make(imageDrawView, "치수 마크업은 페이지 또는 공유 모드 변경시 자동 삭제 됩니다", Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("다시 보지 않기", new View.OnClickListener() {
+        this.snackbar = Snackbar.make(imageDrawView, "치수 마크업은 페이지 또는 공유 모드 변경시 자동 삭제 됩니다", Snackbar.LENGTH_INDEFINITE);
+        this.snackbar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onShown(Snackbar sb) {
+                super.onShown(sb);
+                if (showSnackbarListener != null) {
+                    showSnackbarListener.onShown(sb.getView().getMeasuredHeight());
+                }
+            }
+
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+                if (showSnackbarListener != null) {
+                    showSnackbarListener.onDismissed();
+                }
+            }
+        });
+        this.snackbar.setAction("다시 보지 않기", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -148,13 +165,13 @@ public class DrawToolDimension extends BaseDrawTool {
                 editor.commit();
             }
         });
-        snackbar.setAction("확인", new View.OnClickListener() {
+        this.snackbar.setAction("확인", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                snackbar.dismiss();
+                 snackbar.dismiss();
             }
         });
-        snackbar.show();
+        this.snackbar.show();
     }
 
     /**
