@@ -38,7 +38,6 @@ import com.github.crazyatom.subscaleimagedrawview.listener.CompleteCallback;
 import com.github.crazyatom.subscaleimagedrawview.listener.GestureListener;
 import com.github.crazyatom.subscaleimagedrawview.drawviews.BaseDrawView;
 import com.github.crazyatom.subscaleimagedrawview.drawtools.*;
-import com.github.crazyatom.subscaleimagedrawview.listener.NewDrawViewListener;
 import com.github.crazyatom.subscaleimagedrawview.listener.RemoveDrawViewListener;
 import com.github.crazyatom.subscaleimagedrawview.listener.ShowSnackbarListener;
 import com.github.crazyatom.subscaleimagedrawview.listener.DrawToolControllViewListener;
@@ -176,8 +175,8 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     public void removeDrawView(@NonNull BaseDrawView drawView) {
         this.drawViewMap.remove(drawView.getUniqId());
         removeView(drawView);
-        if (removeDrawViewListener != null) {
-            removeDrawViewListener.removeDrawView(drawView.getUniqId());
+        if (this.removeDrawViewListener != null) {
+            this.removeDrawViewListener.removeDrawView(drawView.getUniqId());
         }
     }
 
@@ -185,12 +184,10 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
      * drawView 모두 삭제
      */
     public void clearDrawView() {
-        Iterator<String> iterator = drawViewMap.keySet().iterator();
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            removeDrawView(drawViewMap.get(key));
-            iterator.remove();
+        for (String key : this.drawViewMap.keySet()) {
+            removeView(this.drawViewMap.get(key));
         }
+        this.drawViewMap.clear();
     }
 
     /**
@@ -199,8 +196,8 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
      * @return 변경된 도구
      */
     public BaseDrawTool changeTool(BaseDrawTool.DrawToolType toolType) {
-        if (drawTool != null) {
-            drawTool.exit();
+        if (this.drawTool != null) {
+            this.drawTool.exit();
         }
 
         switch (toolType) {
@@ -265,7 +262,7 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
             this.drawTool.setShowSnackbarListener(getShowSnackbarListener());
         }
 
-        return drawTool;
+        return this.drawTool;
     }
 
     @Override
@@ -273,7 +270,7 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
         final int x = (int)event.getX();
         final int y = (int)event.getY();
 
-        if (gestureType == GestureType.VIEW) {
+        if (this.gestureType == GestureType.VIEW) {
             // VIEW 상태에서 drawView 위치에 터치 하면 편집 tool로 변경하고 longPress
             selectDrawViewProcess(x, y, new CompleteCallback() {
                 @Override
