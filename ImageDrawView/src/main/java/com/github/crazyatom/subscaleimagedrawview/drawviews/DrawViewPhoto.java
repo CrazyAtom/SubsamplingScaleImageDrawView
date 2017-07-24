@@ -133,12 +133,29 @@ public class DrawViewPhoto extends BaseDrawView {
     /**
      * Class photo information
      */
-    public class PhotoItem {
+    public static class PhotoItem {
 
+        String uniqId;
         String title;
         String commiter;
         String commitDate;
         String fileName;
+
+        public PhotoItem(String title, String commiter, String commitDate, String fileName) {
+            this.uniqId = Utillity.getUUID();
+            this.title = title;
+            this.commiter = commiter;
+            this.commitDate = commitDate;
+            this.fileName = fileName;
+        }
+
+        public String getUniqId() {
+            return uniqId;
+        }
+
+        public void setUniqId(String uniqId) {
+            this.uniqId = uniqId;
+        }
 
         public String getTitle() {
             return title;
