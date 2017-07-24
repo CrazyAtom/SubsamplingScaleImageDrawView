@@ -5,6 +5,6 @@ package com.github.crazyatom.subscaleimagedrawview.listener;
  */
 
 public interface ShowSnackbarListener {
-    void onShown(final float height);
+    void onShown(final int height);
     void onDismissed();
 }
