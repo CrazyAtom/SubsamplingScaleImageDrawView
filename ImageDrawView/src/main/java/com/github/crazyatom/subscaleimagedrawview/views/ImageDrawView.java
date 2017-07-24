@@ -28,15 +28,18 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.github.crazyatom.subscaleimagedrawview.drawviews.DrawViewReferenceDimension;
 import com.github.crazyatom.subscaleimagedrawview.listener.AddDrawViewPhotoListener;
+import com.github.crazyatom.subscaleimagedrawview.listener.ChangeDrawToolListener;
 import com.github.crazyatom.subscaleimagedrawview.listener.CompleteCallback;
 import com.github.crazyatom.subscaleimagedrawview.listener.GestureListener;
 import com.github.crazyatom.subscaleimagedrawview.drawviews.BaseDrawView;
 import com.github.crazyatom.subscaleimagedrawview.drawtools.*;
 import com.github.crazyatom.subscaleimagedrawview.listener.NewDrawViewListener;
+import com.github.crazyatom.subscaleimagedrawview.listener.RemoveDrawViewListener;
 import com.github.crazyatom.subscaleimagedrawview.listener.ShowSnackbarListener;
 import com.github.crazyatom.subscaleimagedrawview.listener.DrawToolControllViewListener;
 
@@ -44,7 +47,7 @@ import com.github.crazyatom.subscaleimagedrawview.listener.DrawToolControllViewL
  * Created by crazy on 2017-07-11.
  */
 
-public class ImageDrawView extends SubsamplingScaleImageView implements View.OnTouchListener, GestureListener {
+public class ImageDrawView extends SubsamplingScaleImageView implements View.OnTouchListener, GestureListener, ChangeDrawToolListener {
 
     private static final String TAG = ImageDrawView.class.getSimpleName();
 
@@ -61,6 +64,8 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     private AddDrawViewPhotoListener addDrawViewPhotoListener;
     // Listener Show Snackbar Event
     private ShowSnackbarListener showSnackbarListener;
+    // Listener Remove DrawView Event
+    private RemoveDrawViewListener removeDrawViewListener;
 
     public ImageDrawView(Context context, AttributeSet attr) {
         super(context, attr);
@@ -175,9 +180,29 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     public void removeDrawView(@NonNull BaseDrawView drawView) {
         this.drawViewMap.remove(drawView.getUniqId());
         removeView(drawView);
+        if (removeDrawViewListener != null) {
+            removeDrawViewListener.removeDrawView(drawView.getUniqId());
+        }
     }
 
-    public void changeTool(BaseDrawTool.DrawToolType toolType) {
+    /**
+     * drawView 모두 삭제
+     */
+    public void clearDrawView() {
+        Iterator<String> iterator = drawViewMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            removeDrawView(drawViewMap.get(key));
+            iterator.remove();
+        }
+    }
+
+    /**
+     * 그리기 도구 변경
+     * @param toolType
+     * @return 변경된 도구
+     */
+    public BaseDrawTool changeTool(BaseDrawTool.DrawToolType toolType) {
         if (drawTool != null) {
             drawTool.exit();
         }
@@ -243,6 +268,8 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
             this.drawTool.setDrawToolControllViewListener(getDrawToolControllViewListener());
             this.drawTool.setShowSnackbarListener(getShowSnackbarListener());
         }
+
+        return drawTool;
     }
 
     @Override
@@ -416,6 +443,27 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
     public void setShowSnackbarListener(ShowSnackbarListener showSnackbarListener) {
         this.showSnackbarListener = showSnackbarListener;
+    }
+
+    /**
+     * DrawView 삭제 이벤트
+     * @return
+     */
+    public RemoveDrawViewListener getRemoveDrawViewListener() {
+        return removeDrawViewListener;
+    }
+
+    public void setRemoveDrawViewListener(RemoveDrawViewListener removeDrawViewListener) {
+        this.removeDrawViewListener = removeDrawViewListener;
+    }
+
+    /**
+     * DrawTool 변경 이벤트
+     * @param drawToolType
+     */
+    @Override
+    public void changeDrawTool(BaseDrawTool.DrawToolType drawToolType) {
+        changeTool(drawToolType);
     }
 
     /**
