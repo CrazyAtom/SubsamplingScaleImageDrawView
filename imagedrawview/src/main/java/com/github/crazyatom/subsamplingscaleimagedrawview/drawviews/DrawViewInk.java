@@ -11,6 +11,7 @@ import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.R;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
@@ -20,6 +21,8 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
  */
 
 public class DrawViewInk extends BaseDrawView {
+
+    final private float MAX_PATH_DIST = 1500;
 
     public DrawViewInk(@NonNull ImageDrawView imageDrawView) {
         super(DrawViewType.INK, imageDrawView);
@@ -66,14 +69,40 @@ public class DrawViewInk extends BaseDrawView {
             setBoundaryBox();
 
             Path path = new Path();
-            PointF vPrev = sourceToViewCoord(getPosition(0).x, getPosition(0).y);
-            path.moveTo(vPrev.x, vPrev.y);
-            for (int i = 1; i < getPositionSize(); i++) {
-                PointF vPoint = sourceToViewCoord(getPosition(i).x, getPosition(i).y);
-                path.quadTo(vPrev.x, vPrev.y, (vPoint.x + vPrev.x) / 2, (vPoint.y + vPrev.y) / 2);
-                vPrev = vPoint;
+            Iterator iterator = getIterator();
+            PointF pos = (PointF) iterator.next();
+            pos = sourceToViewCoord(pos.x, pos.y);
+            float x = pos.x;
+            float y = pos.y;
+
+            while (iterator.hasNext()) {
+                float start_x = x;
+                float start_y = y;
+                path.moveTo(start_x, start_y);
+
+                while (Math.abs(start_x - x) < MAX_PATH_DIST && Math.abs(start_y - y) < MAX_PATH_DIST && iterator.hasNext()) {
+                    pos = (PointF) iterator.next();
+                    pos = sourceToViewCoord(pos.x, pos.y);
+                    float x2 = pos.x;
+                    float y2 = pos.y;
+                    path.quadTo(x, y, (x + x2) / 2.0f, (y + y2) / 2.0f);
+                    x = x2;
+                    y = y2;
+                }
+                path.lineTo(x, y);
+                canvas.drawPath(path, this.paint);
+                path.reset();
             }
-            canvas.drawPath(path, this.paint);
+
+//            Path path = new Path();
+//            PointF vPrev = sourceToViewCoord(getPosition(0).x, getPosition(0).y);
+//            path.moveTo(vPrev.x, vPrev.y);
+//            for (int i = 1; i < getPositionSize(); i++) {
+//                PointF vPoint = sourceToViewCoord(getPosition(i).x, getPosition(i).y);
+//                path.quadTo(vPrev.x, vPrev.y, (vPoint.x + vPrev.x) / 2, (vPoint.y + vPrev.y) / 2);
+//                vPrev = vPoint;
+//            }
+//            canvas.drawPath(path, this.paint);
         }
 
         super.onDraw(canvas);

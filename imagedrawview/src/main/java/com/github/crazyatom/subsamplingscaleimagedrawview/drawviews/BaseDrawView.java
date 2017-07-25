@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.BaseDrawTool;
 import com.github.crazyatom.subsamplingscaleimagedrawview.listener.DrawToolControllViewListener;
@@ -93,6 +94,10 @@ public abstract class BaseDrawView extends View {
             e.printStackTrace();
             return null;
         }
+    }
+
+    protected Iterator getIterator() {
+        return this.pointList.iterator();
     }
 
     public void setPoints(ArrayList<PointF> points) {
