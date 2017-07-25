@@ -135,14 +135,14 @@ public class DrawViewPhoto extends BaseDrawView {
      */
     public static class PhotoItem {
 
-        String uniqId;
+        String uniqId = "";
         String title;
         String commiter;
         String commitDate;
         String fileName;
 
         public PhotoItem(String title, String commiter, String commitDate, String fileName) {
-            this.uniqId = Utillity.getUUID();
+//            this.uniqId = Utillity.getUUID();
             this.title = title;
             this.commiter = commiter;
             this.commitDate = commitDate;
