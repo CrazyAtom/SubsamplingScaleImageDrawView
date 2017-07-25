@@ -21,7 +21,7 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 public class DrawViewDimension extends BaseDrawView {
 
-    final private int textSize = 15;
+    final private int textSize = 65;
     public enum state { PREVIEW_BEGIN, PREVIEW_END, COMPLETE }
     private state currentState = DrawViewDimension.state.COMPLETE;
 
