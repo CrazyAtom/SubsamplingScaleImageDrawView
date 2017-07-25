@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">subscaleimagedrawview</string>
+    <string name="app_name">subsamplingscaleimagedrawview</string>
     <string name="delete">삭제</string>
     <string name="select_all">모두선택</string>
     <string name="deselect_all">모두취소</string>
