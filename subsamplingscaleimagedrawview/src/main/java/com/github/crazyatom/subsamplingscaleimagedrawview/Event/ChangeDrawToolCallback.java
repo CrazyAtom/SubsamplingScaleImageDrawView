@@ -7,5 +7,5 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.BaseDrawTool
  */
 
 public interface ChangeDrawToolCallback {
-    void changed(final BaseDrawTool.DrawToolType drawToolType);
+    void changed(final BaseDrawTool drawTool);
 }

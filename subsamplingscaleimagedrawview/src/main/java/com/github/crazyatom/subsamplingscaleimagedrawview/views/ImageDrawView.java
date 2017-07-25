@@ -266,7 +266,7 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
         // callback changed
         if (changeDrawToolCallback != null) {
-            changeDrawToolCallback.changed(toolType);
+            changeDrawToolCallback.changed(this.drawTool);
         }
 
         return this.drawTool;
