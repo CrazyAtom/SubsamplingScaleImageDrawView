@@ -1,8 +1,8 @@
 package com.github.crazyatom.subsamplingscaleimagedrawview.util;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.*;
-import com.github.crazyatom.subsamplingscaleimagedrawview.listener.AddDrawViewPhotoListener;
-import com.github.crazyatom.subsamplingscaleimagedrawview.listener.NewDrawViewListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.AddDrawViewPhotoListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.NewDrawViewListener;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 /**

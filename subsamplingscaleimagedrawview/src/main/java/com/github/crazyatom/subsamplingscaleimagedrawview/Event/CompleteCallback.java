@@ -1,4 +1,4 @@
-package com.github.crazyatom.subsamplingscaleimagedrawview.listener;
+package com.github.crazyatom.subsamplingscaleimagedrawview.Event;
 
 import android.content.Intent;
 

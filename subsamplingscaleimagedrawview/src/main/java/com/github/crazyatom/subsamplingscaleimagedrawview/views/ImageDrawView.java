@@ -30,15 +30,16 @@ import android.view.View;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.ChangeDrawToolCallback;
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.DrawViewReferenceDimension;
-import com.github.crazyatom.subsamplingscaleimagedrawview.listener.ChangeDrawToolListener;
-import com.github.crazyatom.subsamplingscaleimagedrawview.listener.CompleteCallback;
-import com.github.crazyatom.subsamplingscaleimagedrawview.listener.GestureListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.ChangeDrawToolListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.CompleteCallback;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.GestureListener;
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.BaseDrawView;
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.*;
-import com.github.crazyatom.subsamplingscaleimagedrawview.listener.RemoveDrawViewListener;
-import com.github.crazyatom.subsamplingscaleimagedrawview.listener.ShowSnackbarListener;
-import com.github.crazyatom.subsamplingscaleimagedrawview.listener.DrawToolControllViewListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.RemoveDrawViewListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.ShowSnackbarListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.DrawToolControllViewListener;
 
 /**
  * Created by crazy on 2017-07-11.
@@ -59,6 +60,8 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     private ShowSnackbarListener showSnackbarListener;
     // Listener Remove DrawView Event
     private RemoveDrawViewListener removeDrawViewListener;
+    // Callback Changed DrawTool
+    private ChangeDrawToolCallback changeDrawToolCallback;
 
     public ImageDrawView(Context context, AttributeSet attr) {
         super(context, attr);
@@ -255,9 +258,15 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
                 break;
         }
 
+        // set listener
         if (this.drawTool != null) {
             this.drawTool.setDrawToolControllViewListener(getDrawToolControllViewListener());
             this.drawTool.setShowSnackbarListener(getShowSnackbarListener());
+        }
+
+        // callback changed
+        if (changeDrawToolCallback != null) {
+            changeDrawToolCallback.changed(toolType);
         }
 
         return this.drawTool;
@@ -422,6 +431,18 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
     public void setRemoveDrawViewListener(RemoveDrawViewListener removeDrawViewListener) {
         this.removeDrawViewListener = removeDrawViewListener;
+    }
+
+    /**
+     * DrawTool 변경에 대한 callback
+     * @return
+     */
+    public ChangeDrawToolCallback getChangeDrawToolCallback() {
+        return changeDrawToolCallback;
+    }
+
+    public void setChangeDrawToolCallback(ChangeDrawToolCallback changeDrawToolCallback) {
+        this.changeDrawToolCallback = changeDrawToolCallback;
     }
 
     /**

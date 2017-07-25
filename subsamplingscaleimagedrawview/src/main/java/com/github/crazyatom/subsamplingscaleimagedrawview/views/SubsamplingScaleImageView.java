@@ -48,7 +48,7 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import com.github.crazyatom.subsamplingscaleimagedrawview.listener.GestureListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.GestureListener;
 import com.github.crazyatom.subsamplingscaleimagedrawview.R.styleable;
 import com.github.crazyatom.subsamplingscaleimagedrawview.decoder.CompatDecoderFactory;
 import com.github.crazyatom.subsamplingscaleimagedrawview.decoder.DecoderFactory;

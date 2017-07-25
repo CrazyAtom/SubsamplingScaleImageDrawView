@@ -1,4 +1,4 @@
-package com.github.crazyatom.subsamplingscaleimagedrawview.listener;
+package com.github.crazyatom.subsamplingscaleimagedrawview.Event;
 
 /**
  * Created by hangilit on 2017. 7. 18..

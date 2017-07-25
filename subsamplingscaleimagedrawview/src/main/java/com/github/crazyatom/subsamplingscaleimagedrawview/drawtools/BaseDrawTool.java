@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import android.view.inputmethod.InputMethodManager;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.BaseDrawView;
-import com.github.crazyatom.subsamplingscaleimagedrawview.listener.ShowSnackbarListener;
-import com.github.crazyatom.subsamplingscaleimagedrawview.listener.DrawToolControllViewListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.ShowSnackbarListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.DrawToolControllViewListener;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewSetting;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
