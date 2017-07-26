@@ -182,16 +182,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
      */
     private void update(RectF newBoundaryBox) {
         if (this.selectedDrawView != null) {
-            RectF boundaryBox = this.selectedDrawView.getBoundaryBox();
-            final float distLeft = newBoundaryBox.left - boundaryBox.left;
-            final float distTop = newBoundaryBox.top - boundaryBox.top;
-            final float distRight = newBoundaryBox.right - boundaryBox.right;
-            final float distBottom = newBoundaryBox.bottom - boundaryBox.bottom;
-            boundaryBox.left += distLeft;
-            boundaryBox.top += distTop;
-            boundaryBox.right += distRight;
-            boundaryBox.bottom += distBottom;
-            this.selectedDrawView.update(boundaryBox);
+            this.selectedDrawView.update(newBoundaryBox);
         }
     }
 

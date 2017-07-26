@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.R;
+import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewFactory;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
@@ -19,8 +20,6 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
  */
 
 public class DrawViewLine extends BaseDrawView {
-
-    final private float MINIMUM_LENGTH = 100;
 
     public DrawViewLine(@NonNull ImageDrawView imageDrawView) {
         super(DrawViewType.LINE, imageDrawView);
@@ -94,6 +93,7 @@ public class DrawViewLine extends BaseDrawView {
     public boolean isContains(float x, float y) {
         if (getPositionSize() >= 2) {
             final PointF dirVert = Utillity.getUnitVertDirenction(getPosition(0), getPosition(1));
+            final float MINIMUM_LENGTH = DrawViewFactory.getInstance().getMINIMUM_LENGTH();
             ArrayList<PointF> polygon = new ArrayList<>();
             polygon.add(Utillity.getOffset(getPosition(0), dirVert, (MINIMUM_LENGTH / 2)));
             polygon.add(Utillity.getOffset(getPosition(1), dirVert, (MINIMUM_LENGTH / 2)));

@@ -12,6 +12,7 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 public class DrawViewFactory {
 
     private static DrawViewFactory instance;
+    final private float MINIMUM_LENGTH = 100;
     // Listener New DrawView Event
     private NewDrawViewCallback newDrawViewCallback;
     // Listener Add Photo DrawView Event
@@ -46,6 +47,14 @@ public class DrawViewFactory {
 
     public void setAddDrawViewPhotoListener(AddDrawViewPhotoListener addDrawViewPhotoListener) {
         this.addDrawViewPhotoListener = addDrawViewPhotoListener;
+    }
+
+    /**
+     * DrawView Minimun size
+     * @return
+     */
+    public float getMINIMUM_LENGTH() {
+        return MINIMUM_LENGTH;
     }
 
     public BaseDrawView create(ImageDrawView imageDrawView, BaseDrawView.DrawViewType type) {

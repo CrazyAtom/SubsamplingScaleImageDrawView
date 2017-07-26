@@ -39,8 +39,8 @@ public class DrawToolRectangle extends BaseDrawTool {
     @Override
     protected void touchEnd(int x, int y) {
         end = viewToSourceCoord(x, y);
-        if (Utillity.getDistance(begin, end) < MINIMUM_LENGTH) {
-            end = Utillity.getOffset(begin, new PointF(1, 1), MINIMUM_LENGTH);
+        if (Utillity.getDistance(begin, end) < DrawViewFactory.getInstance().getMINIMUM_LENGTH()) {
+            end = Utillity.getOffset(begin, new PointF(1, 1), DrawViewFactory.getInstance().getMINIMUM_LENGTH());
         }
         imageDrawView.removeDrawView(previewDrawView);
         injectAnnotation();

@@ -50,7 +50,7 @@ public class DrawViewText extends BaseDrawView {
     @Override
     public void update(RectF newBbox) {
         ArrayList<PointF> points = new ArrayList<>();
-        points.add(new PointF((newBbox.left + newBbox.right) / 2, newBbox.top + getThick()));
+        points.add(new PointF(newBbox.left, newBbox.top + getThick()));
         update(points);
     }
 
