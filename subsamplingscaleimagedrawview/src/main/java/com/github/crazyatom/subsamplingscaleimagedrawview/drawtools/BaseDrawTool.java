@@ -125,7 +125,7 @@ public abstract class BaseDrawTool {
     /**
      * tool을 연속으로 수행할지 여부 확인하여 연속 수행이 아니면 tool 해제
      */
-    public void checkContinueTool() {
+    protected void checkContinueTool() {
         if (DrawViewSetting.getInstance().isContinuous() == false) {
             imageDrawView.changeTool(DrawToolType.NONE);
             if (drawToolControllViewListener != null) {

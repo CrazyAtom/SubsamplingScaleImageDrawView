@@ -398,7 +398,7 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     }
 
     /**
-     * drawTool 변경 이벤트
+     * drawTool 이벤트
      * @return
      */
     public DrawToolControllViewListener getDrawToolControllViewListener() {

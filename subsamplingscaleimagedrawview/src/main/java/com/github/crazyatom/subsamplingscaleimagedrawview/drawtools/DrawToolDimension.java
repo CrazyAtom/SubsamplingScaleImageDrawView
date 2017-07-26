@@ -107,6 +107,16 @@ public class DrawToolDimension extends BaseDrawTool {
     }
 
     @Override
+    protected void checkContinueTool() {
+        if (DrawViewSetting.getInstance().isContinuous() == false || this.isReferenceDrawMode == true) {
+            imageDrawView.changeTool(DrawToolType.NONE);
+            if (drawToolControllViewListener != null) {
+                drawToolControllViewListener.changeDefaultDrawTool();
+            }
+        }
+    }
+
+    @Override
     protected BaseDrawView createDrawView() {
         BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView,
                 (isReferenceDrawMode == true) ? BaseDrawView.DrawViewType.DIMENSION_REF : BaseDrawView.DrawViewType.DIMENSION);
