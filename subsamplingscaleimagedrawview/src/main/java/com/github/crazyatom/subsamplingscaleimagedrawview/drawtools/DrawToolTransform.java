@@ -111,7 +111,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
                         || selectedDrawView.getType() == BaseDrawView.DrawViewType.LINE) {
                     selectedDrawView.update(this.editPinView.getPinPoints());
                 } else {
-                    update(selectedDrawView, this.editPinView.getBoundaryBox());
+                    update(this.editPinView.getBoundaryBox());
                 }
             }
         } else {
@@ -125,8 +125,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
             final float vDistX = sDistX * imageDrawView.getScale();
             final float vDistY = sDistY * imageDrawView.getScale();
             if (isInsideView(vRect.left + vDistX, vRect.top + vDistY, vRect.right + vDistX, vRect.bottom + vDistY) == true) {
-                update(this.selectedDrawView,
-                        new RectF(sRect.left + sDistX, sRect.top + sDistY, sRect.right + sDistX, sRect.bottom + sDistY));
+                update(new RectF(sRect.left + sDistX, sRect.top + sDistY, sRect.right + sDistX, sRect.bottom + sDistY));
                 if (this.editPinView != null) {
                     this.editPinView.initPinList();
                     this.editPinView.invalidate();
@@ -179,12 +178,20 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
 
     /**
      * boundary box를 이용한 update
-     * @param annotation
      * @param newBoundaryBox
      */
-    private void update(BaseDrawView annotation, RectF newBoundaryBox) {
+    private void update(RectF newBoundaryBox) {
         if (this.selectedDrawView != null) {
-            this.selectedDrawView.update(newBoundaryBox);
+            RectF boundaryBox = this.selectedDrawView.getBoundaryBox();
+            final float distLeft = newBoundaryBox.left - boundaryBox.left;
+            final float distTop = newBoundaryBox.top - boundaryBox.top;
+            final float distRight = newBoundaryBox.right - boundaryBox.right;
+            final float distBottom = newBoundaryBox.bottom - boundaryBox.bottom;
+            boundaryBox.left += distLeft;
+            boundaryBox.top += distTop;
+            boundaryBox.right += distRight;
+            boundaryBox.bottom += distBottom;
+            this.selectedDrawView.update(boundaryBox);
         }
     }
 
