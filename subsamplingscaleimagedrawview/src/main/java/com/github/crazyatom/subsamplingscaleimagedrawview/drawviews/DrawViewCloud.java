@@ -51,24 +51,26 @@ public class DrawViewCloud extends BaseDrawView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (getPositionSize() >= 2 && getPosition(0).equals(getPosition(1)) == false) {
-            loadPaint();
-            setBoundaryBox();
-
-            final RectF vRect = getRect(true);
-            final float intervalLength = getIntervalLength();
-            final float offset = intervalLength / 2.0f;
-            vRect.left += offset;
-            vRect.top += offset;
-            vRect.right -= offset;
-            vRect.bottom -= offset;
-            drawLineLTToRT(canvas, vRect);
-            drawLineRTToRB(canvas, vRect);
-            drawLineRBToLB(canvas, vRect);
-            drawLineLBToLT(canvas, vRect);
-
-            super.onDraw(canvas);
+        if (getPositionSize() < 2 || getRect(false).width() == 0 || getRect(false).height() == 0) {
+            return;
         }
+
+        loadPaint();
+        setBoundaryBox();
+
+        final RectF vRect = getRect(true);
+        final float intervalLength = getIntervalLength();
+        final float offset = intervalLength / 2.0f;
+        vRect.left += offset;
+        vRect.top += offset;
+        vRect.right -= offset;
+        vRect.bottom -= offset;
+        drawLineLTToRT(canvas, vRect);
+        drawLineRTToRB(canvas, vRect);
+        drawLineRBToLB(canvas, vRect);
+        drawLineLBToLT(canvas, vRect);
+
+        super.onDraw(canvas);
     }
 
     protected void setBoundaryBox() {

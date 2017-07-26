@@ -49,15 +49,17 @@ public class DrawViewEllipse extends BaseDrawView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (getPositionSize() >= 2 && getPosition(0).equals(getPosition(1)) == false) {
-            loadPaint();
-            setBoundaryBox();
-
-            final RectF rect = getRect(true);
-            canvas.drawOval(rect, paint);
-
-            super.onDraw(canvas);
+        if (getPositionSize() < 2 || getRect(false).width() == 0 || getRect(false).height() == 0) {
+            return;
         }
+
+        loadPaint();
+        setBoundaryBox();
+
+        final RectF rect = getRect(true);
+        canvas.drawOval(rect, paint);
+
+        super.onDraw(canvas);
     }
 
     protected void setBoundaryBox() {
