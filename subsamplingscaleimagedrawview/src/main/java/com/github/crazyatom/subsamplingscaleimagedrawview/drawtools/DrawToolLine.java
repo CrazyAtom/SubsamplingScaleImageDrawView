@@ -39,6 +39,10 @@ public class DrawToolLine extends BaseDrawTool {
     @Override
     protected void touchEnd(int x, int y) {
         this.end = viewToSourceCoord(x, y);
+        if (Utillity.getDistance(begin, end) < MINIMUM_LENGTH) {
+            PointF dir = Utillity.getUnitDirection(begin, end);
+            end = Utillity.getOffset(begin, dir, MINIMUM_LENGTH);
+        }
         imageDrawView.removeDrawView(previewDrawView);
         injectAnnotation();
         checkContinueTool();

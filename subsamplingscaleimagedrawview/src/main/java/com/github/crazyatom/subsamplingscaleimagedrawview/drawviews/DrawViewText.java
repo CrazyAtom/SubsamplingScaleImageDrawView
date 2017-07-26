@@ -111,16 +111,12 @@ public class DrawViewText extends BaseDrawView {
 
     @Override
     public boolean isContains(float x, float y) {
-        if (boundaryBox.width() < MINIMUM_LENGTH) {
-            final float offset = MINIMUM_LENGTH / 2;
-            ArrayList<PointF> boundary = new ArrayList<>();
-            boundary.add(new PointF(boundaryBox.left + offset, boundaryBox.top + offset));
-            boundary.add(new PointF(boundaryBox.right - offset, boundaryBox.top + offset));
-            boundary.add(new PointF(boundaryBox.right - offset, boundaryBox.bottom - offset));
-            boundary.add(new PointF(boundaryBox.left + offset, boundaryBox.bottom - offset));
-            return Utillity.isInside(new PointF(x, y), boundary);
-        }
-        return super.isContains(x, y);
+        ArrayList<PointF> boundary = new ArrayList<>();
+        boundary.add(new PointF(boundaryBox.left, boundaryBox.top));
+        boundary.add(new PointF(boundaryBox.right, boundaryBox.top));
+        boundary.add(new PointF(boundaryBox.right, boundaryBox.bottom));
+        boundary.add(new PointF(boundaryBox.left, boundaryBox.bottom));
+        return Utillity.isInside(new PointF(x, y), boundary);
     }
 
     @Override

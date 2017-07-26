@@ -52,10 +52,6 @@ public class EditPinViewRect extends BaseEditPinView {
             }
         }
 
-        if (boundaryBox.width() <= BaseDrawView.MINIMUM_LENGTH || boundaryBox.height() <= BaseDrawView.MINIMUM_LENGTH) {
-            return;
-        }
-
         findPinByRectPos(Pin.RectPos.LEFT_TOP).point = new PointF(boundaryBox.left, boundaryBox.top);
         findPinByRectPos(Pin.RectPos.TOP).point = new PointF((boundaryBox.left + boundaryBox.right) / 2.0F, boundaryBox.top);
         findPinByRectPos(Pin.RectPos.RIGHT_TOP).point = new PointF(boundaryBox.right, boundaryBox.top);

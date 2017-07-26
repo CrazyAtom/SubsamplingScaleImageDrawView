@@ -29,8 +29,6 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 public abstract class BaseDrawView extends View {
 
-    public static final float MINIMUM_LENGTH = 100.0f;
-
     private DrawViewType type;
     private String uniqId;
 
@@ -149,6 +147,16 @@ public abstract class BaseDrawView extends View {
     }
 
     public void setBoundaryBox(RectF box) {
+        final float MINIMUM_LENGTH = 100;
+        if (box.width() < MINIMUM_LENGTH) {
+            box.left -= MINIMUM_LENGTH / 2;
+            box.right += MINIMUM_LENGTH / 2;
+        }
+        if (box.height() < MINIMUM_LENGTH) {
+            box.top -= MINIMUM_LENGTH / 2;
+            box.bottom += MINIMUM_LENGTH / 2;
+        }
+
         this.boundaryBox = box;
     }
 

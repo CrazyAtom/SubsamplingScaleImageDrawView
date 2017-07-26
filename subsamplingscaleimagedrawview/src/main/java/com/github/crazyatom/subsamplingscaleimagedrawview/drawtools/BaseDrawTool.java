@@ -16,6 +16,7 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 public abstract class BaseDrawTool {
 
+    final protected float MINIMUM_LENGTH = 100;
     protected ImageDrawView imageDrawView;
     protected BaseDrawView previewDrawView;
     private boolean isBeginEdited = false;

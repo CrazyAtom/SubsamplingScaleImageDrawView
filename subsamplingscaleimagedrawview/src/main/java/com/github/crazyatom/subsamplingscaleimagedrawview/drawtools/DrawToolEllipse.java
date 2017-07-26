@@ -15,8 +15,8 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 public class DrawToolEllipse extends BaseDrawTool {
 
-    private PointF mBegin;
-    private PointF mEnd;
+    private PointF begin;
+    private PointF end;
 
     public DrawToolEllipse(@NonNull ImageDrawView imageDrawView) {
         super(imageDrawView);
@@ -24,8 +24,8 @@ public class DrawToolEllipse extends BaseDrawTool {
 
     @Override
     protected void touchBegin(int x, int y) {
-        mBegin = viewToSourceCoord(x, y);
-        mEnd = mBegin;
+        begin = viewToSourceCoord(x, y);
+        end = begin;
         previewDrawView = createDrawView();
         imageDrawView.addDrawView(previewDrawView);
     }
@@ -38,7 +38,10 @@ public class DrawToolEllipse extends BaseDrawTool {
 
     @Override
     protected void touchEnd(int x, int y) {
-        mEnd = viewToSourceCoord(x, y);
+        end = viewToSourceCoord(x, y);
+        if (Utillity.getDistance(begin, end) < MINIMUM_LENGTH) {
+            end = Utillity.getOffset(begin, new PointF(1, 1), MINIMUM_LENGTH);
+        }
         imageDrawView.removeDrawView(previewDrawView);
         injectAnnotation();
         checkContinueTool();
@@ -57,8 +60,8 @@ public class DrawToolEllipse extends BaseDrawTool {
     @Override
     protected BaseDrawView createDrawView() {
         BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView, BaseDrawView.DrawViewType.ELLIPSE);
-        drawView.addPosition(mBegin);
-        drawView.addPosition(mEnd);
+        drawView.addPosition(begin);
+        drawView.addPosition(end);
         drawView.setColor(Utillity.getColorString(DrawViewSetting.getInstance().getColor()));
         drawView.setThick(DrawViewSetting.getInstance().getLineWidth());
 

@@ -21,6 +21,7 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 public class DrawViewDimension extends BaseDrawView {
 
+    final private float MINIMUM_LENGTH = 100;
     final private int textSize = 65;
     public enum state { PREVIEW_BEGIN, PREVIEW_END, COMPLETE }
     private state currentState = DrawViewDimension.state.COMPLETE;
@@ -90,14 +91,6 @@ public class DrawViewDimension extends BaseDrawView {
 
     protected void setBoundaryBox() {
         final RectF rect = getRect(false);
-        if (rect.width() < MINIMUM_LENGTH) {
-            rect.left -= MINIMUM_LENGTH / 2;
-            rect.right += MINIMUM_LENGTH / 2;
-        }
-        if (rect.height() < MINIMUM_LENGTH) {
-            rect.top -= MINIMUM_LENGTH / 2;
-            rect.bottom += MINIMUM_LENGTH / 2;
-        }
         setBoundaryBox(rect);
     }
 

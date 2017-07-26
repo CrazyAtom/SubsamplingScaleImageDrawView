@@ -20,6 +20,8 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 public class DrawViewLine extends BaseDrawView {
 
+    final private float MINIMUM_LENGTH = 100;
+
     public DrawViewLine(@NonNull ImageDrawView imageDrawView) {
         super(DrawViewType.LINE, imageDrawView);
     }
@@ -58,12 +60,7 @@ public class DrawViewLine extends BaseDrawView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (getPositionSize() >= 2) {
-            if (Math.abs(Utillity.getDistance(getPosition(0), getPosition(1))) <= MINIMUM_LENGTH) {
-                PointF dir = Utillity.getUnitDirection(getPosition(0), getPosition(1));
-                setPosition(1, Utillity.getOffset(getPosition(0), dir, MINIMUM_LENGTH));
-            }
-
+        if (getPositionSize() >= 2 && getPosition(0).equals(getPosition(1)) == false) {
             loadPaint();
             setBoundaryBox();
 
@@ -77,14 +74,6 @@ public class DrawViewLine extends BaseDrawView {
 
     protected void setBoundaryBox() {
         final RectF rect = getRect(false);
-        if (rect.width() < MINIMUM_LENGTH) {
-            rect.left -= MINIMUM_LENGTH / 2;
-            rect.right += MINIMUM_LENGTH / 2;
-        }
-        if (rect.height() < MINIMUM_LENGTH) {
-            rect.top -= MINIMUM_LENGTH / 2;
-            rect.bottom += MINIMUM_LENGTH / 2;
-        }
         setBoundaryBox(rect);
     }
 

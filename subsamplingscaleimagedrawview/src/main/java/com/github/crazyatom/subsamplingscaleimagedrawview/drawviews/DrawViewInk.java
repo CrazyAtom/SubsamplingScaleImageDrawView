@@ -64,7 +64,7 @@ public class DrawViewInk extends BaseDrawView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (getPositionSize() >= 2) {
+        if (getPositionSize() >= 1) {
             loadPaint();
             setBoundaryBox();
 
@@ -109,15 +109,7 @@ public class DrawViewInk extends BaseDrawView {
     }
 
     protected void setBoundaryBox() {
-        RectF rect = new RectF(getMinX(), getMinY(), getMaxX(), getMaxY());
-        if (rect.width() <= MINIMUM_LENGTH && rect.height() <= MINIMUM_LENGTH) {
-            final float offset = MINIMUM_LENGTH / 2.0f;
-            rect.left -= offset;
-            rect.top -= offset;
-            rect.right += offset;
-            rect.bottom += offset;
-        }
-
+        RectF rect = getRect(false);
         setBoundaryBox(rect);
     }
 
