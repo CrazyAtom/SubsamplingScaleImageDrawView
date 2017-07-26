@@ -57,8 +57,8 @@ public abstract class BaseDrawView extends View {
 
         this.type = type;
         this.imageDrawView = imageDrawView;
-        if (DrawViewFactory.getInstance().getNewDrawViewListener() != null) {
-            setUniqId(DrawViewFactory.getInstance().getNewDrawViewListener().newUUID());
+        if (DrawViewFactory.getInstance().getNewDrawViewCallback() != null) {
+            setUniqId(DrawViewFactory.getInstance().getNewDrawViewCallback().newUUID());
         } else {
             setUniqId(Utillity.getUUID());
         }

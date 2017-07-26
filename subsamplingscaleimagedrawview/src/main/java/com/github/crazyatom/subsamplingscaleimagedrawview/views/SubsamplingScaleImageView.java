@@ -3026,7 +3026,7 @@ public class SubsamplingScaleImageView extends ViewGroup {
     public interface OnStateChangedListener {
 
         /**
-         * The scale has changed. Use with {@link #getMaxScale()} and {@link #getMinScale()} to determine
+         * The scale has changedDrawTool. Use with {@link #getMaxScale()} and {@link #getMinScale()} to determine
          * whether the image is fully zoomed in or out.
          * @param newScale The new scale.
          * @param origin Where the event originated from - one of {@link #ORIGIN_ANIM}, {@link #ORIGIN_TOUCH}.
@@ -3034,7 +3034,7 @@ public class SubsamplingScaleImageView extends ViewGroup {
         void onScaleChanged(float newScale, int origin);
 
         /**
-         * The source center has been changed. This can be a result of panning or zooming.
+         * The source center has been changedDrawTool. This can be a result of panning or zooming.
          * @param newCenter The new source center point.
          * @param origin Where the event originated from - one of {@link #ORIGIN_ANIM}, {@link #ORIGIN_TOUCH}.
          */

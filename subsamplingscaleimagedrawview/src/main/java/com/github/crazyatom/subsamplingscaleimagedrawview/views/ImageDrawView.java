@@ -30,7 +30,7 @@ import android.view.View;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.crazyatom.subsamplingscaleimagedrawview.Event.ChangeDrawToolCallback;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.ChangedDrawToolCallback;
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.DrawViewReferenceDimension;
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.ChangeDrawToolListener;
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.CompleteCallback;
@@ -61,7 +61,7 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     // Listener Remove DrawView Event
     private RemoveDrawViewListener removeDrawViewListener;
     // Callback Changed DrawTool
-    private ChangeDrawToolCallback changeDrawToolCallback;
+    private ChangedDrawToolCallback changedDrawToolCallback;
 
     public ImageDrawView(Context context, AttributeSet attr) {
         super(context, attr);
@@ -264,9 +264,9 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
             this.drawTool.setShowSnackbarListener(getShowSnackbarListener());
         }
 
-        // callback changed
-        if (changeDrawToolCallback != null) {
-            changeDrawToolCallback.changed(this.drawTool);
+        // callback changedDrawTool
+        if (changedDrawToolCallback != null) {
+            changedDrawToolCallback.changedDrawTool(this.drawTool);
         }
 
         return this.drawTool;
@@ -437,12 +437,12 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
      * DrawTool 변경에 대한 callback
      * @return
      */
-    public ChangeDrawToolCallback getChangeDrawToolCallback() {
-        return changeDrawToolCallback;
+    public ChangedDrawToolCallback getChangedDrawToolCallback() {
+        return changedDrawToolCallback;
     }
 
-    public void setChangeDrawToolCallback(ChangeDrawToolCallback changeDrawToolCallback) {
-        this.changeDrawToolCallback = changeDrawToolCallback;
+    public void setChangedDrawToolCallback(ChangedDrawToolCallback changedDrawToolCallback) {
+        this.changedDrawToolCallback = changedDrawToolCallback;
     }
 
     /**

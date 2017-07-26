@@ -13,12 +13,12 @@ import java.io.FileFilter;
 import java.util.ArrayList;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.BaseDrawTool;
-import com.github.crazyatom.subsamplingscaleimagedrawview.Event.NewDrawViewListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.NewDrawViewCallback;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewSetting;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
-public class ImageDrawViewActivity extends AppCompatActivity implements NewDrawViewListener {
+public class ImageDrawViewActivity extends AppCompatActivity implements NewDrawViewCallback {
 
     private ImageDrawViewPager mPager;
     private ImageDrawViewPagerAdapter mAdapter;

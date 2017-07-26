@@ -2,7 +2,7 @@ package com.github.crazyatom.subsamplingscaleimagedrawview.util;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.*;
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.AddDrawViewPhotoListener;
-import com.github.crazyatom.subsamplingscaleimagedrawview.Event.NewDrawViewListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.NewDrawViewCallback;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 /**
@@ -13,7 +13,7 @@ public class DrawViewFactory {
 
     private static DrawViewFactory instance;
     // Listener New DrawView Event
-    private NewDrawViewListener newDrawViewListener;
+    private NewDrawViewCallback newDrawViewCallback;
     // Listener Add Photo DrawView Event
     private AddDrawViewPhotoListener addDrawViewPhotoListener;
 
@@ -28,12 +28,12 @@ public class DrawViewFactory {
      * new DrawView Event
      * @return
      */
-    public NewDrawViewListener getNewDrawViewListener() {
-        return newDrawViewListener;
+    public NewDrawViewCallback getNewDrawViewCallback() {
+        return newDrawViewCallback;
     }
 
-    public void setNewDrawViewListener(NewDrawViewListener newDrawViewListener) {
-        this.newDrawViewListener = newDrawViewListener;
+    public void setNewDrawViewCallback(NewDrawViewCallback newDrawViewCallback) {
+        this.newDrawViewCallback = newDrawViewCallback;
     }
 
     /**
