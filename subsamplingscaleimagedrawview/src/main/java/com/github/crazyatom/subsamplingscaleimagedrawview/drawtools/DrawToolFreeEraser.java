@@ -81,6 +81,8 @@ public class DrawToolFreeEraser extends BaseDrawTool {
      */
     @Override
     public void exit() {
+        super.exit();
+
         for (String key : selectedDrawViewMap.keySet()) {
             selectedDrawViewMap.get(key).setShowBoundaryBox(false);
             selectedDrawViewMap.get(key).invalidate();

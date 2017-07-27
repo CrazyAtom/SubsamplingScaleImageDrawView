@@ -97,12 +97,10 @@ public class DrawToolDimension extends BaseDrawTool {
 
     @Override
     public void exit() {
+        super.exit();
+
         if (snackbar != null && snackbar.isShown() == true) {
             snackbar.dismiss();
-        }
-
-        if (previewDrawView != null) {
-            imageDrawView.removeDrawView(previewDrawView);
         }
     }
 

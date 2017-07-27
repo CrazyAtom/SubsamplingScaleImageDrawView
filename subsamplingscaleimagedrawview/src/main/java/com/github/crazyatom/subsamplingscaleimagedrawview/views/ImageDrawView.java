@@ -174,17 +174,20 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
      * @param drawView 삭제할 drawView 뷰
      */
     public void removeDrawView(@NonNull BaseDrawView drawView) {
-        this.drawViewMap.remove(drawView.getUniqId());
-        removeView(drawView);
-        if (this.removeDrawViewListener != null) {
-            this.removeDrawViewListener.removeDrawView(drawView.getUniqId());
+        if (drawView != null) {
+            this.drawViewMap.remove(drawView.getUniqId());
+            removeView(drawView);
+            drawView = null;
+            if (this.removeDrawViewListener != null) {
+                this.removeDrawViewListener.removeDrawView(drawView.getUniqId());
+            }
         }
     }
 
     /**
-     * drawView 모두 삭제
+     * drawView 초기화
      */
-    public void clearDrawView() {
+    public void initDrawView() {
         for (String key : this.drawViewMap.keySet()) {
             removeView(this.drawViewMap.get(key));
         }
