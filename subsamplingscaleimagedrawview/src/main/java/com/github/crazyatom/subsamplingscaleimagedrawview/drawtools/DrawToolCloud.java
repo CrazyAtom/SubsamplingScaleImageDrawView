@@ -49,12 +49,6 @@ public class DrawToolCloud extends BaseDrawTool {
 
     @Override
     public void enter() {
-
-    }
-
-    @Override
-    public void exit() {
-
     }
 
     @Override

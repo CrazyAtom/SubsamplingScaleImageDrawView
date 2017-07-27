@@ -54,11 +54,6 @@ public class DrawToolLine extends BaseDrawTool {
     }
 
     @Override
-    public void exit() {
-
-    }
-
-    @Override
     protected BaseDrawView createDrawView() {
         BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView, BaseDrawView.DrawViewType.LINE);
         drawView.addPosition(this.begin);

@@ -55,11 +55,6 @@ public class DrawToolInk extends BaseDrawTool {
     }
 
     @Override
-    public void exit() {
-
-    }
-
-    @Override
     protected BaseDrawView createDrawView() {
         BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView, BaseDrawView.DrawViewType.INK);
         drawView.setColor(Utillity.getColorString(DrawViewSetting.getInstance().getColor()));

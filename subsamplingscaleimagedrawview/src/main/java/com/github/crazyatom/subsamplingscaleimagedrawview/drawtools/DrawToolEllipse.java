@@ -53,11 +53,6 @@ public class DrawToolEllipse extends BaseDrawTool {
     }
 
     @Override
-    public void exit() {
-
-    }
-
-    @Override
     protected BaseDrawView createDrawView() {
         BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView, BaseDrawView.DrawViewType.ELLIPSE);
         drawView.addPosition(begin);

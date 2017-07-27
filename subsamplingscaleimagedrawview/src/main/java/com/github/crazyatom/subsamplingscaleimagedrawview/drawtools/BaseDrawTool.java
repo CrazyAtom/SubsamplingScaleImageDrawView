@@ -68,7 +68,9 @@ public abstract class BaseDrawTool {
 
     public abstract void enter();
 
-    public abstract void exit();
+    public void exit() {
+        imageDrawView.removeDrawView(previewDrawView);
+    }
 
     /**
      * DrawView 생성
