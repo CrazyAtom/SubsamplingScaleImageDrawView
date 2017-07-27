@@ -25,14 +25,6 @@ public class DrawViewRectangle extends BaseDrawView {
     }
 
     @Override
-    public void update(RectF newBbox) {
-        ArrayList<PointF> points = new ArrayList<>();
-        points.add(new PointF(newBbox.left, newBbox.top));
-        points.add(new PointF(newBbox.right, newBbox.bottom));
-        update(points);
-    }
-
-    @Override
     public void showContentsBox(Context context) {
 
     }

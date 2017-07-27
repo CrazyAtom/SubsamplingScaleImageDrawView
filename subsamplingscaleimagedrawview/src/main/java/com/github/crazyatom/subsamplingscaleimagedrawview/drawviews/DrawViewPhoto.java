@@ -33,13 +33,6 @@ public class DrawViewPhoto extends BaseDrawView {
     }
 
     @Override
-    public void update(RectF newBbox) {
-        ArrayList<PointF> points = new ArrayList<>();
-        points.add(new PointF((newBbox.left + newBbox.right) / 2, (newBbox.top + newBbox.bottom) / 2));
-        update(points);
-    }
-
-    @Override
     public void showContentsBox(Context context) {
         // call managed photo window
         if (DrawViewFactory.getInstance().getAddDrawViewPhotoListener() != null) {

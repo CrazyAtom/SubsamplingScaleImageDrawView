@@ -5,6 +5,7 @@ import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.BaseDrawView;
+import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewFactory;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 public class EditPinViewRect extends BaseEditPinView {
@@ -15,51 +16,62 @@ public class EditPinViewRect extends BaseEditPinView {
 
     @Override
     public void setMovePin(PointF pos) {
-        RectF boundaryBox = getBoundaryBox();
+        final RectF origin = getBoundaryBox();
+        RectF modify = getBoundaryBox();
         for (Pin pin : pinList) {
             if (pin.state == true) {
                 switch (pin.rectPos) {
                     case LEFT_TOP:
-                        boundaryBox.left = pos.x;
-                        boundaryBox.top = pos.y;
+                        modify.left = pos.x;
+                        modify.top = pos.y;
                         break;
                     case TOP:
-                        boundaryBox.top = pos.y;
+                        modify.top = pos.y;
                         break;
                     case RIGHT_TOP:
-                        boundaryBox.top = pos.y;
-                        boundaryBox.right = pos.x;
+                        modify.top = pos.y;
+                        modify.right = pos.x;
                         break;
                     case RIGHT:
-                        boundaryBox.right = pos.x;
+                        modify.right = pos.x;
                         break;
                     case RIGHT_BOTTOM:
-                        boundaryBox.right = pos.x;
-                        boundaryBox.bottom = pos.y;
+                        modify.right = pos.x;
+                        modify.bottom = pos.y;
                         break;
                     case BOTTOM:
-                        boundaryBox.bottom = pos.y;
+                        modify.bottom = pos.y;
                         break;
                     case LEFT_BOTTOM:
-                        boundaryBox.bottom = pos.y;
-                        boundaryBox.left = pos.x;
+                        modify.bottom = pos.y;
+                        modify.left = pos.x;
                         break;
                     case LEFT:
-                        boundaryBox.left = pos.x;
+                        modify.left = pos.x;
                         break;
                 }
                 break;
             }
         }
 
-        findPinByRectPos(Pin.RectPos.LEFT_TOP).point = new PointF(boundaryBox.left, boundaryBox.top);
-        findPinByRectPos(Pin.RectPos.TOP).point = new PointF((boundaryBox.left + boundaryBox.right) / 2.0F, boundaryBox.top);
-        findPinByRectPos(Pin.RectPos.RIGHT_TOP).point = new PointF(boundaryBox.right, boundaryBox.top);
-        findPinByRectPos(Pin.RectPos.RIGHT).point = new PointF(boundaryBox.right, (boundaryBox.top + boundaryBox.bottom) / 2.0F);
-        findPinByRectPos(Pin.RectPos.RIGHT_BOTTOM).point = new PointF(boundaryBox.right, boundaryBox.bottom);
-        findPinByRectPos(Pin.RectPos.BOTTOM).point = new PointF((boundaryBox.left + boundaryBox.right) / 2.0F, boundaryBox.bottom);
-        findPinByRectPos(Pin.RectPos.LEFT_BOTTOM).point = new PointF(boundaryBox.left, boundaryBox.bottom);
-        findPinByRectPos(Pin.RectPos.LEFT).point = new PointF(boundaryBox.left, (boundaryBox.top + boundaryBox.bottom) / 2.0F);
+        final float MINIMUM_LENGTH = DrawViewFactory.getInstance().getMINIMUM_LENGTH() / imageDrawView.getScale();
+        if (origin.width() > modify.width() && modify.width() < MINIMUM_LENGTH) {
+            modify.left = origin.left;
+            modify.right = origin.right;
+        }
+        if (origin.height() > modify.height() && modify.height() < MINIMUM_LENGTH) {
+            modify.top = origin.top;
+            modify.bottom = origin.bottom;
+        }
+
+        findPinByRectPos(Pin.RectPos.LEFT_TOP).point = new PointF(modify.left, modify.top);
+        findPinByRectPos(Pin.RectPos.TOP).point = new PointF((modify.left + modify.right) / 2.0F, modify.top);
+        findPinByRectPos(Pin.RectPos.RIGHT_TOP).point = new PointF(modify.right, modify.top);
+        findPinByRectPos(Pin.RectPos.RIGHT).point = new PointF(modify.right, (modify.top + modify.bottom) / 2.0F);
+        findPinByRectPos(Pin.RectPos.RIGHT_BOTTOM).point = new PointF(modify.right, modify.bottom);
+        findPinByRectPos(Pin.RectPos.BOTTOM).point = new PointF((modify.left + modify.right) / 2.0F, modify.bottom);
+        findPinByRectPos(Pin.RectPos.LEFT_BOTTOM).point = new PointF(modify.left, modify.bottom);
+        findPinByRectPos(Pin.RectPos.LEFT).point = new PointF(modify.left, (modify.top + modify.bottom) / 2.0F);
 
         invalidate();
     }

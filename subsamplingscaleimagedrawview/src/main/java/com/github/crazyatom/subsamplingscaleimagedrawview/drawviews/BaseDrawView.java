@@ -385,7 +385,25 @@ public abstract class BaseDrawView extends View {
      *
      * @param newBbox
      */
-    abstract public void update(RectF newBbox);
+    public void update(RectF newBbox) {
+        final RectF originalBbox = getBoundaryBox();
+
+        if (newBbox != null && originalBbox != null) {
+            final float scaleX = newBbox.width() / originalBbox.width();
+            final float scaleY = newBbox.height() / originalBbox.height();
+
+            ArrayList<PointF> points = new ArrayList<>();
+            for (int updateIdx = 0; updateIdx < getPositionSize(); ++updateIdx) {
+                PointF currPoint = getPosition(updateIdx);
+                PointF newPoint = new PointF();
+                newPoint.x = (currPoint.x - originalBbox.left) * scaleX + newBbox.left;
+                newPoint.y = (currPoint.y - originalBbox.top) * scaleY + newBbox.top;
+                points.add(newPoint);
+            }
+
+            update(points);
+        }
+    }
 
     /**
      * drawView 정보 팝업

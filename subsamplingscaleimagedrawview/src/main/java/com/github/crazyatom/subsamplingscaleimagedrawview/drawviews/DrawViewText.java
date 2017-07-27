@@ -48,13 +48,6 @@ public class DrawViewText extends BaseDrawView {
     }
 
     @Override
-    public void update(RectF newBbox) {
-        ArrayList<PointF> points = new ArrayList<>();
-        points.add(new PointF(newBbox.left, newBbox.top + getThick()));
-        update(points);
-    }
-
-    @Override
     public void showContentsBox(Context context) {
         if (this.dialog == null) {
             createDialog(getContext());

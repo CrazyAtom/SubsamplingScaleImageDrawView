@@ -32,23 +32,6 @@ public class DrawViewDimension extends BaseDrawView {
     }
 
     @Override
-    public void update(RectF newBbox) {
-        if (getPositionSize() >= 2) {
-            final RectF originBbox = getBoundaryBox();
-            final PointF begin = getPosition(0);
-            final PointF end = getPosition(1);
-
-            final float scaleX = newBbox.width() / originBbox.width();
-            final float scaleY = newBbox.height() / originBbox.height();
-
-            ArrayList<PointF> points = new ArrayList<>();
-            points.add(new PointF((begin.x - originBbox.left) * scaleX + newBbox.left, (begin.y - originBbox.top) * scaleY + newBbox.top));
-            points.add(new PointF((end.x - originBbox.left) * scaleX + newBbox.left, (end.y - originBbox.top) * scaleY + newBbox.top));
-            update(points);
-        }
-    }
-
-    @Override
     public void showContentsBox(Context context) {
 
     }
@@ -91,6 +74,15 @@ public class DrawViewDimension extends BaseDrawView {
 
     protected void setBoundaryBox() {
         final RectF rect = getRect(false);
+        float MINIMUM_LENGTH = DrawViewFactory.getInstance().getMINIMUM_LENGTH();
+        if (rect.width() < MINIMUM_LENGTH) {
+            rect.left -= MINIMUM_LENGTH / 2;
+            rect.right += MINIMUM_LENGTH / 2;
+        }
+        if (rect.height() < MINIMUM_LENGTH) {
+            rect.top -= MINIMUM_LENGTH / 2;
+            rect.bottom += MINIMUM_LENGTH / 2;
+        }
         setBoundaryBox(rect);
     }
 

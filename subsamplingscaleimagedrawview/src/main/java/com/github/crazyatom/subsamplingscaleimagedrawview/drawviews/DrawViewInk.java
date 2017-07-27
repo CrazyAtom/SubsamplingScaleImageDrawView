@@ -30,25 +30,6 @@ public class DrawViewInk extends BaseDrawView {
     }
 
     @Override
-    public void update(RectF newBbox) {
-        final RectF originalBbox = getBoundaryBox();
-
-        final float scaleX = newBbox.width() / originalBbox.width();
-        final float scaleY = newBbox.height() / originalBbox.height();
-
-        ArrayList<PointF> points = new ArrayList<>();
-        for (int updateList = 0; updateList < getPositionSize(); ++updateList) {
-            PointF currPoint = getPosition(updateList);
-            PointF newPoint = new PointF();
-            newPoint.x = (currPoint.x - originalBbox.left) * scaleX + newBbox.left;
-            newPoint.y = (currPoint.y - originalBbox.top) * scaleY + newBbox.top;
-            points.add(newPoint);
-        }
-
-        update(points);
-    }
-
-    @Override
     public void showContentsBox(Context context) {
 
     }
