@@ -1,6 +1,7 @@
 package com.github.crazyatom.subsamplingscaleimagedrawview.drawtools;
 
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.BaseDrawView;
@@ -39,11 +40,20 @@ public class DrawToolCloud extends BaseDrawTool {
     @Override
     protected void touchEnd(int x, int y) {
         end = viewToSourceCoord(x, y);
-        if (Utillity.getDistance(begin, end) < DrawViewFactory.getInstance().getMINIMUM_LENGTH()) {
-            end = Utillity.getOffset(begin, new PointF(1, 1), DrawViewFactory.getInstance().getMINIMUM_LENGTH());
-        }
         imageDrawView.removeDrawView(previewDrawView);
-        injectAnnotation();
+
+        boolean valid = true;
+        if (Math.abs(end.x - begin.x) == 0 || Math.abs(end.y - begin.y) == 0) {
+            valid = false;
+        }
+
+        if (valid == true) {
+            if (Utillity.getDistance(begin, end) < DrawViewFactory.getInstance().getMINIMUM_LENGTH()) {
+                end = Utillity.getOffset(begin, new PointF(1, 1), DrawViewFactory.getInstance().getMINIMUM_LENGTH());
+            }
+            injectAnnotation();
+        }
+
         checkContinueTool();
     }
 

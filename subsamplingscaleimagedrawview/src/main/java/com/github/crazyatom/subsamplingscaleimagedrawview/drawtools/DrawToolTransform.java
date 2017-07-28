@@ -103,7 +103,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
 
         PointF sCoord = viewToSourceCoord(x, y);
         if (this.editPinView.isPinPressed() == true) {
-            if (isInsideView(x, y, x, y) == true) {
+            if (isInsideSourceView(sCoord.x, sCoord.y, sCoord.x, sCoord.y) == true) {
                 this.editPinView.setMovePin(new PointF(sCoord.x, sCoord.y));
                 this.editPinView.invalidate();
                 if (selectedDrawView.getType() == BaseDrawView.DrawViewType.DIMENSION_REF
@@ -119,17 +119,10 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
             final float sDistX = sCoord.x - beginPoint.x;
             final float sDistY = sCoord.y - beginPoint.y;
             beginPoint = sCoord;
-
-            RectF vRect = new RectF();
-            imageDrawView.sourceToViewRect(sRect, vRect);
-            final float vDistX = sDistX * imageDrawView.getScale();
-            final float vDistY = sDistY * imageDrawView.getScale();
-            if (isInsideView(vRect.left + vDistX, vRect.top + vDistY, vRect.right + vDistX, vRect.bottom + vDistY) == true) {
-                update(new RectF(sRect.left + sDistX, sRect.top + sDistY, sRect.right + sDistX, sRect.bottom + sDistY));
-                if (this.editPinView != null) {
-                    this.editPinView.initPinList();
-                    this.editPinView.invalidate();
-                }
+            update(new RectF(sRect.left + sDistX, sRect.top + sDistY, sRect.right + sDistX, sRect.bottom + sDistY));
+            if (this.editPinView != null) {
+                this.editPinView.initPinList();
+                this.editPinView.invalidate();
             }
         }
     }

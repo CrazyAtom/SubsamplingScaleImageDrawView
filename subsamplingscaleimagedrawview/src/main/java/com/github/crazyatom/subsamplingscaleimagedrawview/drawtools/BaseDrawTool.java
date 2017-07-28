@@ -137,16 +137,16 @@ public abstract class BaseDrawTool {
     }
 
     /**
-     * 영역이 뷰 내에 존재하는지 판단
+     * 영역이 소스뷰 내에 존재하는지 판단
      * @param left
      * @param top
      * @param right
      * @param bottom
      * @return boolean
      */
-    protected boolean isInsideView(final float left, final float top, final float right, final float bottom) {
-        return (left > 0.0f && right < this.imageDrawView.getWidth()
-                && top > 0.0f && bottom < this.imageDrawView.getHeight());
+    protected boolean isInsideSourceView(final float left, final float top, final float right, final float bottom) {
+        return (left > 0.0f && right < this.imageDrawView.getSHeight()
+                && top > 0.0f && bottom < this.imageDrawView.getSHeight());
     }
 
     /**

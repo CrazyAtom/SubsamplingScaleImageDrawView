@@ -34,17 +34,7 @@ public class DrawToolInk extends BaseDrawTool {
 
     @Override
     protected void touchEnd(int x, int y) {
-        boolean valid = true;
-        for (int i = 0; i < previewDrawView.getPositionSize(); i++) {
-            PointF vc = sourceToViewCoord(previewDrawView.getPosition(i).x, previewDrawView.getPosition(i).y);
-            if (isInsideView(vc.x, vc.y, vc.x, vc.y) == false) {
-                valid = false;
-                break;
-            }
-        }
-        if (valid == true) {
-            injectAnnotation();
-        }
+        injectAnnotation();
         imageDrawView.removeDrawView(previewDrawView);
         checkContinueTool();
     }
