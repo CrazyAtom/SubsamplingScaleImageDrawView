@@ -92,14 +92,6 @@ public class DrawViewInk extends BaseDrawView {
 
     protected void setBoundaryBox() {
         RectF rect = getRect(false);
-        if (rect.width() <= DrawViewFactory.getInstance().getMINIMUM_LENGTH() &&
-                rect.height() <= DrawViewFactory.getInstance().getMINIMUM_LENGTH()) {
-            final float offset = DrawViewFactory.getInstance().getMINIMUM_LENGTH() / 2.0f;
-            rect.left -= offset;
-            rect.top -= offset;
-            rect.right += offset;
-            rect.bottom += offset;
-        }
         setBoundaryBox(rect);
     }
 

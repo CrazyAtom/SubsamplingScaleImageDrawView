@@ -177,10 +177,10 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
         if (drawView != null) {
             this.drawViewMap.remove(drawView.getUniqId());
             removeView(drawView);
-            drawView = null;
             if (this.removeDrawViewListener != null) {
                 this.removeDrawViewListener.removeDrawView(drawView.getUniqId());
             }
+            drawView = null;
         }
     }
 
@@ -207,57 +207,57 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
         switch (toolType) {
             case NONE:
                 this.drawTool = null;
-                this.gestureType = GestureType.VIEW;
+                changeGestureType(GestureType.VIEW);
                 break;
             case PHOTO:
                 this.drawTool = new DrawToolPhoto(this);
-                this.gestureType = GestureType.EDIT;
+                changeGestureType(GestureType.EDIT);
                 break;
             case TEXT:
                 this.drawTool = new DrawToolText(this);
-                this.gestureType = GestureType.EDIT;
+                changeGestureType(GestureType.EDIT);
                 break;
             case DIMENSION_REF:
                 this.drawTool = new DrawToolDimension(this);
                 ((DrawToolDimension) drawTool).setReferenceDrawMode(true);
-                this.gestureType = GestureType.EDIT;
+                changeGestureType(GestureType.EDIT);
                 break;
             case DIMENSION:
                 this.drawTool = new DrawToolDimension(this);
                 ((DrawToolDimension) drawTool).setReferenceDrawMode(false);
-                this.gestureType = GestureType.EDIT;
+                changeGestureType(GestureType.EDIT);
                 break;
             case CLOUD:
                 this.drawTool = new DrawToolCloud(this);
-                this.gestureType = GestureType.EDIT;
+                changeGestureType(GestureType.EDIT);
                 break;
             case INK:
                 this.drawTool = new DrawToolInk(this);
-                this.gestureType = GestureType.EDIT;
+                changeGestureType(GestureType.EDIT);
                 break;
             case LINE:
                 this.drawTool = new DrawToolLine(this);
-                this.gestureType = GestureType.EDIT;
+                changeGestureType(GestureType.EDIT);
                 break;
             case RECTANGLE:
                 this.drawTool = new DrawToolRectangle(this);
-                this.gestureType = GestureType.EDIT;
+                changeGestureType(GestureType.EDIT);
                 break;
             case ELLIPSE:
                 this.drawTool = new DrawToolEllipse(this);
-                this.gestureType = GestureType.EDIT;
+                changeGestureType(GestureType.EDIT);
                 break;
             case ERASER:
                 this.drawTool = new DrawToolFreeEraser(this);
-                this.gestureType = GestureType.EDIT;
+                changeGestureType(GestureType.EDIT);
                 break;
             case TRANSFORM:
                 this.drawTool = new DrawToolTransform(this);
-                this.gestureType = GestureType.EDIT;
+                changeGestureType(GestureType.EDIT);
                 break;
             default:
                 this.drawTool = null;
-                this.gestureType = GestureType.VIEW;
+                changeGestureType(GestureType.VIEW);
                 break;
         }
 
@@ -273,6 +273,15 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
         }
 
         return this.drawTool;
+    }
+
+    private void changeGestureType(GestureType gestureType) {
+        this.gestureType = gestureType;
+        if (this.gestureType == GestureType.VIEW) {
+            setZoomEnabled(true);
+        } else {
+            setZoomEnabled(false);
+        }
     }
 
     @Override

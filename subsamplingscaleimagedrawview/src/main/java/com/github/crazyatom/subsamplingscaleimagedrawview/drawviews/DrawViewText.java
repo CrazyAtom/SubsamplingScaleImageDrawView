@@ -40,11 +40,11 @@ public class DrawViewText extends BaseDrawView {
         super(DrawViewType.TEXT, imageDrawView);
 
         this.textSizeMap.clear();
-        this.textSizeMap.put(R.id.btn_freetext_size1, 20);
-        this.textSizeMap.put(R.id.btn_freetext_size2, 40);
-        this.textSizeMap.put(R.id.btn_freetext_size3, 60);
-        this.textSizeMap.put(R.id.btn_freetext_size4, 80);
-        this.textSizeMap.put(R.id.btn_freetext_size5, 100);
+        this.textSizeMap.put(R.id.btn_freetext_size1, 40);
+        this.textSizeMap.put(R.id.btn_freetext_size2, 80);
+        this.textSizeMap.put(R.id.btn_freetext_size3, 120);
+        this.textSizeMap.put(R.id.btn_freetext_size4, 160);
+        this.textSizeMap.put(R.id.btn_freetext_size5, 200);
     }
 
     @Override
