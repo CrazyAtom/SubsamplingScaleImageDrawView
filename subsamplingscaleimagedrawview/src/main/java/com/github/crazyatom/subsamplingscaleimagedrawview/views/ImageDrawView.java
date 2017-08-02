@@ -136,17 +136,37 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
             return;
         }
 
-        if (!isZooming && !isPanning) {
-            for (String key : this.drawViewMap.keySet()) {
-                final BaseDrawView drawView = this.drawViewMap.get(key);
-                if (drawView.isVisibility() == true) {
-                    drawView.onDraw(canvas);
-                }
+        if (this.drawViewMap.size() > 50) {
+            if (!isZooming && !isPanning) {
+                onDrawDrawView(canvas);
+                onDrawEditPinView(canvas);
             }
+        } else {
+            onDrawDrawView(canvas);
+            onDrawEditPinView(canvas);
+        }
+    }
 
-            if (this.drawTool instanceof DrawToolTransform && this.editPinView != null) {
-                this.editPinView.onDraw(canvas);
+    /**
+     * DrawView 그리기
+     * @param canvas
+     */
+    private void onDrawDrawView(Canvas canvas) {
+        for (String key : this.drawViewMap.keySet()) {
+            final BaseDrawView drawView = this.drawViewMap.get(key);
+            if (drawView.isVisibility() == true) {
+                drawView.onDraw(canvas);
             }
+        }
+    }
+
+    /**
+     * EditPinView 그리기
+     * @param canvas
+     */
+    private void onDrawEditPinView(Canvas canvas) {
+        if (this.drawTool instanceof DrawToolTransform && this.editPinView != null) {
+            this.editPinView.onDraw(canvas);
         }
     }
 
