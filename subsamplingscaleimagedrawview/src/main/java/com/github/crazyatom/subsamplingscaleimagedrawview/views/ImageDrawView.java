@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -168,15 +169,24 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
     /**
      * drawView 추가
-     *  - drawView 리스트에 추가
-     *  - drawView child view 추가
-     * @param drawView 추가할 drawView 뷰
+     * @param drawView 추가할 drawView
      */
     public void addDrawView(@NonNull BaseDrawView drawView) {
         this.drawViewMap.put(drawView.getUniqId(), drawView);
 //        addView(drawView);
         postInvalidate();
 //        invalidate();
+    }
+
+    /**
+     * drawView 리스트 추가
+     * @param drawViews 추가할 drawView 리스트
+     */
+    public void addDrawView(@NonNull ArrayList<BaseDrawView> drawViews) {
+        for (BaseDrawView drawView : drawViews) {
+            this.drawViewMap.put(drawView.getUniqId(), drawView);
+        }
+        postInvalidate();
     }
 
     /**
@@ -196,18 +206,31 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
             }
             drawView = null;
         }
-        invalidate();
+        postInvalidate();
+    }
+
+    public void removeDrawView(@NonNull ArrayList<BaseDrawView> drawViews) {
+        for (BaseDrawView drawView : drawViews) {
+            this.drawViewMap.remove(drawView.getUniqId());
+            if (this.removeDrawViewListener != null) {
+                this.removeDrawViewListener.removeDrawView(drawView.getUniqId());
+            }
+        }
+        postInvalidate();
     }
 
     /**
      * drawView 초기화
+     * @param invalidate 화면 invalidate
      */
-    public void initDrawView() {
+    public void initDrawView(final boolean invalidate) {
 //        for (String key : this.drawViewMap.keySet()) {
 //            removeView(this.drawViewMap.get(key));
 //        }
         this.drawViewMap.clear();
-        invalidate();
+        if (invalidate == true) {
+            invalidate();
+        }
     }
 
     /**
