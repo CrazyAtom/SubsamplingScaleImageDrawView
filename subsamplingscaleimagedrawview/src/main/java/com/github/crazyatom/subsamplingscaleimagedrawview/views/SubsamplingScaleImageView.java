@@ -45,7 +45,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.ViewGroup;
+import android.view.View;
 import android.view.ViewParent;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.GestureListener;
@@ -79,7 +79,7 @@ import java.util.concurrent.Executor;
  * s prefixes - coordinates, translations and distances measured in source image pixels (scaled)
  */
 @SuppressWarnings("unused")
-public class SubsamplingScaleImageView extends ViewGroup {
+public class SubsamplingScaleImageView extends View {
 
     private static final String TAG = SubsamplingScaleImageView.class.getSimpleName();
 
@@ -218,9 +218,9 @@ public class SubsamplingScaleImageView extends ViewGroup {
     private Rect pRegion;
 
     // Is two-finger zooming in progress
-    private boolean isZooming;
+    protected boolean isZooming;
     // Is one-finger panning in progress
-    private boolean isPanning;
+    protected boolean isPanning;
     // Is quick-scale gesture in progress
     private boolean isQuickScaling;
     // Max touches used in current gesture
