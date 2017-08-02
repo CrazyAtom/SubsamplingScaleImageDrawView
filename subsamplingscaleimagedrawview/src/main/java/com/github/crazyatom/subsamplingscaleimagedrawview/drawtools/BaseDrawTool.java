@@ -145,7 +145,7 @@ public abstract class BaseDrawTool {
      * @return boolean
      */
     protected boolean isInsideSourceView(final float left, final float top, final float right, final float bottom) {
-        return (left > 0.0f && right < this.imageDrawView.getSHeight()
+        return (left > 0.0f && right < this.imageDrawView.getSWidth()
                 && top > 0.0f && bottom < this.imageDrawView.getSHeight());
     }
 
