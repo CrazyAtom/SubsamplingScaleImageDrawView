@@ -1,6 +1,7 @@
 package com.github.crazyatom.subsamplingscaleimagedrawview.drawviews;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -8,7 +9,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
  * Created by crazy on 2017-07-11.
  */
 
-public abstract class BaseDrawView extends View {
+public abstract class BaseDrawView {
 
     private DrawViewType type;
     private String uniqId;
@@ -43,13 +43,13 @@ public abstract class BaseDrawView extends View {
     protected boolean showBoundaryBox = false;
     protected RectF boundaryBox = null;
 
+    private boolean visibility = true;
     private boolean isPreview = false;
     private boolean isEditable = false;
 
     protected DrawToolControllViewListener drawToolControllViewListener;
 
     public BaseDrawView(DrawViewType type, @NonNull ImageDrawView imageDrawView) {
-        super(imageDrawView.getContext());
         this.type = type;
         this.imageDrawView = imageDrawView;
 
@@ -152,6 +152,14 @@ public abstract class BaseDrawView extends View {
 
     public void setDrawToolControllViewListener(DrawToolControllViewListener drawToolControllViewListener) {
         this.drawToolControllViewListener = drawToolControllViewListener;
+    }
+
+    public boolean isVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(boolean visibility) {
+        this.visibility = visibility;
     }
 
     /**
@@ -266,8 +274,7 @@ public abstract class BaseDrawView extends View {
         }).y;
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
+    public void onDraw(Canvas canvas) {
         if (this.showBoundaryBox == true) {
             drawBBox(canvas);
         }
@@ -292,7 +299,7 @@ public abstract class BaseDrawView extends View {
             canvas.drawRect(vRect, paint);
 
             phase = (phase < 10.0f) ? phase + 1.0f : 0.0f;
-            this.postInvalidateOnAnimation();
+//            this.postInvalidateOnAnimation();
         }
     }
 
@@ -475,6 +482,21 @@ public abstract class BaseDrawView extends View {
                 drawToolControllViewListener.changeDefaultDrawTool();
             }
         }
+    }
+
+    protected Resources getResources() {
+        return imageDrawView.getResources();
+    }
+
+    protected Context getContext() {
+        return imageDrawView.getContext();
+    }
+
+    /**
+     * view 갱신
+     */
+    public void invalidate() {
+        imageDrawView.invalidate();
     }
 
     /**

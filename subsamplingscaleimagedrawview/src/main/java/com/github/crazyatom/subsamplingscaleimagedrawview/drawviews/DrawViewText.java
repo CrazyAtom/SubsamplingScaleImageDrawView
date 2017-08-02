@@ -74,7 +74,7 @@ public class DrawViewText extends BaseDrawView {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    public void onDraw(Canvas canvas) {
         if (getPositionSize() >= 1) {
             loadPaint();
             setBoundaryBox();
@@ -166,7 +166,7 @@ public class DrawViewText extends BaseDrawView {
             }
         });
 
-        this.dialog.findViewById(R.id.btn_cancel).setOnClickListener(new OnClickListener() {
+        this.dialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
@@ -174,7 +174,7 @@ public class DrawViewText extends BaseDrawView {
             }
         });
 
-        this.dialog.findViewById(R.id.btn_ok).setOnClickListener(new OnClickListener() {
+        this.dialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 content = ((EditText) dialog.findViewById(R.id.contents)).getText().toString();

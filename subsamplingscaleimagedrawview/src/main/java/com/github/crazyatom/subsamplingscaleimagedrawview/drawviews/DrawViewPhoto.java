@@ -51,7 +51,7 @@ public class DrawViewPhoto extends BaseDrawView {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    public void onDraw(Canvas canvas) {
         if (getPositionSize() >= 1) {
             final Bitmap bitmap = createBitmap();
             final float w = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, bitmap.getWidth(), getResources().getDisplayMetrics()) / 2;

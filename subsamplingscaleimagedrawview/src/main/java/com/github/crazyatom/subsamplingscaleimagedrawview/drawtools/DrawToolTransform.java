@@ -70,12 +70,8 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
 
         if (this.editPinView == null) {
             this.editPinView = newPinView(this.selectedDrawView);
-            this.editPinView.setClickable(true);
-            this.editPinView.setOnTouchListener(this);
-
-            imageDrawView.addView(editPinView);
-            this.editPinView.layout(0, 0, imageDrawView.getWidth(), imageDrawView.getHeight());
-            this.editPinView.invalidate();
+            imageDrawView.setEditPinView(editPinView);
+            imageDrawView.invalidate();
         }
     }
 
@@ -103,16 +99,14 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
 
         PointF sCoord = viewToSourceCoord(x, y);
         if (this.editPinView.isPinPressed() == true) {
-            if (isInsideSourceView(sCoord.x, sCoord.y, sCoord.x, sCoord.y) == true) {
-                this.editPinView.setMovePin(new PointF(sCoord.x, sCoord.y));
-                this.editPinView.invalidate();
-                if (selectedDrawView.getType() == BaseDrawView.DrawViewType.DIMENSION_REF
-                        || selectedDrawView.getType() == BaseDrawView.DrawViewType.DIMENSION
-                        || selectedDrawView.getType() == BaseDrawView.DrawViewType.LINE) {
-                    selectedDrawView.update(this.editPinView.getPinPoints());
-                } else {
-                    update(this.editPinView.getBoundaryBox());
-                }
+            this.editPinView.setMovePin(new PointF(sCoord.x, sCoord.y));
+            this.editPinView.invalidate();
+            if (selectedDrawView.getType() == BaseDrawView.DrawViewType.DIMENSION_REF
+                    || selectedDrawView.getType() == BaseDrawView.DrawViewType.DIMENSION
+                    || selectedDrawView.getType() == BaseDrawView.DrawViewType.LINE) {
+                selectedDrawView.update(this.editPinView.getPinPoints());
+            } else {
+                update(this.editPinView.getBoundaryBox());
             }
         } else {
             RectF sRect = this.selectedDrawView.getBoundaryBox();
@@ -140,7 +134,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
     @Override
     public void exit() {
         if (this.editPinView != null) {
-            imageDrawView.removeView(this.editPinView);
+            imageDrawView.clearEditPinView();
             imageDrawView.invalidate();
         }
     }
@@ -184,7 +178,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
      */
     private void exitTransformState() {
         if (this.editPinView != null) {
-            imageDrawView.removeView(this.editPinView);
+            imageDrawView.clearEditPinView();
             imageDrawView.invalidate();
         }
 

@@ -1,5 +1,6 @@
 package com.github.crazyatom.subsamplingscaleimagedrawview.drawtools;
 
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -22,7 +23,7 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
  * Created by crazy on 2017-06-22.
  */
 
-public abstract class BaseEditPinView extends View {
+public abstract class BaseEditPinView {
 
     protected static class Pin {
         protected enum RectPos {
@@ -58,22 +59,16 @@ public abstract class BaseEditPinView extends View {
     private float phase = 0.0f;
 
     public BaseEditPinView(@NonNull ImageDrawView imageDrawView, @NonNull BaseDrawView drawView) {
-        super(imageDrawView.getContext());
         this.imageDrawView = imageDrawView;
         this.drawView = drawView;
         this.initPinList();
     }
 
-    @Override
     public void invalidate() {
-        super.invalidate();
-        bringToFront();
+        imageDrawView.invalidate();
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
+    public void onDraw(Canvas canvas) {
         paint.setStrokeWidth(8.0f);
         paint.setAntiAlias(true);
 
@@ -89,7 +84,6 @@ public abstract class BaseEditPinView extends View {
             canvas.drawRect(vRect, this.paint);
 
             phase = (phase < 10.0f) ? phase + 1.0f : 0.0f;
-            this.postInvalidateOnAnimation();
         }
 
         // pin
@@ -257,6 +251,10 @@ public abstract class BaseEditPinView extends View {
      */
     protected int getBoundraryColor() {
         return Color.argb(20, 0, 0, 0);
+    }
+
+    protected Resources getResources() {
+        return imageDrawView.getResources();
     }
 }
 

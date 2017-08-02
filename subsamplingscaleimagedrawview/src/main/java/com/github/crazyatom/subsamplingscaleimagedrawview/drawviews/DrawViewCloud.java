@@ -43,7 +43,7 @@ public class DrawViewCloud extends BaseDrawView {
 
     @Override
     public void onDraw(Canvas canvas) {
-        if (getPositionSize() < 2 || getRect(false).width() == 0 || getRect(false).height() == 0) {
+        if (getPositionSize() < 2 || getRect(true).width() == 0 || getRect(true).height() == 0) {
             return;
         }
 

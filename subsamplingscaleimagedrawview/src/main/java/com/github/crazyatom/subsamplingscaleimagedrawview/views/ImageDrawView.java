@@ -21,12 +21,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +54,7 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     private ImageDrawView.GestureType gestureType = GestureType.VIEW;
     private BaseDrawTool drawTool = null;
     private Map<String, BaseDrawView> drawViewMap = new HashMap<>();
+    private BaseEditPinView editPinView = null;
     private boolean isEditedDrawView = false;
 
     // Listener draw tool controll view Event
@@ -132,8 +135,17 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
             return;
         }
 
-        for (String key : this.drawViewMap.keySet()) {
-            this.drawViewMap.get(key).invalidate();
+        if (!isZooming && !isPanning) {
+            for (String key : this.drawViewMap.keySet()) {
+                final BaseDrawView drawView = this.drawViewMap.get(key);
+                if (drawView.isVisibility() == true) {
+                    drawView.onDraw(canvas);
+                }
+            }
+
+            if (this.drawTool instanceof DrawToolTransform && this.editPinView != null) {
+                this.editPinView.onDraw(canvas);
+            }
         }
     }
 
@@ -143,13 +155,13 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        final int w = right - left;
-        final int h = bottom - top;
-
-        for (String key : this.drawViewMap.keySet()) {
+//        final int w = right - left;
+//        final int h = bottom - top;
+//
+//        for (String key : this.drawViewMap.keySet()) {
 //            this.drawViewMap.get(key).bringToFront();
-            this.drawViewMap.get(key).layout(0, 0, w, h);
-        }
+//            this.drawViewMap.get(key).layout(0, 0, w, h);
+//        }
 
         super.onLayout(changed, left, top, right, bottom);
     }
@@ -162,7 +174,9 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
      */
     public void addDrawView(@NonNull BaseDrawView drawView) {
         this.drawViewMap.put(drawView.getUniqId(), drawView);
-        addView(drawView);
+//        addView(drawView);
+        postInvalidate();
+//        invalidate();
     }
 
     /**
@@ -176,22 +190,24 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     public void removeDrawView(@NonNull BaseDrawView drawView) {
         if (drawView != null) {
             this.drawViewMap.remove(drawView.getUniqId());
-            removeView(drawView);
+//            removeView(drawView);
             if (this.removeDrawViewListener != null) {
                 this.removeDrawViewListener.removeDrawView(drawView.getUniqId());
             }
             drawView = null;
         }
+        invalidate();
     }
 
     /**
      * drawView 초기화
      */
     public void initDrawView() {
-        for (String key : this.drawViewMap.keySet()) {
-            removeView(this.drawViewMap.get(key));
-        }
+//        for (String key : this.drawViewMap.keySet()) {
+//            removeView(this.drawViewMap.get(key));
+//        }
         this.drawViewMap.clear();
+        invalidate();
     }
 
     /**
@@ -464,6 +480,21 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     @Override
     public void changeDrawTool(BaseDrawTool.DrawToolType drawToolType) {
         changeTool(drawToolType);
+    }
+
+    /**
+     * 편집뷰 설정
+     * @param editPinView
+     */
+    public void setEditPinView(BaseEditPinView editPinView) {
+        this.editPinView = editPinView;
+    }
+
+    /**
+     * 편집뷰 초기화
+     */
+    public void clearEditPinView() {
+        this.editPinView = null;
     }
 
     /**

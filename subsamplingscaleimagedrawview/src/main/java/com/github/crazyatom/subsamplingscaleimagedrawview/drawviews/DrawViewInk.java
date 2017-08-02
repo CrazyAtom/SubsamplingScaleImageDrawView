@@ -45,7 +45,7 @@ public class DrawViewInk extends BaseDrawView {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    public void onDraw(Canvas canvas) {
         if (getPositionSize() >= 1) {
             loadPaint();
             setBoundaryBox();

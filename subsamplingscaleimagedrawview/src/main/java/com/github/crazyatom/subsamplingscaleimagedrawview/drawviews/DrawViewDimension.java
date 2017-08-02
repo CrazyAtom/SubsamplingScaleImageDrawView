@@ -47,7 +47,7 @@ public class DrawViewDimension extends BaseDrawView {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    public void onDraw(Canvas canvas) {
         if (getPositionSize() >= 2) {
             loadPaint();
             setBoundaryBox();
@@ -163,7 +163,7 @@ public class DrawViewDimension extends BaseDrawView {
      */
     private void loadPaint() {
         paint.setColor(getIndexColor());
-        paint.setStrokeWidth(thick);
+        paint.setStrokeWidth(4);
         paint.setAntiAlias(true);
         paint.setTextSize(textSize * imageDrawView.getScale());
         paint.setStyle(Paint.Style.FILL);

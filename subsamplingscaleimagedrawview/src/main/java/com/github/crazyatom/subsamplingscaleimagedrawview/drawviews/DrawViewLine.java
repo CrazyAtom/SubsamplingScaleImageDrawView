@@ -41,7 +41,7 @@ public class DrawViewLine extends BaseDrawView {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    public void onDraw(Canvas canvas) {
         if (getPositionSize() >= 2 && getPosition(0).equals(getPosition(1)) == false) {
             loadPaint();
             setBoundaryBox();
