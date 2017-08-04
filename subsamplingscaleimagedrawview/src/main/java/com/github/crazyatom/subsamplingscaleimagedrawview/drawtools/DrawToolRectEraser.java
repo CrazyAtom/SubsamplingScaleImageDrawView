@@ -11,16 +11,22 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
  * Created by hangilit on 2017. 7. 14..
  */
 
-public class DrawToolFreeEraser extends DrawToolEraserBase {
+public class DrawToolRectEraser extends DrawToolEraserBase {
 
-    public DrawToolFreeEraser(@NonNull ImageDrawView imageDrawView) {
+    public DrawToolRectEraser(@NonNull ImageDrawView imageDrawView) {
         super(imageDrawView);
+    }
+
+    @Override
+    protected void touchBegin(int x, int y) {
+        super.touchBegin(x, y);
+        previewDrawView.addPosition(viewToSourceCoord(x, y));
     }
 
     @Override
     protected void touchMove(int x, int y) {
         final PointF sCoord = viewToSourceCoord(x, y);
-        previewDrawView.addPosition(sCoord);
+        previewDrawView.setPosition(1, sCoord);
         previewDrawView.invalidate();
 
         final PointF sCoordFirst = previewDrawView.getPosition(0);
@@ -31,15 +37,33 @@ public class DrawToolFreeEraser extends DrawToolEraserBase {
         }
     }
 
-    /**
-     * 터치 위치에 포함되는 drawView를 선택 맵에 추가
-     */
     @Override
     protected void addSelected() {
-        final PointF sCoordLast = previewDrawView.getPosition(previewDrawView.getPositionSize() - 1);
         for (String key : imageDrawView.getDrawViewMap().keySet()) {
             final BaseDrawView drawView = imageDrawView.getDrawViewMap().get(key);
-            if (drawView.isPreview() == false && drawView.isContains(sCoordLast.x, sCoordLast.y) == true) {
+            if (drawView.isPreview() == false) {
+                if (Utillity.contains(previewDrawView.getSourceRegion(), drawView.getSourceRegion())) {
+                    selectedDrawViewMap.put(key, drawView);
+                    drawView.setShowBoundaryBox(true);
+                } else {
+                    selectedDrawViewMap.remove(key);
+                    drawView.setShowBoundaryBox(false);
+                }
+                drawView.invalidate();
+            }
+        }
+
+        onChangeSelectedCount();
+    }
+
+    /**
+     * 터치 위치에 포함되는 drawView를 선택 맵에 추가
+     * @param sCoord 소스 좌표
+     */
+    private void addSelected(PointF sCoord) {
+        for (String key : imageDrawView.getDrawViewMap().keySet()) {
+            final BaseDrawView drawView = imageDrawView.getDrawViewMap().get(key);
+            if (drawView.isPreview() == false && drawView.isContains(sCoord.x, sCoord.y) == true) {
                 selectedDrawViewMap.put(key, drawView);
                 drawView.setShowBoundaryBox(true);
                 drawView.invalidate();
@@ -50,6 +74,6 @@ public class DrawToolFreeEraser extends DrawToolEraserBase {
 
     @Override
     protected BaseDrawView.DrawViewType getPreviewType() {
-        return BaseDrawView.DrawViewType.INK;
+        return BaseDrawView.DrawViewType.RECTANGLE;
     }
 }

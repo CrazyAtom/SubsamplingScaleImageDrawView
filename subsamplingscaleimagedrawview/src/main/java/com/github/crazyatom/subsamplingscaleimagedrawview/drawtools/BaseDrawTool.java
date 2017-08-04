@@ -173,7 +173,8 @@ public abstract class BaseDrawTool {
         LINE,
         RECTANGLE,
         ELLIPSE,
-        ERASER,
+        ERASER_FREE,
+        ERASER_RECT,
         TRANSFORM
     }
 }

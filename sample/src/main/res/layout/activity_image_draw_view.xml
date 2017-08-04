@@ -77,7 +77,13 @@
             android:id="@+id/free_eraser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="eraser"/>
+            android:text="free eraser"/>
+
+        <CheckBox
+            android:id="@+id/rectangle_eraser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="rect eraser"/>
 
     </LinearLayout>
 

@@ -33,7 +33,8 @@ public class ImageDrawViewActivity extends AppCompatActivity implements NewDrawV
     private CheckBox checkPhoto;
     private CheckBox checkBaseDimension;
     private CheckBox checkDimension;
-    private CheckBox checkEraser;
+    private CheckBox checkFreeEraser;
+    private CheckBox checkRectEraser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +74,10 @@ public class ImageDrawViewActivity extends AppCompatActivity implements NewDrawV
         checkBaseDimension.setOnCheckedChangeListener(checkedChangeListener);
         checkDimension = (CheckBox) findViewById(R.id.dimension);
         checkDimension.setOnCheckedChangeListener(checkedChangeListener);
-        checkEraser = (CheckBox) findViewById(R.id.free_eraser);
-        checkEraser.setOnCheckedChangeListener(checkedChangeListener);
+        checkFreeEraser = (CheckBox) findViewById(R.id.free_eraser);
+        checkFreeEraser.setOnCheckedChangeListener(checkedChangeListener);
+        checkRectEraser = (CheckBox) findViewById(R.id.rectangle_eraser);
+        checkRectEraser.setOnCheckedChangeListener(checkedChangeListener);
     }
 
     CompoundButton.OnCheckedChangeListener checkedChangeListener = new CompoundButton.OnCheckedChangeListener() {
@@ -111,7 +114,9 @@ public class ImageDrawViewActivity extends AppCompatActivity implements NewDrawV
             case R.id.dimension:
                 return BaseDrawTool.DrawToolType.DIMENSION;
             case R.id.free_eraser:
-                return BaseDrawTool.DrawToolType.ERASER;
+                return BaseDrawTool.DrawToolType.ERASER_FREE;
+            case R.id.rectangle_eraser:
+                return BaseDrawTool.DrawToolType.ERASER_RECT;
             default:
                 return BaseDrawTool.DrawToolType.INK;
         }
@@ -127,7 +132,8 @@ public class ImageDrawViewActivity extends AppCompatActivity implements NewDrawV
         checkPhoto.setChecked((id == checkPhoto.getId()) && checked);
         checkBaseDimension.setChecked((id == checkBaseDimension.getId()) && checked);
         checkDimension.setChecked((id == checkDimension.getId()) && checked);
-        checkEraser.setChecked((id == checkEraser.getId()) && checked);
+        checkFreeEraser.setChecked((id == checkFreeEraser.getId()) && checked);
+        checkRectEraser.setChecked((id == checkRectEraser.getId()) && checked);
     }
 
     private void initialise() {
