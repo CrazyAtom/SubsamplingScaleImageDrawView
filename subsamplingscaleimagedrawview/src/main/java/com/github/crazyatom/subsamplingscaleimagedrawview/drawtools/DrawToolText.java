@@ -44,8 +44,9 @@ public class DrawToolText extends BaseDrawTool {
     }
 
     @Override
-    protected BaseDrawView createDrawView() {
+    protected BaseDrawView createDrawView(final boolean preview) {
         BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView, BaseDrawView.DrawViewType.TEXT);
+        drawView.setPreview(preview);
         drawView.addPosition(this.base);
         drawView.setColor(Utillity.getColorString(DrawViewSetting.getInstance().getColor()));
 
@@ -57,7 +58,7 @@ public class DrawToolText extends BaseDrawTool {
      */
     private void injectAnnotation() {
         if (base != null) {
-            DrawViewText drawView = (DrawViewText) createDrawView();
+            DrawViewText drawView = (DrawViewText) createDrawView(false);
             drawView.setDrawToolControllViewListener(drawToolControllViewListener);
             imageDrawView.addDrawView(drawView);
             drawView.showContentsBox(imageDrawView.getContext());

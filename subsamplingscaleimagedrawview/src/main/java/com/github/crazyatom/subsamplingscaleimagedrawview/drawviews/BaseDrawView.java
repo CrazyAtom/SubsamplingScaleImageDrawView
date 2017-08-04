@@ -41,7 +41,7 @@ public abstract class BaseDrawView {
     private float phase = 0.0f;
 
     protected boolean showBoundaryBox = false;
-    protected RectF boundaryBox = null;
+    protected RectF sRegion = null;
 
     private boolean visibility = true;
     private boolean isPreview = false;
@@ -94,17 +94,17 @@ public abstract class BaseDrawView {
         }
     }
 
-    protected Iterator getIterator() {
-        return this.pointList.iterator();
-    }
-
     public void setPoints(ArrayList<PointF> points) {
         this.pointList = points;
+        setSourceRegion();
+        preCalc();
     }
 
     public void setPosition(int index, PointF position) {
         try {
             this.pointList.set(index, position);
+            setSourceRegion();
+            preCalc();
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
@@ -112,6 +112,8 @@ public abstract class BaseDrawView {
 
     public void addPosition(PointF position) {
         this.pointList.add(new PointF(position.x, position.y));
+        setSourceRegion();
+        preCalc();
     }
 
     public int getPositionSize() {
@@ -142,12 +144,12 @@ public abstract class BaseDrawView {
         this.showBoundaryBox = show;
     }
 
-    public RectF getBoundaryBox() {
-        return this.boundaryBox;
+    public RectF getSourceRegion() {
+        return this.sRegion;
     }
 
-    public void setBoundaryBox(RectF box) {
-        this.boundaryBox = box;
+    protected void setSourceRegion() {
+        this.sRegion = getRect(false);
     }
 
     public void setDrawToolControllViewListener(DrawToolControllViewListener drawToolControllViewListener) {
@@ -286,7 +288,7 @@ public abstract class BaseDrawView {
      * @param canvas
      */
     protected void drawBBox(Canvas canvas) {
-        if (this.boundaryBox != null) {
+        if (this.sRegion != null) {
             Paint paint = new Paint();
             paint.setStrokeWidth(8.0f);
             paint.setAntiAlias(true);
@@ -295,7 +297,7 @@ public abstract class BaseDrawView {
             DashPathEffect dashPathEffect = new DashPathEffect(new float[] {10.0f, 5.0f}, phase);
             paint.setPathEffect(dashPathEffect);
             RectF vRect = new RectF();
-            this.imageDrawView.sourceToViewRect(this.boundaryBox, vRect);
+            this.imageDrawView.sourceToViewRect(this.sRegion, vRect);
             canvas.drawRect(vRect, paint);
 
             phase = (phase < 10.0f) ? phase + 1.0f : 0.0f;
@@ -356,8 +358,7 @@ public abstract class BaseDrawView {
      * @param points
      */
     public void update(ArrayList<PointF> points) {
-        initPosition();
-        this.pointList.addAll(points);
+        setPoints(points);
         invalidate();
     }
 
@@ -393,7 +394,7 @@ public abstract class BaseDrawView {
      * @param newBbox
      */
     public void update(RectF newBbox) {
-        final RectF originalBbox = getBoundaryBox();
+        final RectF originalBbox = getSourceRegion();
 
         if (newBbox != null && originalBbox != null) {
             final float scaleX = newBbox.width() / originalBbox.width();
@@ -416,13 +417,7 @@ public abstract class BaseDrawView {
      * drawView 정보 팝업
      * @param context
      */
-    abstract public void showContentsBox(Context context);
-
-    /**
-     * 저장 하는 annotation인지 여부
-     * @return
-     */
-    abstract public boolean isInvalidSaveAnnotEx();
+    public abstract void showContentsBox(Context context);
 
     /**
      * drawView 이름
@@ -432,30 +427,21 @@ public abstract class BaseDrawView {
     public abstract String getName(boolean isSimple);
 
     /**
+     * 필요한 정보 미리 계산
+     */
+    protected abstract void preCalc();
+
+    /**
      * 좌표 x, y가 annotation내에 존재 하는지 체크
      * @param x
      * @param y
      * @return true 이면 drawView 내에 존재, false 이면 drawView 내에 존재 하지 않음
      */
     public boolean isContains(float x, float y) {
-        if(this.boundaryBox == null) {
+        if(this.sRegion == null) {
             return false;
         } else {
-            RectF rect = new RectF(this.boundaryBox);
-            float temp;
-            if(rect.left > rect.right) {
-                temp = rect.left;
-                rect.left = rect.right;
-                rect.right = temp;
-            }
-
-            if(rect.top > rect.bottom) {
-                temp = rect.top;
-                rect.top = rect.bottom;
-                rect.bottom = temp;
-            }
-
-            return rect.contains(x, y);
+            return sRegion.contains(x, y);
         }
     }
 

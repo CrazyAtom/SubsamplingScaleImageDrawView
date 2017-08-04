@@ -50,7 +50,7 @@ public class DrawToolDimension extends BaseDrawTool {
         if (this.isBegin == true) {
             this.begin = getCorrectPos(x, y);
             this.end = this.begin;
-            previewDrawView = createDrawView();
+            previewDrawView = createDrawView(true);
             ((DrawViewDimension) previewDrawView).setCurrentState(DrawViewDimension.state.PREVIEW_BEGIN);
             imageDrawView.addDrawView(previewDrawView);
         } else {
@@ -115,9 +115,10 @@ public class DrawToolDimension extends BaseDrawTool {
     }
 
     @Override
-    protected BaseDrawView createDrawView() {
+    protected BaseDrawView createDrawView(final boolean preview) {
         BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView,
                 (isReferenceDrawMode == true) ? BaseDrawView.DrawViewType.DIMENSION_REF : BaseDrawView.DrawViewType.DIMENSION);
+        drawView.setPreview(preview);
         drawView.addPosition(this.begin);
         drawView.addPosition(this.end);
 
@@ -129,7 +130,7 @@ public class DrawToolDimension extends BaseDrawTool {
      */
     private void injectAnnotation() {
         if (this.begin != this.end) {
-            DrawViewDimension drawView = (DrawViewDimension) createDrawView();
+            DrawViewDimension drawView = (DrawViewDimension) createDrawView(false);
             drawView.setCurrentState(DrawViewDimension.state.COMPLETE);
             imageDrawView.addDrawView(drawView);
 

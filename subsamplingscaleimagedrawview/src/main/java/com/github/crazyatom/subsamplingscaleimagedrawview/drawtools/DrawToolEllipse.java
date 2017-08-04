@@ -26,7 +26,7 @@ public class DrawToolEllipse extends BaseDrawTool {
     protected void touchBegin(int x, int y) {
         begin = viewToSourceCoord(x, y);
         end = begin;
-        previewDrawView = createDrawView();
+        previewDrawView = createDrawView(true);
         imageDrawView.addDrawView(previewDrawView);
     }
 
@@ -53,8 +53,9 @@ public class DrawToolEllipse extends BaseDrawTool {
     }
 
     @Override
-    protected BaseDrawView createDrawView() {
+    protected BaseDrawView createDrawView(final boolean preview) {
         BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView, BaseDrawView.DrawViewType.ELLIPSE);
+        drawView.setPreview(preview);
         drawView.addPosition(begin);
         drawView.addPosition(end);
         drawView.setColor(Utillity.getColorString(DrawViewSetting.getInstance().getColor()));
@@ -67,7 +68,7 @@ public class DrawToolEllipse extends BaseDrawTool {
      * drawView를 view에 추가
      */
     private void injectAnnotation() {
-        BaseDrawView drawView = createDrawView();
+        BaseDrawView drawView = createDrawView(false);
         imageDrawView.addDrawView(drawView);
     }
 }

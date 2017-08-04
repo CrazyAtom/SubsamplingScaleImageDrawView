@@ -44,8 +44,9 @@ public class DrawToolPhoto extends BaseDrawTool {
     }
 
     @Override
-    protected BaseDrawView createDrawView() {
+    protected BaseDrawView createDrawView(final boolean preview) {
         BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView, BaseDrawView.DrawViewType.PHOTO);
+        drawView.setPreview(preview);
         drawView.addPosition(this.base);
         drawView.setColor(Utillity.getColorString(DrawViewSetting.getInstance().getColor()));
 
@@ -57,7 +58,7 @@ public class DrawToolPhoto extends BaseDrawTool {
      */
     private void injectAnnotation() {
         if (base != null) {
-            BaseDrawView drawView = createDrawView();
+            BaseDrawView drawView = createDrawView(false);
             if (drawView != null) {
                 imageDrawView.addDrawView(drawView);
                 drawView.showContentsBox(imageDrawView.getContext());

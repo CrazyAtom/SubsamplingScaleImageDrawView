@@ -38,6 +38,6 @@ public class EditPinViewLine extends BaseEditPinView {
 
     @Override
     public RectF getBoundaryBox() {
-        return drawView.getBoundaryBox();
+        return drawView.getSourceRegion();
     }
 }

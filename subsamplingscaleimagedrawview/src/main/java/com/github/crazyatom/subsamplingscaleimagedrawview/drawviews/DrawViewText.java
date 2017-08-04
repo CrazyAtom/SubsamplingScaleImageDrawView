@@ -5,11 +5,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -64,32 +70,43 @@ public class DrawViewText extends BaseDrawView {
     }
 
     @Override
-    public boolean isInvalidSaveAnnotEx() {
-        return true;
-    }
-
-    @Override
     public String getName(boolean isSimple) {
         return isSimple ? "T" : getResources().getString(R.string.text);
     }
 
     @Override
-    public void onDraw(Canvas canvas) {
-        if (getPositionSize() >= 1) {
-            loadPaint();
-            setBoundaryBox();
+    protected void preCalc() {
 
-            final PointF vCoord = sourceToViewCoord(getPosition(0).x, getPosition(0).y);
-            canvas.drawText(content, vCoord.x, vCoord.y, paint);
-
-            super.onDraw(canvas);
-        }
     }
 
-    protected void setBoundaryBox() {
-        final PointF position = getPosition(0);
-        final float textWidth = paint.measureText(content) / imageDrawView.getScale();
-        setBoundaryBox(new RectF(position.x, position.y - getThick(), position.x + textWidth, position.y));
+    @Override
+    public void onDraw(Canvas canvas) {
+        if (sRegion == null) {
+            return;
+        }
+
+        loadPaint();
+
+        setSourceRegion();
+
+        final PointF vCoord = sourceToViewCoord(sRegion.left, sRegion.bottom);
+        canvas.drawText(content, vCoord.x, vCoord.y, paint);
+
+        super.onDraw(canvas);
+    }
+
+    @Override
+    protected void setSourceRegion() {
+        final PointF sCoord = getPosition(0);
+        sRegion = new RectF(sCoord.x, sCoord.y - textHeight(), sCoord.x + textWidth(), sCoord.y);
+    }
+
+    private float textWidth() {
+        return paint.measureText(content) / imageDrawView.getScale();
+    }
+
+    private float textHeight() {
+        return getThick();
     }
 
     /**
@@ -100,16 +117,6 @@ public class DrawViewText extends BaseDrawView {
         this.paint.setColor(Color.parseColor(color));
         this.paint.setTextSize(getThick() * imageDrawView.getScale());
         this.paint.setAntiAlias(true);
-    }
-
-    @Override
-    public boolean isContains(float x, float y) {
-        ArrayList<PointF> boundary = new ArrayList<>();
-        boundary.add(new PointF(boundaryBox.left, boundaryBox.top));
-        boundary.add(new PointF(boundaryBox.right, boundaryBox.top));
-        boundary.add(new PointF(boundaryBox.right, boundaryBox.bottom));
-        boundary.add(new PointF(boundaryBox.left, boundaryBox.bottom));
-        return Utillity.isInside(new PointF(x, y), boundary);
     }
 
     @Override

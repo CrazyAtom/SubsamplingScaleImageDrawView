@@ -109,7 +109,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
                 update(this.editPinView.getBoundaryBox());
             }
         } else {
-            RectF sRect = this.selectedDrawView.getBoundaryBox();
+            RectF sRect = this.selectedDrawView.getSourceRegion();
             final float sDistX = sCoord.x - beginPoint.x;
             final float sDistY = sCoord.y - beginPoint.y;
             beginPoint = sCoord;
@@ -140,7 +140,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
     }
 
     @Override
-    protected BaseDrawView createDrawView() {
+    protected BaseDrawView createDrawView(final boolean preview) {
         return null;
     }
 

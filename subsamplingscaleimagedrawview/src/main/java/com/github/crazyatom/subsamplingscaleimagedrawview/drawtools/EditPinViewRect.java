@@ -78,7 +78,7 @@ public class EditPinViewRect extends BaseEditPinView {
 
     @Override
     public void initPinList() {
-        RectF rect = drawView.getBoundaryBox();
+        RectF rect = drawView.getSourceRegion();
         pinList.clear();
         pinList.add(new Pin(new PointF(rect.left, rect.top), Pin.RectPos.LEFT_TOP));
         pinList.add(new Pin(new PointF((rect.left + rect.right) / 2.0F, rect.top), Pin.RectPos.TOP));

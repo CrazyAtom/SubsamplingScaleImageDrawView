@@ -21,6 +21,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -31,6 +33,7 @@ import android.view.View;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.ChangedDrawToolCallback;
@@ -54,7 +57,7 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
 
     private ImageDrawView.GestureType gestureType = GestureType.VIEW;
     private BaseDrawTool drawTool = null;
-    private Map<String, BaseDrawView> drawViewMap = new HashMap<>();
+    private LinkedHashMap<String, BaseDrawView> drawViewMap = new LinkedHashMap<>();
     private BaseEditPinView editPinView = null;
     private boolean isEditedDrawView = false;
 
@@ -136,15 +139,12 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
             return;
         }
 
-        if (this.drawViewMap.size() > 50) {
-            if (!isZooming && !isPanning) {
-                onDrawDrawView(canvas);
-                onDrawEditPinView(canvas);
-            }
-        } else {
-            onDrawDrawView(canvas);
-            onDrawEditPinView(canvas);
-        }
+//        if (this.drawViewMap.size() > 50 && (isZooming || isPanning)) {
+//            return;
+//        }
+
+        onDrawDrawView(canvas);
+        onDrawEditPinView(canvas);
     }
 
     /**
@@ -152,12 +152,27 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
      * @param canvas
      */
     private void onDrawDrawView(Canvas canvas) {
+        RectF viewRect = new RectF(getLeft(), getTop(), getRight(), getBottom());
+        RectF vRect = new RectF();
         for (String key : this.drawViewMap.keySet()) {
             final BaseDrawView drawView = this.drawViewMap.get(key);
             if (drawView.isVisibility() == true) {
-                drawView.onDraw(canvas);
+                sourceToViewRect(drawView.getSourceRegion(), vRect);
+                if (contains(viewRect, vRect) == true) {
+                    drawView.onDraw(canvas);
+                }
             }
         }
+    }
+
+    /**
+     * 외부 사각영역에 내부 사각영역의 요소가 속해 있는지 체크
+     * @param p 외부
+     * @param c 내부
+     * @return
+     */
+    private boolean contains(final RectF p, final RectF c) {
+        return p.contains(c) || RectF.intersects(p, c);
     }
 
     /**
@@ -194,8 +209,10 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     public void addDrawView(@NonNull BaseDrawView drawView) {
         this.drawViewMap.put(drawView.getUniqId(), drawView);
 //        addView(drawView);
-        postInvalidate();
-//        invalidate();
+//        postInvalidate();
+        RectF invalidArea = new RectF();
+        sourceToViewRect(drawView.getSourceRegion(), invalidArea);
+        invalidate((int)invalidArea.left, (int)invalidArea.top, (int)invalidArea.right, (int)invalidArea.bottom);
     }
 
     /**
@@ -222,7 +239,9 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
             this.drawViewMap.remove(drawView.getUniqId());
 //            removeView(drawView);
             if (this.removeDrawViewListener != null) {
-                this.removeDrawViewListener.removeDrawView(drawView.getUniqId());
+                if (drawView.isPreview() == false) {
+                    this.removeDrawViewListener.removeDrawView(drawView.getUniqId());
+                }
             }
             drawView = null;
         }
@@ -233,7 +252,9 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
         for (BaseDrawView drawView : drawViews) {
             this.drawViewMap.remove(drawView.getUniqId());
             if (this.removeDrawViewListener != null) {
-                this.removeDrawViewListener.removeDrawView(drawView.getUniqId());
+                if (drawView.isPreview() == false) {
+                    this.removeDrawViewListener.removeDrawView(drawView.getUniqId());
+                }
             }
         }
         postInvalidate();

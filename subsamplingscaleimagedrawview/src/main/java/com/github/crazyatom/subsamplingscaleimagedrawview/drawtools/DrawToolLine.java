@@ -26,7 +26,7 @@ public class DrawToolLine extends BaseDrawTool {
     protected void touchBegin(int x, int y) {
         this.begin = viewToSourceCoord(x, y);
         this.end = this.begin;
-        previewDrawView = createDrawView();
+        previewDrawView = createDrawView(true);
         imageDrawView.addDrawView(previewDrawView);
     }
 
@@ -54,8 +54,9 @@ public class DrawToolLine extends BaseDrawTool {
     }
 
     @Override
-    protected BaseDrawView createDrawView() {
+    protected BaseDrawView createDrawView(final boolean preview) {
         BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView, BaseDrawView.DrawViewType.LINE);
+        drawView.setPreview(preview);
         drawView.addPosition(this.begin);
         drawView.addPosition(this.end);
         drawView.setColor(Utillity.getColorString(DrawViewSetting.getInstance().getColor()));
@@ -69,7 +70,7 @@ public class DrawToolLine extends BaseDrawTool {
      */
     private void injectAnnotation() {
         if (this.begin != this.end) {
-            BaseDrawView drawView = createDrawView();
+            BaseDrawView drawView = createDrawView(false);
             imageDrawView.addDrawView(drawView);
         }
     }

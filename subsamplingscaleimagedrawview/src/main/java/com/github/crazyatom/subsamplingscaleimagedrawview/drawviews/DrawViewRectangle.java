@@ -4,14 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
-
 import com.github.crazyatom.subsamplingscaleimagedrawview.R;
-import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 /**
@@ -30,33 +26,32 @@ public class DrawViewRectangle extends BaseDrawView {
     }
 
     @Override
-    public boolean isInvalidSaveAnnotEx() {
-        return true;
-    }
-
-    @Override
     public String getName(boolean isSimple) {
         return isSimple ? "R" : getResources().getString(R.string.rectangle);
     }
 
     @Override
+    protected void preCalc() {
+
+    }
+
+    @Override
     public void onDraw(Canvas canvas) {
-        if (getPositionSize() < 2 || getRect(false).width() == 0 || getRect(false).height() == 0) {
+        if (sRegion == null) {
+            return;
+        }
+
+        RectF vRect = new RectF();
+        imageDrawView.sourceToViewRect(sRegion, vRect);
+        if (vRect.width() == 0 || vRect.height() == 0) {
             return;
         }
 
         loadPaint();
-        setBoundaryBox();
 
-        final RectF rect = getRect(true);
-        canvas.drawRect(rect, paint);
+        canvas.drawRect(vRect, paint);
 
         super.onDraw(canvas);
-    }
-
-    protected void setBoundaryBox() {
-        final RectF rect = getRect(false);
-        setBoundaryBox(rect);
     }
 
     /**
@@ -68,31 +63,5 @@ public class DrawViewRectangle extends BaseDrawView {
         paint.setStrokeWidth(thick);
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
-    }
-
-    @Override
-    public boolean isContains(float x, float y) {
-        return super.isContains(x, y);
-        // 내부 영역 제거가 필요 할때 사용하자
-//        final float offset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-//
-//        // annotation이 여유크기보다 작으면 boundary box로만 판단
-//        if (Math.min(boundaryBox.width(), boundaryBox.height()) < offset) {
-//            return super.isContains(x, y);
-//        } else {
-//            ArrayList<PointF> outter = new ArrayList<>();
-//            outter.add(new PointF(boundaryBox.left - offset, boundaryBox.top - offset));
-//            outter.add(new PointF(boundaryBox.right + offset, boundaryBox.top - offset));
-//            outter.add(new PointF(boundaryBox.right + offset, boundaryBox.bottom + offset));
-//            outter.add(new PointF(boundaryBox.left - offset, boundaryBox.bottom + offset));
-//
-//            ArrayList<PointF> inner = new ArrayList<>();
-//            inner.add(new PointF(boundaryBox.left + offset, boundaryBox.top + offset));
-//            inner.add(new PointF(boundaryBox.right - offset, boundaryBox.top + offset));
-//            inner.add(new PointF(boundaryBox.right - offset, boundaryBox.bottom - offset));
-//            inner.add(new PointF(boundaryBox.left + offset, boundaryBox.bottom - offset));
-//
-//            return Utillity.isInside(new PointF(x, y), outter) && !Utillity.isInside(new PointF(x, y), inner);
-//        }
     }
 }

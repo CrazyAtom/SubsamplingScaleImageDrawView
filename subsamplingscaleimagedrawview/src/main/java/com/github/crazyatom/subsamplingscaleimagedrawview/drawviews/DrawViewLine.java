@@ -31,41 +31,50 @@ public class DrawViewLine extends BaseDrawView {
     }
 
     @Override
-    public boolean isInvalidSaveAnnotEx() {
-        return true;
-    }
-
-    @Override
     public String getName(boolean isSimple) {
         return isSimple ? "L" : getResources().getString(R.string.line);
     }
 
     @Override
-    public void onDraw(Canvas canvas) {
-        if (getPositionSize() >= 2 && getPosition(0).equals(getPosition(1)) == false) {
-            loadPaint();
-            setBoundaryBox();
+    protected void preCalc() {
 
-            final PointF vCoord1 = sourceToViewCoord(getPosition(0).x, getPosition(0).y);
-            final PointF vCoord2 = sourceToViewCoord(getPosition(1).x, getPosition(1).y);
-            canvas.drawLine(vCoord1.x, vCoord1.y, vCoord2.x, vCoord2.y, paint);
-
-            super.onDraw(canvas);
-        }
     }
 
-    protected void setBoundaryBox() {
-        final RectF rect = getRect(false);
-        float MINIMUM_LENGTH = DrawViewFactory.getInstance().getMINIMUM_LENGTH();
-        if (rect.width() < MINIMUM_LENGTH) {
-            rect.left -= MINIMUM_LENGTH / 2;
-            rect.right += MINIMUM_LENGTH / 2;
+    @Override
+    public void onDraw(Canvas canvas) {
+        if (sRegion == null) {
+            return;
         }
-        if (rect.height() < MINIMUM_LENGTH) {
-            rect.top -= MINIMUM_LENGTH / 2;
-            rect.bottom += MINIMUM_LENGTH / 2;
+
+        RectF vRect = new RectF();
+        imageDrawView.sourceToViewRect(sRegion, vRect);
+        if (vRect.width() == 0 || vRect.height() == 0) {
+            return;
         }
-        setBoundaryBox(rect);
+
+        loadPaint();
+
+        final PointF sCoord1 = getPosition(0);
+        final PointF sCoord2 = getPosition(1);
+        final PointF vCoord1 = sourceToViewCoord(sCoord1.x, sCoord1.y);
+        final PointF vCoord2 = sourceToViewCoord(sCoord2.x, sCoord2.y);
+        canvas.drawLine(vCoord1.x, vCoord1.y, vCoord2.x, vCoord2.y, paint);
+
+        super.onDraw(canvas);
+    }
+
+    @Override
+    protected void setSourceRegion() {
+        super.setSourceRegion();
+        final float MINIMUM_LENGTH = DrawViewFactory.getInstance().getMINIMUM_LENGTH();
+        if (sRegion.width() < MINIMUM_LENGTH) {
+            sRegion.left -= MINIMUM_LENGTH / 2;
+            sRegion.right += MINIMUM_LENGTH / 2;
+        }
+        if (sRegion.height() < MINIMUM_LENGTH) {
+            sRegion.top -= MINIMUM_LENGTH / 2;
+            sRegion.bottom += MINIMUM_LENGTH / 2;
+        }
     }
 
     /**

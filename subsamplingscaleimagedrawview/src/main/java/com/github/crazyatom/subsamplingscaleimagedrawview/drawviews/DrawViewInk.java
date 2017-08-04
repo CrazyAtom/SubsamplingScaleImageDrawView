@@ -10,11 +10,9 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.R;
-import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewFactory;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 /**
@@ -22,8 +20,6 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
  */
 
 public class DrawViewInk extends BaseDrawView {
-
-    final private float MAX_PATH_DIST = 1500;
 
     public DrawViewInk(@NonNull ImageDrawView imageDrawView) {
         super(DrawViewType.INK, imageDrawView);
@@ -35,64 +31,34 @@ public class DrawViewInk extends BaseDrawView {
     }
 
     @Override
-    public boolean isInvalidSaveAnnotEx() {
-        return true;
-    }
-
-    @Override
     public String getName(boolean isSimple) {
         return isSimple ? "I" : getResources().getString(R.string.ink);
     }
 
     @Override
-    public void onDraw(Canvas canvas) {
-        if (getPositionSize() >= 1) {
-            loadPaint();
-            setBoundaryBox();
+    protected void preCalc() {
 
-            Path path = new Path();
-            Iterator iterator = getIterator();
-            PointF pos = (PointF) iterator.next();
-            pos = sourceToViewCoord(pos.x, pos.y);
-            float x = pos.x;
-            float y = pos.y;
-
-            while (iterator.hasNext()) {
-                float start_x = x;
-                float start_y = y;
-                path.moveTo(start_x, start_y);
-
-                while (Math.abs(start_x - x) < MAX_PATH_DIST && Math.abs(start_y - y) < MAX_PATH_DIST && iterator.hasNext()) {
-                    pos = (PointF) iterator.next();
-                    pos = sourceToViewCoord(pos.x, pos.y);
-                    float x2 = pos.x;
-                    float y2 = pos.y;
-                    path.quadTo(x, y, (x + x2) / 2.0f, (y + y2) / 2.0f);
-                    x = x2;
-                    y = y2;
-                }
-                path.lineTo(x, y);
-                canvas.drawPath(path, this.paint);
-                path.reset();
-            }
-
-//            Path path = new Path();
-//            PointF vPrev = sourceToViewCoord(getPosition(0).x, getPosition(0).y);
-//            path.moveTo(vPrev.x, vPrev.y);
-//            for (int i = 1; i < getPositionSize(); i++) {
-//                PointF vPoint = sourceToViewCoord(getPosition(i).x, getPosition(i).y);
-//                path.quadTo(vPrev.x, vPrev.y, (vPoint.x + vPrev.x) / 2, (vPoint.y + vPrev.y) / 2);
-//                vPrev = vPoint;
-//            }
-//            canvas.drawPath(path, this.paint);
-        }
-
-        super.onDraw(canvas);
     }
 
-    protected void setBoundaryBox() {
-        RectF rect = getRect(false);
-        setBoundaryBox(rect);
+    @Override
+    public void onDraw(Canvas canvas) {
+        if (sRegion == null) {
+            return;
+        }
+
+        loadPaint();
+
+        Path path = new Path();
+        PointF vPrev = sourceToViewCoord(getPosition(0).x, getPosition(0).y);
+        path.moveTo(vPrev.x, vPrev.y);
+        for (int i = 1; i < getPositionSize(); i++) {
+            PointF vPoint = sourceToViewCoord(getPosition(i).x, getPosition(i).y);
+            path.quadTo(vPrev.x, vPrev.y, (vPoint.x + vPrev.x) / 2, (vPoint.y + vPrev.y) / 2);
+            vPrev = vPoint;
+        }
+        canvas.drawPath(path, this.paint);
+
+        super.onDraw(canvas);
     }
 
     /**
@@ -115,10 +81,5 @@ public class DrawViewInk extends BaseDrawView {
      */
     private DashPathEffect getDashPathEffect() {
         return isPreview() ? new DashPathEffect(new float[] {40, 20}, 0.0f) : null;
-    }
-
-    @Override
-    public boolean isContains(float x, float y) {
-        return super.isContains(x, y);
     }
 }

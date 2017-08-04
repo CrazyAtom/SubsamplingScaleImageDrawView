@@ -42,7 +42,7 @@ public class DrawToolFreeEraser extends BaseDrawTool {
 
     @Override
     protected void touchBegin(int x, int y) {
-        previewDrawView = createDrawView();
+        previewDrawView = createDrawView(true);
         previewDrawView.addPosition(viewToSourceCoord(x, y));
         imageDrawView.addDrawView(previewDrawView);
     }
@@ -176,8 +176,9 @@ public class DrawToolFreeEraser extends BaseDrawTool {
     }
 
     @Override
-    protected BaseDrawView createDrawView() {
+    protected BaseDrawView createDrawView(final boolean preview) {
         BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView, BaseDrawView.DrawViewType.INK);
+        drawView.setPreview(preview);
         drawView.setPreview(true);
         drawView.setThick(8);
         return drawView;

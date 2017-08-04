@@ -25,6 +25,8 @@ public class DrawViewDimension extends BaseDrawView {
     final private int textSize = 65;
     public enum state { PREVIEW_BEGIN, PREVIEW_END, COMPLETE }
     private state currentState = DrawViewDimension.state.COMPLETE;
+    private PointF sCoordText;
+    private PointF dirVert;
 
     public DrawViewDimension(@NonNull ImageDrawView imageDrawView) {
         super(DrawViewType.DIMENSION, imageDrawView);
@@ -37,62 +39,79 @@ public class DrawViewDimension extends BaseDrawView {
     }
 
     @Override
-    public boolean isInvalidSaveAnnotEx() {
-        return false;
-    }
-
-    @Override
     public String getName(boolean isSimple) {
         return isSimple ? "D" : getResources().getString(R.string.dimension);
     }
 
     @Override
-    public void onDraw(Canvas canvas) {
-        if (getPositionSize() >= 2) {
-            loadPaint();
-            setBoundaryBox();
-
-            switch (currentState) {
-                case PREVIEW_BEGIN:
-                    drawPreviewArrow(canvas, getPosition(0));
-                    break;
-                case PREVIEW_END:
-                    drawAssistLine(canvas, getPosition(0));
-                    drawPreviewArrow(canvas, getPosition(1));
-                    break;
-                default:
-                    drawAssistLine(canvas);
-                    break;
-            }
-
-            drawLine(canvas);
-            drawText(canvas);
-
-            super.onDraw(canvas);
+    protected void preCalc() {
+        final PointF sCoord1 = getPosition(0);
+        final PointF sCoord2 = getPosition(1);
+        if (sCoord1 != null && sCoord2 != null) {
+            final PointF sCoordMid = new PointF((sCoord1.x + sCoord2.x) / 2, (sCoord1.y + sCoord2.y) / 2);
+            final PointF dirVert = Utillity.getUnitVertDirenction(sCoord1, sCoord2);
+            this.sCoordText = Utillity.getOffset(sCoordMid, dirVert, DrawViewFactory.getInstance().getMINIMUM_LENGTH() / 2);
+            this.dirVert = Utillity.getUnitVertDirenction(sCoord1, sCoord2);
         }
     }
 
-    protected void setBoundaryBox() {
-        final RectF rect = getRect(false);
-        float MINIMUM_LENGTH = DrawViewFactory.getInstance().getMINIMUM_LENGTH();
-        if (rect.width() < MINIMUM_LENGTH) {
-            rect.left -= MINIMUM_LENGTH / 2;
-            rect.right += MINIMUM_LENGTH / 2;
+    @Override
+    public void onDraw(Canvas canvas) {
+        if (sRegion == null) {
+            return;
         }
-        if (rect.height() < MINIMUM_LENGTH) {
-            rect.top -= MINIMUM_LENGTH / 2;
-            rect.bottom += MINIMUM_LENGTH / 2;
+
+        RectF vRect = new RectF();
+        imageDrawView.sourceToViewRect(sRegion, vRect);
+        if (vRect.width() == 0 || vRect.height() == 0) {
+            return;
         }
-        setBoundaryBox(rect);
+
+        loadPaint();
+
+        final PointF sCoord1 = getPosition(0);
+        final PointF sCoord2 = getPosition(1);
+        final PointF vCoord1 = sourceToViewCoord(sCoord1.x, sCoord1.y);
+        final PointF vCoord2 = sourceToViewCoord(sCoord2.x, sCoord2.y);
+
+        switch (currentState) {
+            case PREVIEW_BEGIN:
+                drawPreviewArrow(canvas, vCoord1);
+                break;
+            case PREVIEW_END:
+                drawAssistLine(canvas, vCoord1);
+                drawPreviewArrow(canvas, vCoord2);
+                break;
+            default:
+                drawAssistLine(canvas, vCoord1, vCoord2);
+                break;
+        }
+
+        drawLine(canvas, vCoord1, vCoord2);
+        drawText(canvas);
+
+        super.onDraw(canvas);
+    }
+
+    @Override
+    protected void setSourceRegion() {
+        super.setSourceRegion();
+        final float MINIMUM_LENGTH = DrawViewFactory.getInstance().getMINIMUM_LENGTH();
+        if (sRegion.width() < MINIMUM_LENGTH) {
+            sRegion.left -= MINIMUM_LENGTH / 2;
+            sRegion.right += MINIMUM_LENGTH / 2;
+        }
+        if (sRegion.height() < MINIMUM_LENGTH) {
+            sRegion.top -= MINIMUM_LENGTH / 2;
+            sRegion.bottom += MINIMUM_LENGTH / 2;
+        }
     }
 
     /**
      * 치수선 그리기
      * @param canvas
      */
-    private void drawLine(Canvas canvas) {
-        final PointF vCoord1 = sourceToViewCoord(getPosition(0).x, getPosition(0).y);
-        final PointF vCoord2 = sourceToViewCoord(getPosition(1).x, getPosition(1).y);
+    private void drawLine(Canvas canvas, final PointF vCoord1, final PointF vCoord2) {
         canvas.drawLine(vCoord1.x, vCoord1.y, vCoord2.x, vCoord2.y, paint);
     }
 
@@ -102,20 +121,19 @@ public class DrawViewDimension extends BaseDrawView {
      * @param canvas
      */
     private void drawText(Canvas canvas) {
-        final PointF vCoord = sourceToViewCoord(getTextPos().x, getTextPos().y);
+        final PointF vCoord = sourceToViewCoord(sCoordText.x, sCoordText.y);
         canvas.drawText(getLengthText(), vCoord.x, vCoord.y, paint);
     }
 
     /**
      * 미리보기 치수시 양 끝 화살표
      * @param canvas
-     * @param sCoord
+     * @param vCoord
      */
-    protected void drawPreviewArrow(Canvas canvas, PointF sCoord) {
+    protected void drawPreviewArrow(Canvas canvas, final PointF vCoord) {
         final float arrow = 30;
         final float line = 20;
 
-        PointF vCoord = sourceToViewCoord(sCoord.x, sCoord.y);
         PointF posArrow1 = Utillity.getOffset(vCoord, new PointF(-1f, -0.2f), arrow);
         PointF posArrowMid = Utillity.getOffset(vCoord, new PointF(-1f, -1f), arrow * 0.4f);
         PointF posArrow2 = Utillity.getOffset(vCoord, new PointF(-0.2f, -1f), arrow);
@@ -136,15 +154,12 @@ public class DrawViewDimension extends BaseDrawView {
     /**
      * 치추선 시종점 보조선
      * @param canvas
-     * @param sCoord
+     * @param vCoord
      */
-    protected void drawAssistLine(Canvas canvas, PointF sCoord) {
-        final PointF dirVert = Utillity.getUnitVertDirenction(getPosition(0), getPosition(1));
-        float MINIMUM_LENGTH = DrawViewFactory.getInstance().getMINIMUM_LENGTH();
-        PointF pos1 = Utillity.getOffset(sCoord, dirVert, MINIMUM_LENGTH / 2);
-        PointF pos2 = Utillity.getOffset(sCoord, dirVert, -MINIMUM_LENGTH / 2);
-        pos1 = sourceToViewCoord(pos1.x, pos1.y);
-        pos2 = sourceToViewCoord(pos2.x, pos2.y);
+    protected void drawAssistLine(Canvas canvas, final PointF vCoord) {
+        float offset = (DrawViewFactory.getInstance().getMINIMUM_LENGTH() / 2) * imageDrawView.getScale();
+        PointF pos1 = Utillity.getOffset(vCoord, this.dirVert, offset);
+        PointF pos2 = Utillity.getOffset(vCoord, this.dirVert, -offset);
         canvas.drawLine(pos1.x, pos1.y, pos2.x, pos2.y, paint);
     }
 
@@ -152,9 +167,9 @@ public class DrawViewDimension extends BaseDrawView {
      * 치수선 시종점 보조선
      * @param canvas
      */
-    protected void drawAssistLine(Canvas canvas) {
-        drawAssistLine(canvas, getPosition(0));
-        drawAssistLine(canvas, getPosition(1));
+    protected void drawAssistLine(Canvas canvas, final PointF vCoord1, final PointF vCoord2) {
+        drawAssistLine(canvas,vCoord1);
+        drawAssistLine(canvas, vCoord2);
     }
 
     /**
@@ -172,13 +187,12 @@ public class DrawViewDimension extends BaseDrawView {
     @Override
     public boolean isContains(float x, float y) {
         if (getPositionSize() >= 2) {
-            final PointF dirVert = Utillity.getUnitVertDirenction(getPosition(0), getPosition(1));
             float MINIMUM_LENGTH = DrawViewFactory.getInstance().getMINIMUM_LENGTH();
             ArrayList<PointF> polygon = new ArrayList<>();
-            polygon.add(Utillity.getOffset(getPosition(0), dirVert, (MINIMUM_LENGTH / 2)));
-            polygon.add(Utillity.getOffset(getPosition(1), dirVert, (MINIMUM_LENGTH / 2)));
-            polygon.add(Utillity.getOffset(getPosition(1), dirVert, -(MINIMUM_LENGTH / 2)));
-            polygon.add(Utillity.getOffset(getPosition(0), dirVert, -(MINIMUM_LENGTH / 2)));
+            polygon.add(Utillity.getOffset(getPosition(0), this.dirVert, (MINIMUM_LENGTH / 2)));
+            polygon.add(Utillity.getOffset(getPosition(1), this.dirVert, (MINIMUM_LENGTH / 2)));
+            polygon.add(Utillity.getOffset(getPosition(1), this.dirVert, -(MINIMUM_LENGTH / 2)));
+            polygon.add(Utillity.getOffset(getPosition(0), this.dirVert, -(MINIMUM_LENGTH / 2)));
             return Utillity.isInside(new PointF(x, y), polygon);
         } else {
             return super.isContains(x, y);
@@ -223,17 +237,6 @@ public class DrawViewDimension extends BaseDrawView {
      */
     protected String getLengthText() {
         return String.format("%d", (int) getLength());
-    }
-
-    /**
-     * 치수의 텍스트 위치
-     * @return
-     */
-    protected PointF getTextPos() {
-        final PointF pos = new PointF((getPosition(0).x + getPosition(1).x) / 2,
-                (getPosition(0).y + getPosition(1).y) / 2);
-        final PointF dirVert = Utillity.getUnitVertDirenction(getPosition(0), getPosition(1));
-        return Utillity.getOffset(pos, dirVert, DrawViewFactory.getInstance().getMINIMUM_LENGTH() / 2);
     }
 
     /**

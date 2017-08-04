@@ -8,10 +8,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
-
 import com.github.crazyatom.subsamplingscaleimagedrawview.R;
-import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 /**
@@ -21,6 +18,7 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 public class DrawViewCloud extends BaseDrawView {
 
     final private float INTERVAL_RATIO = 0.2f;
+    private float sInterval = 0;
 
     public DrawViewCloud(@NonNull ImageDrawView imageDrawView) {
         super(DrawViewType.CLOUD, imageDrawView);
@@ -32,147 +30,102 @@ public class DrawViewCloud extends BaseDrawView {
     }
 
     @Override
-    public boolean isInvalidSaveAnnotEx() {
-        return true;
-    }
-
-    @Override
     public String getName(boolean isSimple) {
         return isSimple ? "C" : getResources().getString(R.string.cloud);
     }
 
     @Override
+    protected void preCalc() {
+        final float min = Math.min(sRegion.width(), sRegion.height());
+        this.sInterval = min * INTERVAL_RATIO;
+    }
+
+    @Override
     public void onDraw(Canvas canvas) {
-        if (getPositionSize() < 2 || getRect(true).width() == 0 || getRect(true).height() == 0) {
+        if (sRegion == null || this.sInterval == 0) {
+            return;
+        }
+
+        RectF vRect = new RectF();
+        imageDrawView.sourceToViewRect(sRegion, vRect);
+        if (vRect.width() == 0 || vRect.height() == 0) {
+            return;
+        }
+
+        final int vInterval = (int) (sInterval * imageDrawView.getScale());
+        if (vInterval ==  0) {
             return;
         }
 
         loadPaint();
-        setBoundaryBox();
 
-        final RectF vRect = getRect(true);
-        final float intervalLength = getIntervalLength();
-        final float offset = intervalLength / 2.0f;
+        final float offset = vInterval / 2;
         vRect.left += offset;
         vRect.top += offset;
         vRect.right -= offset;
         vRect.bottom -= offset;
-        drawLineLTToRT(canvas, vRect);
-        drawLineRTToRB(canvas, vRect);
-        drawLineRBToLB(canvas, vRect);
-        drawLineLBToLT(canvas, vRect);
+        drawLeftToRight(canvas, vRect, vInterval);
+        drawTopToBottom(canvas, vRect, vInterval);
 
         super.onDraw(canvas);
     }
 
-    protected void setBoundaryBox() {
-        final RectF rect = getRect(false);
-        setBoundaryBox(rect);
-    }
-
     /**
-     * 구름 형상 타원 간격 길이
-     * @return float
-     */
-    private float getIntervalLength() {
-        final RectF vRect = getRect(true);
-        final float minLength = Math.min(vRect.width(), vRect.height());
-        return minLength * INTERVAL_RATIO;
-    }
-
-    /**
-     * 좌상단에서 우상단으로 타원조각 그리기
+     * 좌에서 우로 타원조각 그리기
      * @param canvas
      * @param vRect 구름 형상이 그려질 기준 사각형 뷰 좌표
+     * @param vInterval 뷰 좌표에서의 타원 간격
      */
-    private void drawLineLTToRT(Canvas canvas, RectF vRect) {
-        final float intervalLength = getIntervalLength();
-        final float offset = intervalLength / 2.0f;
+    private void drawLeftToRight(Canvas canvas, final RectF vRect, final float vInterval) {
+        final float offset = vInterval / 2.0f;
 
-        PointF pos = new PointF(vRect.left, vRect.top);
-        RectF oval = new RectF();
+        PointF posTop = new PointF(vRect.left, vRect.top);
+        PointF posBottom = new PointF(vRect.left, vRect.bottom);
+        RectF ovalTop = new RectF();
+        RectF ovalBottom = new RectF();
 
-        final int cnt = Math.round(vRect.width() / intervalLength);
+        final int cnt = Math.round(vRect.width() / vInterval);
         for (int i = 0; i < cnt; ++i) {
             if (i == cnt - 1) {
-                oval.set(pos.x, (pos.y - offset), vRect.right, (pos.y + offset));
+                ovalTop.set(posTop.x, (posTop.y - offset), vRect.right, (posTop.y + offset));
+                ovalBottom.set(posBottom.x, (posBottom.y - offset), vRect.right, (posBottom.y + offset));
             } else {
-                oval.set(pos.x, (pos.y - offset), (pos.x + intervalLength), (pos.y + offset));
+                ovalTop.set(posTop.x, (posTop.y - offset), (posTop.x + vInterval), (posTop.y + offset));
+                ovalBottom.set(posBottom.x, (posBottom.y - offset), (posBottom.x + vInterval), (posBottom.y + offset));
             }
-            canvas.drawArc(oval, 180, 180, false, paint);
-            pos.offset(intervalLength, 0);
+            canvas.drawArc(ovalTop, 180, 180, false, paint);
+            posTop.offset(vInterval, 0);
+            canvas.drawArc(ovalBottom, 180, -180, false, paint);
+            posBottom.offset(vInterval, 0);
         }
     }
 
     /**
-     * 우상단에서 우하단으로 타원조각 그리기
+     * 상단에서 하단으로 타원조각 그리기
      * @param canvas
      * @param vRect 구름 형상이 그려질 기준 사각형 뷰 좌표
      */
-    private void drawLineRTToRB(Canvas canvas, RectF vRect) {
-        final float intervalLength = getIntervalLength();
-        final float offset = intervalLength / 2.0f;
+    private void drawTopToBottom(Canvas canvas, final RectF vRect, final float vInterval) {
+        final float offset = vInterval / 2.0f;
 
-        PointF pos = new PointF(vRect.right, vRect.top);
-        RectF oval = new RectF();
+        PointF posLeft = new PointF(vRect.left, vRect.top);
+        PointF posRight = new PointF(vRect.right, vRect.top);
+        RectF ovalLeft = new RectF();
+        RectF ovalRight = new RectF();
 
-        final int cnt = Math.round(vRect.height() / intervalLength);
+        final int cnt = Math.round(vRect.height() / vInterval);
         for (int i = 0; i < cnt; ++i) {
             if (i == cnt - 1) {
-                oval.set((pos.x - offset), pos.y, (pos.x + offset), vRect.bottom);
+                ovalLeft.set((posLeft.x - offset), posLeft.y, (posLeft.x + offset), vRect.bottom);
+                ovalRight.set((posRight.x - offset), posRight.y, (posRight.x + offset), vRect.bottom);
             } else {
-                oval.set((pos.x - offset), pos.y, (pos.x + offset), (pos.y + intervalLength));
+                ovalLeft.set((posLeft.x - offset), posLeft.y, (posLeft.x + offset), (posLeft.y + vInterval));
+                ovalRight.set((posRight.x - offset), posRight.y, (posRight.x + offset), (posRight.y + vInterval));
             }
-            canvas.drawArc(oval, 270, 180, false, paint);
-            pos.offset(0, intervalLength);
-        }
-    }
-
-    /**
-     * 우하단에서 좌하단으로 타원조각 그리기
-     * @param canvas
-     * @param vRect 구름 형상이 그려질 기준 사각형 뷰 좌표
-     */
-    private void drawLineRBToLB(Canvas canvas, RectF vRect) {
-        final float intervalLength = getIntervalLength();
-        final float offset = intervalLength / 2.0f;
-
-        PointF pos = new PointF(vRect.right, vRect.bottom);
-        RectF oval = new RectF();
-
-        final int cnt = Math.round(vRect.width() / intervalLength);
-        for (int i = 0; i < cnt; ++i) {
-            if (i == cnt - 1) {
-                oval.set(vRect.left, (pos.y - offset), pos.x, (pos.y + offset));
-            } else {
-                oval.set((pos.x - intervalLength), (pos.y - offset), pos.x, (pos.y + offset));
-            }
-            canvas.drawArc(oval, 0, 180, false, paint);
-            pos.offset(-intervalLength, 0);
-        }
-    }
-
-    /**
-     *  좌하단에서 좌상단으로 타원조각 그리기
-     * @param canvas
-     * @param vRect 구름 형상이 그려질 기준 사각형 뷰 좌표
-     */
-    private void drawLineLBToLT(Canvas canvas, RectF vRect) {
-        final float intervalLength = getIntervalLength();
-        final float offset = intervalLength / 2.0f;
-
-        PointF pos = new PointF(vRect.left, vRect.bottom);
-        RectF oval = new RectF();
-
-        final int cnt = Math.round(vRect.height() / intervalLength);
-        for (int i = 0; i < cnt; ++i) {
-            if (i == cnt - 1) {
-                oval.set((pos.x - offset), vRect.top, (pos.x + offset), pos.y);
-            } else {
-                oval.set((pos.x - offset), (pos.y - intervalLength), (pos.x + offset), pos.y);
-            }
-            canvas.drawArc(oval, 90, 180, false, paint);
-            pos.offset(0, -intervalLength);
+            canvas.drawArc(ovalLeft, 270, -180, false, paint);
+            posLeft.offset(0, vInterval);
+            canvas.drawArc(ovalRight, 270, 180, false, paint);
+            posRight.offset(0, vInterval);
         }
     }
 
@@ -187,32 +140,5 @@ public class DrawViewCloud extends BaseDrawView {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
-    }
-
-    @Override
-    public boolean isContains(float x, float y) {
-        return super.isContains(x, y);
-// 내부 영역 제거가 필요 할때 사용하자
-//        final float intervalLength = getIntervalLength();
-//        final float offset = intervalLength / 2.0f;
-//
-//        // annotation이 여유크기보다 작으면 boundary box로만 판단
-//        if (Math.min(boundaryBox.width(), boundaryBox.height()) < offset) {
-//            return super.isContains(x, y);
-//        } else {
-//            ArrayList<PointF> outter = new ArrayList<>();
-//            outter.add(new PointF(boundaryBox.left, boundaryBox.top));
-//            outter.add(new PointF(boundaryBox.right, boundaryBox.top));
-//            outter.add(new PointF(boundaryBox.right, boundaryBox.bottom));
-//            outter.add(new PointF(boundaryBox.left, boundaryBox.bottom));
-//
-//            ArrayList<PointF> inner = new ArrayList<>();
-//            inner.add(new PointF(boundaryBox.left + offset, boundaryBox.top + offset));
-//            inner.add(new PointF(boundaryBox.right - offset, boundaryBox.top + offset));
-//            inner.add(new PointF(boundaryBox.right - offset, boundaryBox.bottom - offset));
-//            inner.add(new PointF(boundaryBox.left + offset, boundaryBox.bottom - offset));
-//
-//            return Utillity.isInside(new PointF(x, y), outter) && !Utillity.isInside(new PointF(x, y), inner);
-//        }
     }
 }

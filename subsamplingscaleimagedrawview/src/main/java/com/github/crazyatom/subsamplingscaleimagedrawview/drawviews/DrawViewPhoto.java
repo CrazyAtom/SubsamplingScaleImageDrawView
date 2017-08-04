@@ -27,9 +27,11 @@ public class DrawViewPhoto extends BaseDrawView {
 
     private ArrayList<PhotoItem> photoItems = new ArrayList<>();
     private ArrayList<String> removeItemFilenames = new ArrayList<>();
+    private Bitmap bitmap;
 
     public DrawViewPhoto(@NonNull ImageDrawView imageDrawView) {
         super(DrawViewType.PHOTO, imageDrawView);
+        bitmap = createBitmap();
     }
 
     @Override
@@ -41,39 +43,44 @@ public class DrawViewPhoto extends BaseDrawView {
     }
 
     @Override
-    public boolean isInvalidSaveAnnotEx() {
-        return true;
-    }
-
-    @Override
     public String getName(boolean isSimple) {
         return isSimple ? "P" : getResources().getString(R.string.photo);
     }
 
     @Override
+    protected void preCalc() {
+
+    }
+
+    @Override
+    public void setColor(String color) {
+        super.setColor(color);
+        bitmap = createBitmap();
+    }
+
+    @Override
     public void onDraw(Canvas canvas) {
         if (getPositionSize() >= 1) {
-            final Bitmap bitmap = createBitmap();
             final float w = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, bitmap.getWidth(), getResources().getDisplayMetrics()) / 2;
             final float h = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, bitmap.getHeight(), getResources().getDisplayMetrics()) / 2;
 
             // create bitmap
             final PointF vCoord = sourceToViewCoord(getPosition(0).x, getPosition(0).y);
-            float left = vCoord.x - w;
-            float top = vCoord.y - h;
-            float right = vCoord.x + w;
-            float bottom = vCoord.y + h;
-            canvas.drawBitmap(bitmap, null, new RectF(left, top, right, bottom), null);
-
-            // set boundary box
-            left = getPosition(0).x - (w / imageDrawView.getScale());
-            top = getPosition(0).y - (h / imageDrawView.getScale());
-            right = getPosition(0).x + (w / imageDrawView.getScale());
-            bottom = getPosition(0).y + (h / imageDrawView.getScale());
-            setBoundaryBox(new RectF(left, top, right, bottom));
+            canvas.drawBitmap(bitmap, null, new RectF(vCoord.x - w, vCoord.y - h,
+                    vCoord.x + w, vCoord.y + h), null);
 
             super.onDraw(canvas);
         }
+    }
+
+    @Override
+    protected void setSourceRegion() {
+        final float w = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, bitmap.getWidth(), getResources().getDisplayMetrics()) / 2;
+        final float h = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, bitmap.getHeight(), getResources().getDisplayMetrics()) / 2;
+        final float scale = imageDrawView.getScale();
+        final PointF sCoord = getPosition(0);
+        sRegion = new RectF(sCoord.x - (w / scale), sCoord.y - (h / scale),
+                sCoord.x + (w / scale), sCoord.y + (h / scale));
     }
 
     /**

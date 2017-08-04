@@ -30,7 +30,7 @@ public class EditPinViewPoint extends BaseEditPinView {
 
     @Override
     public RectF getBoundaryBox() {
-        return drawView.getBoundaryBox();
+        return drawView.getSourceRegion();
     }
 
     @Override

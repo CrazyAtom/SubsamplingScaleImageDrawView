@@ -21,7 +21,7 @@ public class DrawToolInk extends BaseDrawTool {
 
     @Override
     protected void touchBegin(int x, int y) {
-        previewDrawView = createDrawView();
+        previewDrawView = createDrawView(true);
         previewDrawView.addPosition(viewToSourceCoord(x, y));
         imageDrawView.addDrawView(previewDrawView);
     }
@@ -45,8 +45,9 @@ public class DrawToolInk extends BaseDrawTool {
     }
 
     @Override
-    protected BaseDrawView createDrawView() {
+    protected BaseDrawView createDrawView(final boolean preview) {
         BaseDrawView drawView = DrawViewFactory.getInstance().create(imageDrawView, BaseDrawView.DrawViewType.INK);
+        drawView.setPreview(preview);
         drawView.setColor(Utillity.getColorString(DrawViewSetting.getInstance().getColor()));
         drawView.setThick(DrawViewSetting.getInstance().getLineWidth());
 
@@ -57,7 +58,7 @@ public class DrawToolInk extends BaseDrawTool {
      * drawView를 view에 추가
      */
     private void injectAnnotation() {
-        BaseDrawView drawView = createDrawView();
+        BaseDrawView drawView = createDrawView(false);
         for (int i = 0; i < previewDrawView.getPositionSize(); ++i) {
             drawView.addPosition(previewDrawView.getPosition(i));
         }

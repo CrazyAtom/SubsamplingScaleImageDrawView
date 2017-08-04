@@ -76,7 +76,7 @@ public abstract class BaseDrawTool {
      * DrawView 생성
      * @return
      */
-    protected abstract BaseDrawView createDrawView();
+    protected abstract BaseDrawView createDrawView(final boolean preview);
 
     public void setBeginEdited(boolean mIsBeginEdited) {
         this.isBeginEdited = mIsBeginEdited;
