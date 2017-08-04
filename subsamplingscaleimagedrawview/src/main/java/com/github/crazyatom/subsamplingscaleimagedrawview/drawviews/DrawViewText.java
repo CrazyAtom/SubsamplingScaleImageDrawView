@@ -176,7 +176,6 @@ public class DrawViewText extends BaseDrawView {
         this.dialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
                 dialog.cancel();
             }
         });
@@ -205,7 +204,6 @@ public class DrawViewText extends BaseDrawView {
             imageDrawView.removeDrawView(this);
         }
         toggleSoftInput(false);
-
         checkContinueTool();
     }
 }
