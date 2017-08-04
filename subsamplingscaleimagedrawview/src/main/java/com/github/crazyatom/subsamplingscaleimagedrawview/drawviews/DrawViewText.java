@@ -113,10 +113,10 @@ public class DrawViewText extends BaseDrawView {
      * 페인트 설정
      *
      */
-    private void loadPaint() {
-        this.paint.setColor(Color.parseColor(color));
+    @Override
+    protected void loadPaint() {
+        super.loadPaint();
         this.paint.setTextSize(getThick() * imageDrawView.getScale());
-        this.paint.setAntiAlias(true);
     }
 
     @Override

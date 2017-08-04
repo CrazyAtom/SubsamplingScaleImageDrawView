@@ -176,10 +176,9 @@ public class DrawViewDimension extends BaseDrawView {
      * 페인트 설정
      *
      */
-    private void loadPaint() {
-        paint.setColor(getIndexColor());
-        paint.setStrokeWidth(4);
-        paint.setAntiAlias(true);
+    @Override
+    protected void loadPaint() {
+        super.loadPaint();
         paint.setTextSize(textSize * imageDrawView.getScale());
         paint.setStyle(Paint.Style.FILL);
     }

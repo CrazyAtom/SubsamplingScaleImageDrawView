@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.inputmethod.InputMethodManager;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public abstract class BaseDrawView {
     private boolean visibility = true;
     private boolean isPreview = false;
     private boolean isEditable = false;
+    private boolean isDashEffect = false;
 
     protected DrawToolControllViewListener drawToolControllViewListener;
 
@@ -344,12 +346,37 @@ public abstract class BaseDrawView {
         this.isPreview = preview;
     }
 
+    /**
+     * 편집 상태 설정
+     * @return
+     */
     public boolean isEditable() {
         return this.isEditable;
     }
 
     public void setEditable(boolean editable) {
         this.isEditable = editable;
+    }
+
+    /**
+     * dash로 표현할지 여부 설정
+     * @return
+     */
+    public boolean isDashEffect() {
+        return isDashEffect;
+    }
+
+    public void setDashEffect(boolean dashEffect) {
+        isDashEffect = dashEffect;
+    }
+
+    /**
+     * 점선 효과
+     * @return 점선 효과 적용 여부에 따라 이펙트 반환
+     */
+    @Nullable
+    protected DashPathEffect getDashPathEffect() {
+        return isDashEffect ? new DashPathEffect(new float[] {40, 20}, 0.0f) : null;
     }
 
     /**
@@ -468,6 +495,16 @@ public abstract class BaseDrawView {
                 drawToolControllViewListener.changeDefaultDrawTool();
             }
         }
+    }
+
+    /**
+     * paint 기본 설정
+     */
+    protected void loadPaint() {
+        paint.setColor(Color.parseColor(color));
+        paint.setStrokeWidth(thick);
+        paint.setAntiAlias(true);
+        paint.setPathEffect(getDashPathEffect());
     }
 
     protected Resources getResources() {

@@ -9,6 +9,7 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.Iterator;
 
@@ -65,21 +66,11 @@ public class DrawViewInk extends BaseDrawView {
      * 페인트 설정
      *
      */
-    private void loadPaint() {
-        paint.setColor(isPreview() ? Color.parseColor("#4C6C89") : Color.parseColor(color));
-        paint.setStrokeWidth(thick);
-        paint.setAntiAlias(true);
+    @Override
+    protected void loadPaint() {
+        super.loadPaint();
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
-        paint.setPathEffect(getDashPathEffect());
-    }
-
-    /**
-     * Ink 점선 효과
-     * @return 미리보기이면 점선 효과를 적용하고, 미리보기가 아니면 적용하지 않는다
-     */
-    private DashPathEffect getDashPathEffect() {
-        return isPreview() ? new DashPathEffect(new float[] {40, 20}, 0.0f) : null;
     }
 }

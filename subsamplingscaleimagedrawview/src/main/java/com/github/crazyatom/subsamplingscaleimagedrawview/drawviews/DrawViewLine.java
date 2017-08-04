@@ -81,10 +81,9 @@ public class DrawViewLine extends BaseDrawView {
      * 페인트 설정
      *
      */
-    private void loadPaint() {
-        paint.setColor(Color.parseColor(color));
-        paint.setStrokeWidth(thick);
-        paint.setAntiAlias(true);
+    @Override
+    protected void loadPaint() {
+        super.loadPaint();
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);

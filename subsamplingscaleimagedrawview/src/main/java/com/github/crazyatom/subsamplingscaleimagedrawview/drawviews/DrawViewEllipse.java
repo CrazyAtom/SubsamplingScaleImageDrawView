@@ -56,10 +56,9 @@ public class DrawViewEllipse extends BaseDrawView {
      * 페인트 설정
      *
      */
-    private void loadPaint() {
-        paint.setColor(Color.parseColor(color));
-        paint.setStrokeWidth(thick);
-        paint.setAntiAlias(true);
+    @Override
+    protected void loadPaint() {
+        super.loadPaint();
         paint.setStyle(Paint.Style.STROKE);
     }
 }
