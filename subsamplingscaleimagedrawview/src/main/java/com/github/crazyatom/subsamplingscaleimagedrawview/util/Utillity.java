@@ -1,6 +1,8 @@
 package com.github.crazyatom.subsamplingscaleimagedrawview.util;
 
 import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.RectF;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -111,5 +113,16 @@ public class Utillity {
         }
 
         return crosses % 2 > 0;
+    }
+
+    /**
+     * 외부 사각영역에 내부 사각영역의 요소가 속해 있는지 체크
+     * 내부 체크 & 교차 체크
+     * @param p 외부
+     * @param c 내부
+     * @return
+     */
+    public static boolean contains(final RectF p, final RectF c) {
+        return p.contains(c) || RectF.intersects(p, c);
     }
 }
