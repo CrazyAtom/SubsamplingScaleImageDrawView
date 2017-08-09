@@ -11,4 +11,6 @@
     <string name="line">직선</string>
     <string name="rectangle">사각형</string>
     <string name="ellipse">타원</string>
+    <string name="eraser_rectangle">범위선택</string>
+    <string name="eraser_free">곡선선택</string>
 </resources>

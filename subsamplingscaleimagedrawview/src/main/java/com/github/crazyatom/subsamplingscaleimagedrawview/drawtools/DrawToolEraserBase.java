@@ -5,10 +5,12 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.R;
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.BaseDrawView;
@@ -31,6 +33,7 @@ public abstract class DrawToolEraserBase extends BaseDrawTool {
     protected Map<String, BaseDrawView> selectedDrawViewMap = new HashMap<>();
     private Snackbar snackbar;
     private TextView tvSelectedCnt;
+    private Button btnEraserType;
     private Button btnSelectAll;
     private Button btnSelectedDelete;
     private boolean stateSelectedAll = false;
@@ -195,6 +198,25 @@ public abstract class DrawToolEraserBase extends BaseDrawTool {
 
         final LayoutInflater inflater = (LayoutInflater) imageDrawView.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.snackbar_delete_drawview, null);
+
+        this.btnEraserType = (Button) view.findViewById(R.id.delete_type);
+        this.btnEraserType.setText(DrawToolEraserBase.this instanceof DrawToolRectEraser ? R.string.eraser_rectangle : R.string.eraser_free);
+        this.btnEraserType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "";
+                if (DrawToolEraserBase.this instanceof DrawToolRectEraser) {
+                    imageDrawView.changeDrawTool(DrawToolType.ERASER_FREE);
+                    message = "곡선 선택 삭제로 변경 되었습니다.";
+                } else {
+                    imageDrawView.changeDrawTool(DrawToolType.ERASER_RECT);
+                    message = "범위 선택 삭제로 변경 되었습니다.";
+                }
+                Toast toast = Toast.makeText(imageDrawView.getContext(), message, Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        });
 
         this.tvSelectedCnt = (TextView) view.findViewById(R.id.selected_cnt);
         this.btnSelectAll = (Button) view.findViewById(R.id.select_all);
