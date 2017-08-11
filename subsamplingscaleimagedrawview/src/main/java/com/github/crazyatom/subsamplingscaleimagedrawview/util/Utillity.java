@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.UUID;
 
 /**
@@ -158,6 +159,8 @@ public class Utillity {
      */
     public static String getTimeString(final long time, @Nullable final String dateFormat) {
         final String pattern = (dateFormat == null) ? "yyyy.MM.dd HH:mm:ss" : dateFormat;
-        return new SimpleDateFormat(pattern).format(new Date(time));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        simpleDateFormat.setTimeZone(TimeZone.getDefault());
+        return simpleDateFormat.format(new Date(time));
     }
 }
