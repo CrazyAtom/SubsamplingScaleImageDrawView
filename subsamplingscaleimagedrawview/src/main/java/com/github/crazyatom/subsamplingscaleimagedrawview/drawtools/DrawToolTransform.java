@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.DrawViewTransformListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.Event.SelectedDrawViewListener;
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.BaseDrawView;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
@@ -20,6 +21,8 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
     private BaseDrawView selectedDrawView;
     private PointF beginPoint;
     private BaseEditPinView editPinView;
+    // Listener selected DrawView
+    private SelectedDrawViewListener selectedDrawViewListener;
 
     public DrawToolTransform(@NonNull ImageDrawView imageDrawView) {
         super(imageDrawView);
@@ -27,6 +30,16 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
 
     public void setSelectedDrawView(@NonNull BaseDrawView selectedDrawView) {
         this.selectedDrawView = selectedDrawView;
+        if (this.selectedDrawViewListener != null) {
+            this.selectedDrawViewListener.onSelectedDrawViewInfo("by" + this.selectedDrawView.getCreater() + " " + Utillity.getTimeString(this.selectedDrawView.getUpdateTime(), null));
+        }
+    }
+
+    /**
+     * DrawView 선택에 대한 이벤트
+     */
+    public void setSelectedDrawViewListener(SelectedDrawViewListener selectedDrawViewListener) {
+        this.selectedDrawViewListener = selectedDrawViewListener;
     }
 
     @Override
@@ -55,6 +68,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
         if (this.selectedDrawView.getType() == BaseDrawView.DrawViewType.PHOTO
                 || this.selectedDrawView.getType() == BaseDrawView.DrawViewType.TEXT) {
             createEditPinView();
+//            touchBegin(x, y);
         }
 
         return this.selectedDrawView;
@@ -69,7 +83,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
         }
 
         if (this.editPinView == null) {
-            this.editPinView = newPinView(this.selectedDrawView);
+            this.editPinView = this.selectedDrawView.getEditPinView();
             imageDrawView.setEditPinView(editPinView);
             imageDrawView.invalidate();
         }
@@ -123,7 +137,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
 
     @Override
     protected void touchEnd(int x, int y) {
-        exitTransformState();
+//        exitTransformState();
     }
 
     @Override
@@ -137,30 +151,15 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
             imageDrawView.clearEditPinView();
             imageDrawView.invalidate();
         }
+
+        if (this.selectedDrawViewListener != null) {
+            this.selectedDrawViewListener.onSelectedDrawViewInfo(null);
+        }
     }
 
     @Override
     protected BaseDrawView createDrawView(final boolean preview) {
         return null;
-    }
-
-    /**
-     * drawView type에 따른 pinView생성
-     * @param annotation
-     * @return
-     */
-    private BaseEditPinView newPinView(BaseDrawView annotation) {
-        switch (annotation.getType()) {
-            case DIMENSION_REF:
-            case DIMENSION:
-            case LINE:
-                return new EditPinViewLine(imageDrawView, annotation);
-            case PHOTO:
-            case TEXT:
-                return new EditPinViewPoint(imageDrawView, annotation);
-            default:
-                return new EditPinViewRect(imageDrawView, annotation);
-        }
     }
 
     /**
@@ -182,12 +181,12 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
             imageDrawView.invalidate();
         }
 
-        imageDrawView.changeTool(DrawToolType.NONE);
-
         if (this.selectedDrawView != null) {
             this.selectedDrawView.setEditable(false);
             this.selectedDrawView = null;
         }
+
+        imageDrawView.changeTool(DrawToolType.NONE);
     }
 
     @Override

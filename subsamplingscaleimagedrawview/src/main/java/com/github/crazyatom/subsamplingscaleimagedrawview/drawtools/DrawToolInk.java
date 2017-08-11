@@ -36,6 +36,7 @@ public class DrawToolInk extends BaseDrawTool {
     protected void touchEnd(int x, int y) {
         injectAnnotation();
         imageDrawView.removeDrawView(previewDrawView);
+        imageDrawView.setEditedDrawView(true);
         checkContinueTool();
     }
 

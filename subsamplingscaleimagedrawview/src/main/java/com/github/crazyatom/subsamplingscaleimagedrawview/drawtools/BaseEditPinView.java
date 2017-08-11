@@ -9,7 +9,6 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.util.TypedValue;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,30 +24,39 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 public abstract class BaseEditPinView {
 
-    protected static class Pin {
-        protected enum RectPos {
-            LEFT_TOP,
-            TOP,
-            RIGHT_TOP,
-            RIGHT,
-            RIGHT_BOTTOM,
-            BOTTOM,
-            LEFT_BOTTOM,
-            LEFT,
-            NONE
+    public static class Pin {
+        public enum RectPos {
+            NONE((byte)0),
+            LEFT((byte)1),
+            TOP((byte)2),
+            RIGHT((byte)4),
+            BOTTOM((byte)8),
+            LEFT_TOP((byte)16),
+            RIGHT_TOP((byte)32),
+            RIGHT_BOTTOM((byte)64),
+            LEFT_BOTTOM((byte)128);
+
+            private final byte pos;
+            RectPos(byte bit) {
+                this.pos = bit;
+            }
+
+            public byte getPos() {
+                return pos;
+            }
         }
 
         public PointF point;
-        public boolean state = false;
         public RectPos rectPos = RectPos.NONE;
+        public boolean state = false;
 
-        public Pin(PointF point, RectPos rectPos) {
+        public Pin(final PointF point) {
             this.point = point;
-            this.rectPos = rectPos;
         }
 
-        public Pin(PointF point) {
+        public Pin(final PointF point, final RectPos rectPos) {
             this.point = point;
+            this.rectPos = rectPos;
         }
     }
 
@@ -72,7 +80,11 @@ public abstract class BaseEditPinView {
         paint.setStrokeWidth(8.0f);
         paint.setAntiAlias(true);
 
-        // boundary
+        drawBoundary(canvas);
+        drawPin(canvas);
+    }
+
+    protected void drawBoundary(Canvas canvas) {
         final RectF boundary = getBoundaryBox();
         if (boundary != null) {
             paint.setStyle(Paint.Style.STROKE);
@@ -85,8 +97,9 @@ public abstract class BaseEditPinView {
 
             phase = (phase < 10.0f) ? phase + 1.0f : 0.0f;
         }
+    }
 
-        // pin
+    protected void drawPin(Canvas canvas) {
         paint.setPathEffect(null);
         for (Pin pin : pinList) {
             RectF pinRect = getRectPin(imageDrawView.sourceToViewCoord(pin.point.x, pin.point.y));
@@ -120,7 +133,7 @@ public abstract class BaseEditPinView {
      * @param point
      * @return
      */
-    protected RectF getRectPin(PointF point) {
+    protected RectF getRectPin(final PointF point) {
         final int pinSize = getPIN_SIZE();
         return new RectF(point.x - pinSize, point.y - pinSize, point.x + pinSize, point.y + pinSize);
     }
@@ -131,9 +144,21 @@ public abstract class BaseEditPinView {
      * @param x
      * @param y
      */
-    public void setPinPressed(float x, float y) {
+    public Pin setPinPressed(final float x, final float y) {
         this.initPinListState();
+        final Pin findPin = findPin(x, y);
+        if (findPin != null) {
+            findPin.state = true;
+        }
+        return findPin;
+    }
 
+    /**
+     * x, y가 속하는 가장 가까운 Pin 반환
+     * @param x, y 좌표
+     * @return Pin
+     */
+    protected Pin findPin(final float x, final float y) {
         Pin findPin = null;
         float dist = Float.MAX_VALUE;
         final float pinSize = (getPIN_SIZE() * 2f) / imageDrawView.getScale();
@@ -142,14 +167,11 @@ public abstract class BaseEditPinView {
             if (rect.contains(x, y)) {
                 if (Utillity.getDistance(pin.point, new PointF(x, y)) < dist) {
                     dist = Utillity.getDistance(pin.point, new PointF(x, y));
-                    pin.state = true;
-                    if (findPin != null) {
-                        findPin.state = false;
-                    }
                     findPin = pin;
                 }
             }
         }
+        return findPin;
     }
 
     /**
@@ -171,7 +193,7 @@ public abstract class BaseEditPinView {
      * @param y
      * @return
      */
-    public boolean isContains(float x, float y) {
+    public boolean isContains(final float x, final float y) {
         return getBoundaryBox().contains(x, y);
     }
 
@@ -238,7 +260,7 @@ public abstract class BaseEditPinView {
      * Pin 이동
      * @param pos
      */
-    public abstract void setMovePin(PointF pos);
+    public abstract void setMovePin(final PointF pos);
 
     /**
      * Pin 초기화

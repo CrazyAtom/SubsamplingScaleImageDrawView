@@ -44,6 +44,7 @@ public class DrawToolRectangle extends BaseDrawTool {
         }
         imageDrawView.removeDrawView(previewDrawView);
         injectAnnotation();
+        imageDrawView.setEditedDrawView(true);
         checkContinueTool();
     }
 

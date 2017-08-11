@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -27,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.R;
+import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.BaseEditPinView;
+import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.EditPinViewPoint;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewSetting;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
@@ -80,16 +83,26 @@ public class DrawViewText extends BaseDrawView {
     }
 
     @Override
+    public BaseEditPinView getEditPinView() {
+        return new EditPinViewPoint(imageDrawView, this);
+    }
+
+    @Override
+    public boolean isValidEditedFlag() {
+        return true;
+    }
+
+    @Override
     public void onDraw(Canvas canvas) {
         if (sRegion == null) {
             return;
         }
 
         loadPaint();
-
         setSourceRegion();
 
-        final PointF vCoord = sourceToViewCoord(sRegion.left, sRegion.bottom);
+        final PointF sCoord = getPosition(0);
+        final PointF vCoord = sourceToViewCoord(sCoord.x, sCoord.y);
         canvas.drawText(content, vCoord.x, vCoord.y, paint);
 
         super.onDraw(canvas);
@@ -98,7 +111,11 @@ public class DrawViewText extends BaseDrawView {
     @Override
     protected void setSourceRegion() {
         final PointF sCoord = getPosition(0);
-        sRegion = new RectF(sCoord.x, sCoord.y - textHeight(), sCoord.x + textWidth(), sCoord.y);
+        final float height = textHeight();
+        final float width = textWidth();
+        final float offset = getThick() / 2;
+        sRegion = new RectF(sCoord.x - offset, sCoord.y - (height + offset),
+                sCoord.x + (width + offset), sCoord.y + offset);
     }
 
     private float textWidth() {
@@ -198,6 +215,7 @@ public class DrawViewText extends BaseDrawView {
      */
     private void onUpdateContent(Context context, boolean state) {
         if (state == true) {
+            imageDrawView.setEditedDrawView(true);
             invalidate();
         } else {
             //내용이 없을 경우 view에서 drawView를 삭제

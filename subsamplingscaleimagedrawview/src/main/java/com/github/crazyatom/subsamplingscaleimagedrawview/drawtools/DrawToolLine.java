@@ -45,6 +45,7 @@ public class DrawToolLine extends BaseDrawTool {
         }
         imageDrawView.removeDrawView(previewDrawView);
         injectAnnotation();
+        imageDrawView.setEditedDrawView(true);
         checkContinueTool();
     }
 

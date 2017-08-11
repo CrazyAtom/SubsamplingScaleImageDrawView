@@ -35,6 +35,7 @@ public class DrawToolPhoto extends BaseDrawTool {
     protected void touchEnd(int x, int y) {
         this.base = viewToSourceCoord(x, y);
         injectAnnotation();
+        imageDrawView.setEditedDrawView(true);
         checkContinueTool();
     }
 

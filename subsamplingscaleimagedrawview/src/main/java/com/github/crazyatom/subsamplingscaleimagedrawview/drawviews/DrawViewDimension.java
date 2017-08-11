@@ -12,6 +12,8 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.R;
+import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.BaseEditPinView;
+import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.EditPinViewLine;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewFactory;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
@@ -53,6 +55,16 @@ public class DrawViewDimension extends BaseDrawView {
             this.sCoordText = Utillity.getOffset(sCoordMid, dirVert, DrawViewFactory.getInstance().getMINIMUM_LENGTH() / 2);
             this.dirVert = Utillity.getUnitVertDirenction(sCoord1, sCoord2);
         }
+    }
+
+    @Override
+    public BaseEditPinView getEditPinView() {
+        return new EditPinViewLine(imageDrawView, this);
+    }
+
+    @Override
+    public boolean isValidEditedFlag() {
+        return false;
     }
 
     @Override
@@ -179,6 +191,7 @@ public class DrawViewDimension extends BaseDrawView {
     @Override
     protected void loadPaint() {
         super.loadPaint();
+        paint.setColor(getIndexColor());
         paint.setTextSize(textSize * imageDrawView.getScale());
         paint.setStyle(Paint.Style.FILL);
     }

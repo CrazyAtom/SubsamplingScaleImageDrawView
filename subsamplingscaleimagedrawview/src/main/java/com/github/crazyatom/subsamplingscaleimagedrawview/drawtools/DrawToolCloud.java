@@ -52,6 +52,7 @@ public class DrawToolCloud extends BaseDrawTool {
                 end = Utillity.getOffset(begin, new PointF(1, 1), DrawViewFactory.getInstance().getMINIMUM_LENGTH());
             }
             injectAnnotation();
+            imageDrawView.setEditedDrawView(true);
         }
 
         checkContinueTool();

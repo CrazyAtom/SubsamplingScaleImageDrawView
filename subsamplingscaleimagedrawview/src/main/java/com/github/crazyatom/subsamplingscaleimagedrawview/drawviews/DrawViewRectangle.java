@@ -8,6 +8,8 @@ import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.R;
+import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.BaseEditPinView;
+import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.EditPinViewRect;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 /**
@@ -33,6 +35,16 @@ public class DrawViewRectangle extends BaseDrawView {
     @Override
     protected void preCalc() {
 
+    }
+
+    @Override
+    public BaseEditPinView getEditPinView() {
+        return new EditPinViewRect(imageDrawView, this);
+    }
+
+    @Override
+    public boolean isValidEditedFlag() {
+        return true;
     }
 
     @Override

@@ -47,7 +47,6 @@ public abstract class BaseDrawTool {
         } else {
             touchEnd(x, y);
             this.isBeginEdited = false;
-            this.imageDrawView.setEditedDrawView(true);
             return true;
         }
     }
@@ -69,7 +68,9 @@ public abstract class BaseDrawTool {
     public abstract void enter();
 
     public void exit() {
-        imageDrawView.removeDrawView(previewDrawView);
+        if (this.previewDrawView != null) {
+            this.imageDrawView.removeDrawView(this.previewDrawView);
+        }
     }
 
     /**
