@@ -248,7 +248,7 @@ public class DrawViewDimension extends BaseDrawView {
      * @return
      */
     protected String getLengthText() {
-        return String.format("%d", (int) getLength());
+        return String.format("%,d", (int) getLength());
     }
 
     /**
