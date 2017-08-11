@@ -3,8 +3,12 @@ package com.github.crazyatom.subsamplingscaleimagedrawview.util;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -62,7 +66,15 @@ public class Utillity {
      * @return PointF
      */
     public static PointF getUnitVertDirenction(final PointF pt1, final PointF pt2) {
-        PointF dir = getUnitDirection(pt1, pt2);
+        return getVertDirection(getUnitDirection(pt1, pt2));
+    }
+
+    /**
+     * 입력 방향의 수직방향
+     * @param dir
+     * @return PointF
+     */
+    public static PointF getVertDirection(final PointF dir) {
         if (dir.x > 0) {
             return new PointF(dir.y, -dir.x);
         }
@@ -87,7 +99,19 @@ public class Utillity {
      * @return PointF
      */
     public static PointF getOffset(final PointF base, final PointF dir, final float offset) {
-        return new PointF(base.x + (dir.x * offset), base.y + (dir.y * offset));
+        final PointF unitDir = getNormalize(dir);
+        return new PointF(base.x + (unitDir.x * offset), base.y + (unitDir.y * offset));
+    }
+
+    /**
+     * 좌표 이동
+     * @param base 기준점
+     * @param x, y 이동방향
+     * @param offset 이동거리
+     * @return PointF
+     */
+    public static PointF getOffset(final PointF base, final float x, final float y, final float offset) {
+        return getOffset(base, new PointF(x, y), offset);
     }
 
     /**
@@ -124,5 +148,16 @@ public class Utillity {
      */
     public static boolean contains(final RectF p, final RectF c) {
         return p.contains(c) || RectF.intersects(p, c);
+    }
+
+    /**
+     * 입력 시간을 포맷에 맞게 문자열로 반환
+     * @param time 시간
+     * @param dateFormat 시간 양식
+     * @return String
+     */
+    public static String getTimeString(final long time, @Nullable final String dateFormat) {
+        final String pattern = (dateFormat == null) ? "yyyy.MM.dd HH:mm:ss" : dateFormat;
+        return new SimpleDateFormat(pattern).format(new Date(time));
     }
 }

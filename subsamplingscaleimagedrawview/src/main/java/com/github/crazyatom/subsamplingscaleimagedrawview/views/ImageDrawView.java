@@ -20,8 +20,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
@@ -33,6 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.ChangedDrawToolCallback;
+import com.github.crazyatom.subsamplingscaleimagedrawview.R;
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.DrawViewReferenceDimension;
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.ChangeDrawToolListener;
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.CompleteCallback;
@@ -364,12 +367,13 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
                     drawTool.longPress(x, y);
                 }
             });
-        } else {
-            // EDIT 상태에서는 tool의 longPress
-            if (this.drawTool != null) {
-                this.drawTool.longPress(x, y);
-            }
         }
+//        else {
+//            // EDIT 상태에서는 tool의 longPress
+//            if (this.drawTool != null) {
+//                this.drawTool.longPress(x, y);
+//            }
+//        }
     }
 
     @Override
@@ -385,12 +389,13 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
                     drawTool.singleTapUp(x, y);
                 }
             });
-        } else {
-            // EDIT 상태에서는 tool의 singleTapUp
-            if (this.drawTool != null) {
-                this.drawTool.singleTapUp(x, y);
-            }
         }
+//        else {
+//            // EDIT 상태에서는 tool의 singleTapUp
+//            if (this.drawTool != null) {
+//                this.drawTool.singleTapUp(x, y);
+//            }
+//        }
     }
 
     /**
@@ -401,11 +406,7 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
      * @param callback
      */
     private void selectDrawViewProcess(final int x, final int y, final CompleteCallback callback) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                getContext());
-
-        final DrawViewArrayAdapter adapter = new DrawViewArrayAdapter(getContext(),
-                android.R.layout.select_dialog_item);
+        final DrawViewArrayAdapter adapter = new DrawViewArrayAdapter(getContext(), R.layout.simple_list_item_2);
 
         PointF sc = viewToSourceCoord(x, y);
         for (String key : this.drawViewMap.keySet()) {
@@ -422,6 +423,7 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
                     callback.complete(null);
                 }
             } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -432,7 +434,9 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
                         }
                     }
                 });
-                builder.show();
+                AlertDialog dialog = builder.create();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
             }
         }
     }

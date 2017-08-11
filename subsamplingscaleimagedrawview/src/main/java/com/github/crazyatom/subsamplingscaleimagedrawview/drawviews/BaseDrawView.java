@@ -15,10 +15,10 @@ import android.view.inputmethod.InputMethodManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.BaseDrawTool;
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.DrawToolControllViewListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.BaseEditPinView;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewFactory;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewSetting;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
@@ -32,6 +32,8 @@ public abstract class BaseDrawView {
 
     private DrawViewType type;
     private String uniqId;
+    private String creater;
+    private long updateTime;
 
     private ArrayList<PointF> pointList = new ArrayList<>();
     protected ImageDrawView imageDrawView;
@@ -59,10 +61,13 @@ public abstract class BaseDrawView {
         this.imageDrawView = imageDrawView;
         if (DrawViewFactory.getInstance().getNewDrawViewCallback() != null) {
             setUniqId(DrawViewFactory.getInstance().getNewDrawViewCallback().newUUID());
+            setCreater(DrawViewFactory.getInstance().getNewDrawViewCallback().creater());
         } else {
             setUniqId(Utillity.getUUID());
+            setCreater("홍길동");
         }
 
+        this.updateTime = System.currentTimeMillis();
         this.thick = 4;
         color = Utillity.getColorString(Color.BLACK);
     }
@@ -152,6 +157,22 @@ public abstract class BaseDrawView {
 
     protected void setSourceRegion() {
         this.sRegion = getRect(false);
+    }
+
+    public String getCreater() {
+        return creater;
+    }
+
+    public void setCreater(String creater) {
+        this.creater = creater;
+    }
+
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
     }
 
     public void setDrawToolControllViewListener(DrawToolControllViewListener drawToolControllViewListener) {
@@ -459,6 +480,18 @@ public abstract class BaseDrawView {
     protected abstract void preCalc();
 
     /**
+     * 편집 view
+     * @return
+     */
+    public abstract BaseEditPinView getEditPinView();
+
+    /**
+     * 편집 flag 설정이 유효한지 여부
+     * @return
+     */
+    public abstract boolean isValidEditedFlag();
+
+    /**
      * 좌표 x, y가 annotation내에 존재 하는지 체크
      * @param x
      * @param y
@@ -519,7 +552,9 @@ public abstract class BaseDrawView {
      * view 갱신
      */
     public void invalidate() {
-        imageDrawView.invalidate();
+        RectF invalidArea = new RectF();
+        imageDrawView.sourceToViewRect(getSourceRegion(), invalidArea);
+        imageDrawView.invalidate((int)invalidArea.left, (int)invalidArea.top, (int)invalidArea.right, (int)invalidArea.bottom);
     }
 
     /**

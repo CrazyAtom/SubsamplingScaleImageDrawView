@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.github.crazyatom.subsamplingscaleimagedrawview.R;
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.BaseDrawView;
+import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 
 /**
  * Created by hangilit on 2017. 7. 19..
@@ -39,9 +41,12 @@ public class DrawViewArrayAdapter extends ArrayAdapter<BaseDrawView> {
         BaseDrawView drawView = getItem(position);
         if (drawView != null) {
             LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            TextView textView = (TextView) layoutInflater.inflate(resource, null);
-            textView.setText(drawView.getName(false));
-            return textView;
+            View view = layoutInflater.inflate(resource, null);
+            TextView name = (TextView) view.findViewById(R.id.text1);
+            name.setText(drawView.getName(false));
+            TextView info = (TextView) view.findViewById(R.id.text2);
+            info.setText("by" + drawView.getCreater() + " " + Utillity.getTimeString(drawView.getUpdateTime(), null));
+            return view;
         }
         return convertView;
     }
