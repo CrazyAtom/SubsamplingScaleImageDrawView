@@ -211,4 +211,9 @@ public class ImageDrawViewActivity extends AppCompatActivity implements NewDrawV
     public String newUUID() {
         return this.getClass().getSimpleName() + Utillity.getUUID();
     }
+
+    @Override
+    public String creater() {
+        return null;
+    }
 }

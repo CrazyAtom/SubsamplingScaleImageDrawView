@@ -6,4 +6,5 @@ package com.github.crazyatom.subsamplingscaleimagedrawview.Event;
 
 public interface NewDrawViewCallback {
     String newUUID();
+    String creater();
 }
