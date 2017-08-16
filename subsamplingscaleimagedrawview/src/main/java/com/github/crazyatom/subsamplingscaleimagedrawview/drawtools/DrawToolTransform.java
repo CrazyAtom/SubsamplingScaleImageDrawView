@@ -151,6 +151,10 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
             imageDrawView.invalidate();
         }
 
+        if (this.selectedDrawView != null && this.selectedDrawView.isValidEditedFlag()) {
+            imageDrawView.setEditedDrawView(true);
+        }
+
         if (this.selectedDrawViewListener != null) {
             this.selectedDrawViewListener.onSelectedDrawViewInfo(null);
         }
