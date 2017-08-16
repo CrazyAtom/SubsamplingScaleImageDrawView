@@ -198,6 +198,14 @@ public abstract class BaseEditPinView {
     }
 
     /**
+     * Pin 이동이 가능한 EidtView인지
+     * @return
+     */
+    public boolean isValidMoveablePin() {
+        return true;
+    }
+
+    /**
      * Pin 상태 초기화
      */
     protected void initPinListState() {

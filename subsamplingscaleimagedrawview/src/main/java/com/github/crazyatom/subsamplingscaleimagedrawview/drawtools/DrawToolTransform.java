@@ -93,8 +93,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
     protected void touchBegin(int x, int y) {
         PointF sCoord = viewToSourceCoord(x, y);
         if (this.editPinView != null) {
-            this.editPinView.setPinPressed(sCoord.x, sCoord.y);
-            if (this.editPinView.isPinPressed() == true) {
+            if (this.editPinView.setPinPressed(sCoord.x, sCoord.y) != null) {
                 this.editPinView.invalidate();
             } else if (this.editPinView.isContains(sCoord.x, sCoord.y) == true) {
                 this.beginPoint = viewToSourceCoord(x, y);
@@ -112,21 +111,21 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
         }
 
         PointF sCoord = viewToSourceCoord(x, y);
-        if (this.editPinView.isPinPressed() == true) {
+        if (this.editPinView.isValidMoveablePin() == true && this.editPinView.isPinPressed() == true) {
             this.editPinView.setMovePin(new PointF(sCoord.x, sCoord.y));
             this.editPinView.invalidate();
-            if (selectedDrawView.getType() == BaseDrawView.DrawViewType.DIMENSION_REF
-                    || selectedDrawView.getType() == BaseDrawView.DrawViewType.DIMENSION
-                    || selectedDrawView.getType() == BaseDrawView.DrawViewType.LINE) {
-                selectedDrawView.update(this.editPinView.getPinPoints());
+            if (this.selectedDrawView.getType() == BaseDrawView.DrawViewType.DIMENSION_REF
+                    || this.selectedDrawView.getType() == BaseDrawView.DrawViewType.DIMENSION
+                    || this.selectedDrawView.getType() == BaseDrawView.DrawViewType.LINE) {
+                this.selectedDrawView.update(this.editPinView.getPinPoints());
             } else {
                 update(this.editPinView.getBoundaryBox());
             }
-        } else {
+        } else if (this.editPinView.isContains(sCoord.x, sCoord.y) == true && this.beginPoint != null) {
             RectF sRect = this.selectedDrawView.getSourceRegion();
-            final float sDistX = sCoord.x - beginPoint.x;
-            final float sDistY = sCoord.y - beginPoint.y;
-            beginPoint = sCoord;
+            final float sDistX = sCoord.x - this.beginPoint.x;
+            final float sDistY = sCoord.y - this.beginPoint.y;
+            this.beginPoint = sCoord;
             update(new RectF(sRect.left + sDistX, sRect.top + sDistY, sRect.right + sDistX, sRect.bottom + sDistY));
             if (this.editPinView != null) {
                 this.editPinView.initPinList();

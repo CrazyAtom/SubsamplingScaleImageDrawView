@@ -299,6 +299,18 @@ public class DrawViewPhoto extends BaseDrawView {
     }
 
     /**
+     * 방향 플래그
+     * @param dir
+     */
+    public void setDir(final byte dir) {
+        this.dir = dir;
+    }
+
+    public byte getDir() {
+        return dir;
+    }
+
+    /**
      * Class photo information
      */
     public static class PhotoItem {
@@ -407,9 +419,15 @@ public class DrawViewPhoto extends BaseDrawView {
         public Pin setPinPressed(final float x, final float y) {
             final Pin findPin = findPin(x, y);
             if (findPin != null) {
-                ((DrawViewPhoto) drawView).setDir(findPin.rectPos);
+                findPin.state = true;
+                setDir(findPin.rectPos);
             }
             return findPin;
+        }
+
+        @Override
+        public boolean isValidMoveablePin() {
+            return false;
         }
     }
 }
