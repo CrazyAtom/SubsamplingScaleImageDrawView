@@ -30,9 +30,9 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
 
     public void setSelectedDrawView(@NonNull BaseDrawView selectedDrawView) {
         this.selectedDrawView = selectedDrawView;
-//        if (this.selectedDrawViewListener != null) {
-//            this.selectedDrawViewListener.onSelectedDrawViewInfo("by" + this.selectedDrawView.getCreater() + " " + Utillity.getTimeString(this.selectedDrawView.getUpdateTime(), null));
-//        }
+        if (this.selectedDrawViewListener != null) {
+            this.selectedDrawViewListener.onSelectedDrawViewInfo("by" + this.selectedDrawView.getCreater() + " " + Utillity.getTimeString(this.selectedDrawView.getUpdateTime(), null));
+        }
     }
 
     /**
@@ -155,9 +155,9 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
             imageDrawView.invalidate();
         }
 
-//        if (this.selectedDrawViewListener != null) {
-//            this.selectedDrawViewListener.onSelectedDrawViewInfo(null);
-//        }
+        if (this.selectedDrawViewListener != null) {
+            this.selectedDrawViewListener.onSelectedDrawViewInfo(null);
+        }
     }
 
     @Override
