@@ -75,7 +75,7 @@ public class DrawViewPhoto extends BaseDrawView {
 
     @Override
     public BaseEditPinView getEditPinView() {
-        return new EditPinViewPoint(imageDrawView, this);
+        return new EditArrowView(imageDrawView, this);
     }
 
     @Override
