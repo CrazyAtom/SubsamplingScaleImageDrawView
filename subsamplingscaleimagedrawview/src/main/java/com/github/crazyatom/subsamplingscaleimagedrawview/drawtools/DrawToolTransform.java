@@ -132,6 +132,10 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
                 this.editPinView.invalidate();
             }
         }
+
+        if (this.selectedDrawView.isValidEditedFlag()) {
+            imageDrawView.setEditedDrawView(true);
+        }
     }
 
     @Override
@@ -149,10 +153,6 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
         if (this.editPinView != null) {
             imageDrawView.clearEditPinView();
             imageDrawView.invalidate();
-        }
-
-        if (this.selectedDrawView != null && this.selectedDrawView.isValidEditedFlag()) {
-            imageDrawView.setEditedDrawView(true);
         }
 
         if (this.selectedDrawViewListener != null) {
