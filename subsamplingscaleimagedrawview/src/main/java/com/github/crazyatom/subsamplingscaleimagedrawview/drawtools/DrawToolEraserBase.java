@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +30,7 @@ import java.util.Map;
 
 public abstract class DrawToolEraserBase extends BaseDrawTool {
 
-    protected final float MINIMUM_LENGTH = 10.0f;
+    protected final float MINIMUM_LENGTH;
 
     protected Map<String, BaseDrawView> selectedDrawViewMap = new HashMap<>();
     private Snackbar snackbar;
@@ -41,6 +43,9 @@ public abstract class DrawToolEraserBase extends BaseDrawTool {
     public DrawToolEraserBase(@NonNull ImageDrawView imageDrawView) {
         super(imageDrawView);
         makeToolSnackbar();
+
+        DisplayMetrics displayMetrics = imageDrawView.getContext().getResources().getDisplayMetrics();
+        MINIMUM_LENGTH = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, displayMetrics);
     }
 
     @Override

@@ -41,14 +41,10 @@ public class DrawToolRectEraser extends DrawToolEraserBase {
     protected void addSelected() {
         for (String key : imageDrawView.getDrawViewMap().keySet()) {
             final BaseDrawView drawView = imageDrawView.getDrawViewMap().get(key);
-            if (drawView.isPreview() == false) {
-                if (Utillity.contains(previewDrawView.getSourceRegion(), drawView.getSourceRegion())) {
-                    selectedDrawViewMap.put(key, drawView);
-                    drawView.setShowBoundaryBox(true);
-                } else {
-                    selectedDrawViewMap.remove(key);
-                    drawView.setShowBoundaryBox(false);
-                }
+            if (drawView.isPreview() == false &&
+                    Utillity.contains(previewDrawView.getSourceRegion(), drawView.getSourceRegion()) == true) {
+                selectedDrawViewMap.put(key, drawView);
+                drawView.setShowBoundaryBox(true);
                 drawView.invalidate();
             }
         }

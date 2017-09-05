@@ -389,13 +389,13 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
                     drawTool.singleTapUp(x, y);
                 }
             });
+        } else {
+            // TODO: 2017-09-04  transform에서 동작 이상이 없는지 확인 필요, 이상이 있다면 eraser에서만 동작하도록 수정하자
+            // EDIT 상태에서는 tool의 singleTapUp
+            if (this.drawTool != null) {
+                this.drawTool.singleTapUp(x, y);
+            }
         }
-//        else {
-//            // EDIT 상태에서는 tool의 singleTapUp
-//            if (this.drawTool != null) {
-//                this.drawTool.singleTapUp(x, y);
-//            }
-//        }
     }
 
     /**
