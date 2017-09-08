@@ -123,23 +123,24 @@ public abstract class DrawToolEraserBase extends BaseDrawTool {
      * 선택된 drawView 삭제
      */
     private void remove() {
-        Iterator<String> iterator = selectedDrawViewMap.keySet().iterator();
+        final UndoManager.UndoItem undoItem = this.imageDrawView.addUndoItem(UndoManager.UndoState.ADD);
+        Iterator<String> iterator = this.selectedDrawViewMap.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
-            imageDrawView.removeDrawView(selectedDrawViewMap.get(key));
-            imageDrawView.addUndoItem(UndoManager.UndoState.ADD, selectedDrawViewMap.get(key), null);
+            this.imageDrawView.removeDrawView(this.selectedDrawViewMap.get(key));
+            undoItem.pushItem(this.selectedDrawViewMap.get(key), null);
             iterator.remove();
         }
         onChangeSelectedCount();
 
-        if (imageDrawView.getDrawViewMap().isEmpty() == true) {
-            Snackbar.make(imageDrawView, "모두 삭제 되었습니다", Snackbar.LENGTH_SHORT).show();
-            if (drawToolControllViewListener != null) {
-                drawToolControllViewListener.changeDefaultDrawTool();
+        if (this.imageDrawView.getDrawViewMap().isEmpty() == true) {
+            Snackbar.make(this.imageDrawView, "모두 삭제 되었습니다", Snackbar.LENGTH_SHORT).show();
+            if (this.drawToolControllViewListener != null) {
+                this.drawToolControllViewListener.changeDefaultDrawTool();
             }
         }
 
-        imageDrawView.setEditedDrawView(true);
+        this.imageDrawView.setEditedDrawView(true);
     }
 
     /**

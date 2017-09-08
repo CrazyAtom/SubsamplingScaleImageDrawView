@@ -1,12 +1,12 @@
 package com.github.crazyatom.subsamplingscaleimagedrawview.util;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.util.Pair;
 
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.BaseDrawView;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -23,15 +23,38 @@ public class UndoManager {
         UPDATE
     }
 
-    private class UndoItem {
-        private String uniqId;
+    public class UndoItem {
         private UndoState undoState;
-        private Pair<BaseDrawView, BaseDrawView> drawView;
+        private ArrayList<Pair<BaseDrawView, BaseDrawView>> items = null;
 
-        public UndoItem(final String uniqId, final UndoState undoState, final BaseDrawView before, final BaseDrawView after) {
-            this.uniqId = uniqId;
+        public UndoItem(UndoState undoState) {
             this.undoState = undoState;
-            this.drawView = Pair.create(before, after);
+        }
+
+        public UndoItem(final UndoState undoState, final BaseDrawView before, final BaseDrawView after) {
+            this.undoState = undoState;
+            pushItem(before, after);
+        }
+
+        public void pushItem(final BaseDrawView before, final BaseDrawView after) {
+            if (items == null) {
+                items = new ArrayList<>();
+            }
+            if (before != null || after != null) {
+                items.add(Pair.create((before != null) ? before.cloneObj() : null, (after != null) ? after.cloneObj() : null));
+            }
+        }
+
+        /**
+         * drawView UniqId
+         * @param index item index
+         * @return String
+         */
+        public String getId(final int index) {
+            if (items.size() > 0) {
+                return items.get(index).first.getUniqId();
+            }
+            return null;
         }
     }
 
@@ -102,23 +125,24 @@ public class UndoManager {
      */
     public boolean doUndo() {
         if (canUndo()) {
-            final UndoItem item = undoItemList.pop();
-            addRedoItem(item);
-            switch (item.undoState) {
-                case REMOVE:
-                    this.imageDrawView.getDrawViewMap().remove(item.uniqId);
-                    break;
-                case ADD:
-                    this.imageDrawView.getDrawViewMap().put(item.uniqId, item.drawView.first);
-                    if (this.imageDrawView.getRemoveDrawViewListener() != null) {
-                        this.imageDrawView.getRemoveDrawViewListener().cancelRemoveDrawView(item.uniqId);
-                    }
-                    break;
-                case UPDATE:
-                    this.imageDrawView.addDrawView(item.drawView.first); // key 중복시 새로운 아이템으로 덮어 쓰도록
-                    break;
+            final UndoItem undoItem = undoItemList.pop();
+            addRedoItem(undoItem);
+            for (final Pair<BaseDrawView, BaseDrawView> item : undoItem.items) {
+                switch (undoItem.undoState) {
+                    case REMOVE:
+                        this.imageDrawView.getDrawViewMap().remove(item.first.getUniqId());
+                        break;
+                    case ADD:
+                        this.imageDrawView.getDrawViewMap().put(item.first.getUniqId(), item.first);
+                        if (this.imageDrawView.getRemoveDrawViewListener() != null) {
+                            this.imageDrawView.getRemoveDrawViewListener().cancelRemoveDrawView(item.first.getUniqId());
+                        }
+                        break;
+                    case UPDATE:
+                        this.imageDrawView.addDrawView(item.first); // key 중복시 새로운 아이템으로 덮어 쓰도록
+                        break;
+                }
             }
-            Log.d(TAG, "doUndo: " + undoItemList.size());
             this.imageDrawView.postInvalidate();
             return true;
         } else {
@@ -132,23 +156,24 @@ public class UndoManager {
      */
     public boolean doRedo() {
         if (canRedo()) {
-            final UndoItem item = redoItemList.pop();
-            addUndoItem(item, false);
-            switch (item.undoState) {
-                case REMOVE:
-                    this.imageDrawView.getDrawViewMap().put(item.uniqId, item.drawView.second);
-                    break;
-                case ADD:
-                    this.imageDrawView.getDrawViewMap().remove(item.uniqId);
-                    if (this.imageDrawView.getRemoveDrawViewListener() != null) {
-                        this.imageDrawView.getRemoveDrawViewListener().removeDrawView(item.uniqId);
-                    }
-                    break;
-                case UPDATE:
-                    this.imageDrawView.addDrawView(item.drawView.second); // key 중복시 새로운 아이템으로 덮어 쓰도록
-                    break;
+            final UndoItem undoItem = redoItemList.pop();
+            addUndoItem(undoItem, false);
+            for (final Pair<BaseDrawView, BaseDrawView> item : undoItem.items) {
+                switch (undoItem.undoState) {
+                    case REMOVE:
+                        this.imageDrawView.getDrawViewMap().put(item.first.getUniqId(), item.first);
+                        break;
+                    case ADD:
+                        this.imageDrawView.getDrawViewMap().remove(item.first.getUniqId());
+                        if (this.imageDrawView.getRemoveDrawViewListener() != null) {
+                            this.imageDrawView.getRemoveDrawViewListener().removeDrawView(item.first.getUniqId());
+                        }
+                        break;
+                    case UPDATE:
+                        this.imageDrawView.addDrawView(item.second); // key 중복시 새로운 아이템으로 덮어 쓰도록
+                        break;
+                }
             }
-            Log.d(TAG, "doRedo: " + redoItemList.size());
             this.imageDrawView.postInvalidate();
             return true;
         } else {
@@ -159,11 +184,20 @@ public class UndoManager {
     /**
      * undo item 생성
      * @param state undo item 상태 (액션에 반대되는 상태로 기록)
+     * @return UndoItem
+     */
+    public UndoItem makeUndoItem(final UndoState state) {
+        return new UndoItem(state);
+    }
+
+    /**
+     * undo item 생성
+     * @param state undo item 상태 (액션에 반대되는 상태로 기록)
      * @param before undo item
      * @param after redo item
      * @return UndoItem
      */
     public UndoItem makeUndoItem(final UndoState state, final BaseDrawView before, final BaseDrawView after) {
-        return new UndoItem(before.getUniqId(), state, before, after);
+        return new UndoItem(state, before, after);
     }
 }

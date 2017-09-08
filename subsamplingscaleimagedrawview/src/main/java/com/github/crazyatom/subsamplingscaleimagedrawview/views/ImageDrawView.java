@@ -590,14 +590,28 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     /**
      * undo item 추가
      * @param state undo item 상태 (액션에 반대되는 상태로 기록)
+     */
+    public UndoManager.UndoItem addUndoItem(final UndoManager.UndoState state) {
+        UndoManager.UndoItem item = null;
+        if (this.undoManager != null) {
+            item = this.undoManager.makeUndoItem(state);
+            this.undoManager.addUndoItem(item, true);
+        }
+        return item;
+    }
+
+    /**
+     * undo item 추가
+     * @param state undo item 상태 (액션에 반대되는 상태로 기록)
      * @param before undo item
      * @param after redo item
      */
-    public void addUndoItem(final UndoManager.UndoState state, final BaseDrawView before, final BaseDrawView after) {
-        if (undoManager != null) {
-            undoManager.addUndoItem(undoManager.makeUndoItem(state,
-                    (before != null) ? before.cloneObj(): null,
-                    (after != null) ? after.cloneObj() : null), true);
+    public UndoManager.UndoItem addUndoItem(final UndoManager.UndoState state, final BaseDrawView before, final BaseDrawView after) {
+        UndoManager.UndoItem item = null;
+        if (this.undoManager != null) {
+            item = this.undoManager.makeUndoItem(state, before, after);
+            this.undoManager.addUndoItem(item, true);
         }
+        return item;
     }
 }
