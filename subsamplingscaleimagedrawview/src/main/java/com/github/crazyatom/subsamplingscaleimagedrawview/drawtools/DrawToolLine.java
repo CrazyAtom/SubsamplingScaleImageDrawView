@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.BaseDrawView;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewFactory;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewSetting;
+import com.github.crazyatom.subsamplingscaleimagedrawview.util.UndoManager;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
@@ -73,6 +74,7 @@ public class DrawToolLine extends BaseDrawTool {
         if (this.begin != this.end) {
             BaseDrawView drawView = createDrawView(false);
             imageDrawView.addDrawView(drawView);
+            imageDrawView.addUndoItem(UndoManager.UndoState.REMOVE, drawView, drawView);
         }
     }
 }

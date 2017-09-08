@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import com.github.crazyatom.subsamplingscaleimagedrawview.util.UndoManager;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.util.ArrayList;
@@ -137,6 +138,8 @@ public class DrawToolDimension extends BaseDrawTool {
             // 기준 치수일 경우 설정 다이얼로그 팝업
             if (isReferenceDrawMode == true) {
                 showSetupDialog((DrawViewReferenceDimension) drawView);
+            } else {
+                imageDrawView.addUndoItem(UndoManager.UndoState.REMOVE, drawView, drawView);
             }
         }
     }
@@ -253,6 +256,7 @@ public class DrawToolDimension extends BaseDrawTool {
                     if (current != null && referenceDimension.equals(current) == false) {
                         imageDrawView.removeDrawView(current);
                     }
+                    imageDrawView.addUndoItem(UndoManager.UndoState.REMOVE, referenceDimension, referenceDimension);
                 }
             }
         });

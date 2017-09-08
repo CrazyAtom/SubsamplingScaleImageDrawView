@@ -6,4 +6,5 @@ package com.github.crazyatom.subsamplingscaleimagedrawview.Event;
 
 public interface RemoveDrawViewListener {
     void removeDrawView(final String uniqId);
+    void cancelRemoveDrawView(final String uniqId);
 }

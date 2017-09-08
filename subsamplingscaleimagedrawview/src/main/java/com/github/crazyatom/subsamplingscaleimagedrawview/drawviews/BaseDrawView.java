@@ -28,7 +28,7 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
  * Created by crazy on 2017-07-11.
  */
 
-public abstract class BaseDrawView {
+public abstract class BaseDrawView extends Object implements Cloneable {
 
     private DrawViewType type;
     private String uniqId;
@@ -70,6 +70,23 @@ public abstract class BaseDrawView {
         this.updateTime = System.currentTimeMillis();
         this.thick = 4;
         color = Utillity.getColorString(Color.BLACK);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        BaseDrawView cloneObj = (BaseDrawView) super.clone();
+        cloneObj.showBoundaryBox = false;
+        cloneObj.isEditable = false;
+        return cloneObj;
+    }
+
+    public BaseDrawView cloneObj() {
+        try {
+            return (BaseDrawView) clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     protected void initPosition() {

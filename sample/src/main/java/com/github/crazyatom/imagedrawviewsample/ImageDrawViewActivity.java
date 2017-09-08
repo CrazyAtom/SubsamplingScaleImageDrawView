@@ -5,6 +5,8 @@ import android.os.Environment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
@@ -35,6 +37,9 @@ public class ImageDrawViewActivity extends AppCompatActivity implements NewDrawV
     private CheckBox checkDimension;
     private CheckBox checkFreeEraser;
     private CheckBox checkRectEraser;
+
+    private Button btnUndo;
+    private Button btnRedo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,22 @@ public class ImageDrawViewActivity extends AppCompatActivity implements NewDrawV
         checkFreeEraser.setOnCheckedChangeListener(checkedChangeListener);
         checkRectEraser = (CheckBox) findViewById(R.id.rectangle_eraser);
         checkRectEraser.setOnCheckedChangeListener(checkedChangeListener);
+        btnUndo = (Button) findViewById(R.id.undo);
+        btnUndo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final ImageDrawView imageDrawView = mAdapter.getImageView(mPager.getCurrentItem());
+                imageDrawView.getUndoManager().doUndo();
+            }
+        });
+        btnRedo = (Button) findViewById(R.id.redo);
+        btnRedo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final ImageDrawView imageDrawView = mAdapter.getImageView(mPager.getCurrentItem());
+                imageDrawView.getUndoManager().doRedo();
+            }
+        });
     }
 
     CompoundButton.OnCheckedChangeListener checkedChangeListener = new CompoundButton.OnCheckedChangeListener() {

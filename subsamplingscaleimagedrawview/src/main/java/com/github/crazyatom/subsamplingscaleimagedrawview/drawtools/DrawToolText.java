@@ -7,6 +7,7 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.BaseDrawView
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.DrawViewText;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewFactory;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewSetting;
+import com.github.crazyatom.subsamplingscaleimagedrawview.util.UndoManager;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
@@ -62,6 +63,7 @@ public class DrawToolText extends BaseDrawTool {
             DrawViewText drawView = (DrawViewText) createDrawView(false);
             drawView.setDrawToolControllViewListener(drawToolControllViewListener);
             imageDrawView.addDrawView(drawView);
+            imageDrawView.addUndoItem(UndoManager.UndoState.REMOVE, drawView, drawView);
             drawView.showContentsBox(imageDrawView.getContext());
         }
     }

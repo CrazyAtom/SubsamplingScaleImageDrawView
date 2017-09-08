@@ -31,6 +31,7 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.R;
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.BaseEditPinView;
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.EditPinViewPoint;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewSetting;
+import com.github.crazyatom.subsamplingscaleimagedrawview.util.UndoManager;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 

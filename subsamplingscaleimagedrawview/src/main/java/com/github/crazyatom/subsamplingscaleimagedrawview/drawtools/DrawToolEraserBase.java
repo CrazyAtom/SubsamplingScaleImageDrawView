@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.github.crazyatom.subsamplingscaleimagedrawview.R;
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.BaseDrawView;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewFactory;
+import com.github.crazyatom.subsamplingscaleimagedrawview.util.UndoManager;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
@@ -126,6 +127,7 @@ public abstract class DrawToolEraserBase extends BaseDrawTool {
         while (iterator.hasNext()) {
             String key = iterator.next();
             imageDrawView.removeDrawView(selectedDrawViewMap.get(key));
+            imageDrawView.addUndoItem(UndoManager.UndoState.ADD, selectedDrawViewMap.get(key), null);
             iterator.remove();
         }
         onChangeSelectedCount();

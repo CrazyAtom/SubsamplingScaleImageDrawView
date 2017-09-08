@@ -45,6 +45,7 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.drawtools.*;
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.RemoveDrawViewListener;
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.ShowSnackbarListener;
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.DrawToolControllViewListener;
+import com.github.crazyatom.subsamplingscaleimagedrawview.util.UndoManager;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 
 /**
@@ -60,6 +61,8 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     private LinkedHashMap<String, BaseDrawView> drawViewMap = new LinkedHashMap<>();
     private BaseEditPinView editPinView = null;
     private boolean isEditedDrawView = false;
+
+    private UndoManager undoManager = null;
 
     // Listener draw tool controll view Event
     private DrawToolControllViewListener drawToolControllViewListener;
@@ -82,6 +85,7 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
     private void initialise() {
         setOnTouchListener(this);
         setGestureListener(this);
+        undoManager = new UndoManager(this);
     }
 
     @Override
@@ -573,5 +577,27 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
             }
         }
         return null;
+    }
+
+    /**
+     * undo/redo 관리자
+     * @return UndoManager
+     */
+    public UndoManager getUndoManager() {
+        return undoManager;
+    }
+
+    /**
+     * undo item 추가
+     * @param state undo item 상태 (액션에 반대되는 상태로 기록)
+     * @param before undo item
+     * @param after redo item
+     */
+    public void addUndoItem(final UndoManager.UndoState state, final BaseDrawView before, final BaseDrawView after) {
+        if (undoManager != null) {
+            undoManager.addUndoItem(undoManager.makeUndoItem(state,
+                    (before != null) ? before.cloneObj(): null,
+                    (after != null) ? after.cloneObj() : null), true);
+        }
     }
 }

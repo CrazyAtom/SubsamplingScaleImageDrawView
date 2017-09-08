@@ -9,6 +9,7 @@ import android.view.View;
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.DrawViewTransformListener;
 import com.github.crazyatom.subsamplingscaleimagedrawview.Event.SelectedDrawViewListener;
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.BaseDrawView;
+import com.github.crazyatom.subsamplingscaleimagedrawview.util.UndoManager;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
@@ -18,11 +19,13 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListener, DrawViewTransformListener {
 
-    private BaseDrawView selectedDrawView;
+    private BaseDrawView selectedDrawView = null;
+    private BaseDrawView pureDrawView = null;
     private PointF beginPoint;
-    private BaseEditPinView editPinView;
+    private BaseEditPinView editPinView = null;
+    private boolean edited = false;
     // Listener selected DrawView
-    private SelectedDrawViewListener selectedDrawViewListener;
+    private SelectedDrawViewListener selectedDrawViewListener = null;
 
     public DrawToolTransform(@NonNull ImageDrawView imageDrawView) {
         super(imageDrawView);
@@ -30,6 +33,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
 
     public void setSelectedDrawView(@NonNull BaseDrawView selectedDrawView) {
         this.selectedDrawView = selectedDrawView;
+        this.pureDrawView = selectedDrawView.cloneObj();
 //        if (this.selectedDrawViewListener != null) {
 //            this.selectedDrawViewListener.onSelectedDrawViewInfo("by" + this.selectedDrawView.getCreater() + " " + Utillity.getTimeString(this.selectedDrawView.getUpdateTime(), null));
 //        }
@@ -110,6 +114,8 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
             return;
         }
 
+        this.edited = true;
+
         PointF sCoord = viewToSourceCoord(x, y);
         if (this.editPinView.isValidMoveablePin() == true && this.editPinView.isPinPressed() == true) {
             this.editPinView.setMovePin(new PointF(sCoord.x, sCoord.y));
@@ -134,7 +140,7 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
         }
 
         if (this.selectedDrawView.isValidEditedFlag()) {
-            imageDrawView.setEditedDrawView(true);
+            this.imageDrawView.setEditedDrawView(true);
         }
     }
 
@@ -185,6 +191,11 @@ public class DrawToolTransform extends BaseDrawTool implements View.OnTouchListe
         }
 
         if (this.selectedDrawView != null) {
+            if (this.edited) {
+                this.imageDrawView.addUndoItem(UndoManager.UndoState.UPDATE, this.pureDrawView, this.selectedDrawView);
+                this.edited = false;
+                this.pureDrawView = null;
+            }
             this.selectedDrawView.setEditable(false);
             this.selectedDrawView = null;
         }
