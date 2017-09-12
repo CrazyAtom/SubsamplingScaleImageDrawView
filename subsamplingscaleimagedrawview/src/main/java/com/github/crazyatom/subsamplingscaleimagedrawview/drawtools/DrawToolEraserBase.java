@@ -18,7 +18,6 @@ import com.github.crazyatom.subsamplingscaleimagedrawview.R;
 import com.github.crazyatom.subsamplingscaleimagedrawview.drawviews.BaseDrawView;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.DrawViewFactory;
 import com.github.crazyatom.subsamplingscaleimagedrawview.util.UndoManager;
-import com.github.crazyatom.subsamplingscaleimagedrawview.util.Utillity;
 import com.github.crazyatom.subsamplingscaleimagedrawview.views.ImageDrawView;
 
 import java.util.HashMap;
@@ -123,12 +122,12 @@ public abstract class DrawToolEraserBase extends BaseDrawTool {
      * 선택된 drawView 삭제
      */
     private void remove() {
-        final UndoManager.UndoItem undoItem = this.imageDrawView.addUndoItem(UndoManager.UndoState.ADD);
+        final UndoManager.UndoItem UndoItem = this.imageDrawView.addUndoItem(UndoManager.UndoState.REMOVE);
         Iterator<String> iterator = this.selectedDrawViewMap.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
+            UndoItem.pushItem(this.selectedDrawViewMap.get(key));
             this.imageDrawView.removeDrawView(this.selectedDrawViewMap.get(key));
-            undoItem.pushItem(this.selectedDrawViewMap.get(key), null);
             iterator.remove();
         }
         onChangeSelectedCount();

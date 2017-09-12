@@ -592,26 +592,40 @@ public class ImageDrawView extends SubsamplingScaleImageView implements View.OnT
      * @param state undo item 상태 (액션에 반대되는 상태로 기록)
      */
     public UndoManager.UndoItem addUndoItem(final UndoManager.UndoState state) {
-        UndoManager.UndoItem item = null;
         if (this.undoManager != null) {
-            item = this.undoManager.makeUndoItem(state);
-            this.undoManager.addUndoItem(item, true);
+            UndoManager.UndoItem UndoItem = this.undoManager.makeUndoItem(state);
+            this.undoManager.addUndoItem(UndoItem, true);
+            return UndoItem;
         }
-        return item;
+        return null;
     }
 
     /**
      * undo item 추가
-     * @param state undo item 상태 (액션에 반대되는 상태로 기록)
+     * @param state undo item 상태
+     * @param item undo item
+     */
+    public UndoManager.UndoItem addUndoItem(final UndoManager.UndoState state, final BaseDrawView item) {
+        if (this.undoManager != null) {
+            UndoManager.UndoItem UndoItem = this.undoManager.makeUndoItem(state, item);
+            this.undoManager.addUndoItem(UndoItem, true);
+            return UndoItem;
+        }
+        return null;
+    }
+
+    /**
+     * undo item 추가
+     * @param state undo item 상태
      * @param before undo item
      * @param after redo item
      */
     public UndoManager.UndoItem addUndoItem(final UndoManager.UndoState state, final BaseDrawView before, final BaseDrawView after) {
-        UndoManager.UndoItem item = null;
         if (this.undoManager != null) {
-            item = this.undoManager.makeUndoItem(state, before, after);
-            this.undoManager.addUndoItem(item, true);
+            UndoManager.UndoItem UndoItem = this.undoManager.makeUndoItem(state, before, after);
+            this.undoManager.addUndoItem(UndoItem, true);
+            return UndoItem;
         }
-        return item;
+        return null;
     }
 }

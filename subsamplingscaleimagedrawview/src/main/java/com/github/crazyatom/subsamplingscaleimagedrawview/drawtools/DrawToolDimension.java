@@ -139,7 +139,7 @@ public class DrawToolDimension extends BaseDrawTool {
             if (isReferenceDrawMode == true) {
                 showSetupDialog((DrawViewReferenceDimension) drawView);
             } else {
-                imageDrawView.addUndoItem(UndoManager.UndoState.REMOVE, drawView, drawView);
+                imageDrawView.addUndoItem(UndoManager.UndoState.ADD, drawView);
             }
         }
     }
@@ -256,7 +256,7 @@ public class DrawToolDimension extends BaseDrawTool {
                     if (current != null && referenceDimension.equals(current) == false) {
                         imageDrawView.removeDrawView(current);
                     }
-                    imageDrawView.addUndoItem(UndoManager.UndoState.REMOVE, referenceDimension, referenceDimension);
+                    imageDrawView.addUndoItem(UndoManager.UndoState.ADD, referenceDimension);
                 }
             }
         });

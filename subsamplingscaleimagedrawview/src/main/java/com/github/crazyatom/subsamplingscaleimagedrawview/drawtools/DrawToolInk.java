@@ -65,6 +65,6 @@ public class DrawToolInk extends BaseDrawTool {
             drawView.addPosition(previewDrawView.getPosition(i));
         }
         imageDrawView.addDrawView(drawView);
-        imageDrawView.addUndoItem(UndoManager.UndoState.REMOVE, drawView, drawView);
+        imageDrawView.addUndoItem(UndoManager.UndoState.ADD, drawView);
     }
 }

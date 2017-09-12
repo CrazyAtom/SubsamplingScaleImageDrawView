@@ -1,5 +1,6 @@
 package com.github.crazyatom.subsamplingscaleimagedrawview.util;
 
+import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 
@@ -31,18 +32,38 @@ public class UndoManager {
             this.undoState = undoState;
         }
 
+        public UndoItem(final UndoState undoState, final BaseDrawView item) {
+            this.undoState = undoState;
+            pushItem(item);
+        }
+
         public UndoItem(final UndoState undoState, final BaseDrawView before, final BaseDrawView after) {
             this.undoState = undoState;
             pushItem(before, after);
         }
 
-        public void pushItem(final BaseDrawView before, final BaseDrawView after) {
+        public void pushItem(final BaseDrawView item) {
+            if (item == null) return;
+
             if (items == null) {
                 items = new ArrayList<>();
             }
-            if (before != null || after != null) {
-                items.add(Pair.create((before != null) ? before.cloneObj() : null, (after != null) ? after.cloneObj() : null));
+
+            BaseDrawView _before = item.cloneObj();
+            BaseDrawView _after = null;
+            items.add(Pair.create(_before, _after));
+        }
+
+        public void pushItem(final BaseDrawView before, final BaseDrawView after) {
+            if (before == null && after == null) return;
+
+            if (items == null) {
+                items = new ArrayList<>();
             }
+
+            BaseDrawView _before = (before != null) ? before.cloneObj() : null;
+            BaseDrawView _after = (after != null) ? after.cloneObj() : null;
+            items.add(Pair.create(_before, _after));
         }
 
         /**
@@ -126,20 +147,21 @@ public class UndoManager {
     public boolean doUndo() {
         if (canUndo()) {
             final UndoItem undoItem = undoItemList.pop();
+            if (undoItem.items == null) return false;
             addRedoItem(undoItem);
             for (final Pair<BaseDrawView, BaseDrawView> item : undoItem.items) {
                 switch (undoItem.undoState) {
-                    case REMOVE:
+                    case ADD:
                         this.imageDrawView.getDrawViewMap().remove(item.first.getUniqId());
                         break;
-                    case ADD:
+                    case REMOVE:
                         this.imageDrawView.getDrawViewMap().put(item.first.getUniqId(), item.first);
                         if (this.imageDrawView.getRemoveDrawViewListener() != null) {
                             this.imageDrawView.getRemoveDrawViewListener().cancelRemoveDrawView(item.first.getUniqId());
                         }
                         break;
                     case UPDATE:
-                        this.imageDrawView.addDrawView(item.first); // key 중복시 새로운 아이템으로 덮어 쓰도록
+                        this.imageDrawView.addDrawView(item.first.cloneObj()); // key 중복시 새로운 아이템으로 덮어 쓰도록
                         break;
                 }
             }
@@ -157,20 +179,21 @@ public class UndoManager {
     public boolean doRedo() {
         if (canRedo()) {
             final UndoItem undoItem = redoItemList.pop();
+            if (undoItem.items == null) return false;
             addUndoItem(undoItem, false);
             for (final Pair<BaseDrawView, BaseDrawView> item : undoItem.items) {
                 switch (undoItem.undoState) {
-                    case REMOVE:
+                    case ADD:
                         this.imageDrawView.getDrawViewMap().put(item.first.getUniqId(), item.first);
                         break;
-                    case ADD:
+                    case REMOVE:
                         this.imageDrawView.getDrawViewMap().remove(item.first.getUniqId());
                         if (this.imageDrawView.getRemoveDrawViewListener() != null) {
                             this.imageDrawView.getRemoveDrawViewListener().removeDrawView(item.first.getUniqId());
                         }
                         break;
                     case UPDATE:
-                        this.imageDrawView.addDrawView(item.second); // key 중복시 새로운 아이템으로 덮어 쓰도록
+                        this.imageDrawView.addDrawView(item.second.cloneObj()); // key 중복시 새로운 아이템으로 덮어 쓰도록
                         break;
                 }
             }
@@ -183,7 +206,7 @@ public class UndoManager {
 
     /**
      * undo item 생성
-     * @param state undo item 상태 (액션에 반대되는 상태로 기록)
+     * @param state undo item 상태
      * @return UndoItem
      */
     public UndoItem makeUndoItem(final UndoState state) {
@@ -192,7 +215,17 @@ public class UndoManager {
 
     /**
      * undo item 생성
-     * @param state undo item 상태 (액션에 반대되는 상태로 기록)
+     * @param state undo item 상태
+     * @param item undo item
+     * @return UndoItem
+     */
+    public UndoItem makeUndoItem(final UndoState state, final BaseDrawView item) {
+        return new UndoItem(state, item);
+    }
+
+    /**
+     * undo item 생성
+     * @param state undo item 상태
      * @param before undo item
      * @param after redo item
      * @return UndoItem

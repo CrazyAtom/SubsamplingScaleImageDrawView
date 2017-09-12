@@ -63,7 +63,7 @@ public class DrawToolText extends BaseDrawTool {
             DrawViewText drawView = (DrawViewText) createDrawView(false);
             drawView.setDrawToolControllViewListener(drawToolControllViewListener);
             imageDrawView.addDrawView(drawView);
-            imageDrawView.addUndoItem(UndoManager.UndoState.REMOVE, drawView, drawView);
+            imageDrawView.addUndoItem(UndoManager.UndoState.ADD, drawView);
             drawView.showContentsBox(imageDrawView.getContext());
         }
     }

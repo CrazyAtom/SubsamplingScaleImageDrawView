@@ -74,7 +74,7 @@ public class DrawToolLine extends BaseDrawTool {
         if (this.begin != this.end) {
             BaseDrawView drawView = createDrawView(false);
             imageDrawView.addDrawView(drawView);
-            imageDrawView.addUndoItem(UndoManager.UndoState.REMOVE, drawView, drawView);
+            imageDrawView.addUndoItem(UndoManager.UndoState.ADD, drawView);
         }
     }
 }

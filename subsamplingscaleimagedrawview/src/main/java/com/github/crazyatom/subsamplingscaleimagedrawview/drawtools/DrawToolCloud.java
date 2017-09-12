@@ -81,6 +81,6 @@ public class DrawToolCloud extends BaseDrawTool {
     private void injectAnnotation() {
         BaseDrawView drawView = createDrawView(false);
         imageDrawView.addDrawView(drawView);
-        imageDrawView.addUndoItem(UndoManager.UndoState.REMOVE, drawView, drawView);
+        imageDrawView.addUndoItem(UndoManager.UndoState.ADD, drawView);
     }
 }

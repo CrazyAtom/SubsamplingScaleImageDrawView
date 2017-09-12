@@ -74,15 +74,20 @@ public abstract class BaseDrawView extends Object implements Cloneable {
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        BaseDrawView cloneObj = (BaseDrawView) super.clone();
-        cloneObj.showBoundaryBox = false;
-        cloneObj.isEditable = false;
-        return cloneObj;
+        return super.clone();
     }
 
     public BaseDrawView cloneObj() {
         try {
-            return (BaseDrawView) clone();
+            BaseDrawView cloneObj = (BaseDrawView) this.clone();
+            cloneObj.setShowBoundaryBox(false);
+            cloneObj.setEditable(false);
+            ArrayList<PointF> _pointList = new ArrayList<>();
+            for (PointF point : pointList) {
+                _pointList.add(new PointF(point.x, point.y));
+            }
+            cloneObj.update(_pointList);
+            return cloneObj;
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

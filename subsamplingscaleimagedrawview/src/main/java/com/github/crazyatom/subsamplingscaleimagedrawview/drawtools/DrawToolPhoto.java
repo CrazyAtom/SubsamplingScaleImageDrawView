@@ -63,7 +63,7 @@ public class DrawToolPhoto extends BaseDrawTool {
             BaseDrawView drawView = createDrawView(false);
             if (drawView != null) {
                 imageDrawView.addDrawView(drawView);
-                imageDrawView.addUndoItem(UndoManager.UndoState.REMOVE, drawView, drawView);
+                imageDrawView.addUndoItem(UndoManager.UndoState.ADD, drawView);
                 drawView.showContentsBox(imageDrawView.getContext());
             }
         }
