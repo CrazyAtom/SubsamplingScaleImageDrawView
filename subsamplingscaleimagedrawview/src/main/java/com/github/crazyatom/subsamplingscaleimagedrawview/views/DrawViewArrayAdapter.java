@@ -63,6 +63,8 @@ public class DrawViewArrayAdapter extends ArrayAdapter<BaseDrawView> {
 
             TextView tvInfo = (TextView) view.findViewById(R.id.text2);
             tvInfo.setText("by" + drawView.getCreater() + " " + Utillity.getTimeString(drawView.getUpdateTime(), null));
+            tvInfo.setVisibility(View.VISIBLE);
+
             return view;
         }
         return convertView;
