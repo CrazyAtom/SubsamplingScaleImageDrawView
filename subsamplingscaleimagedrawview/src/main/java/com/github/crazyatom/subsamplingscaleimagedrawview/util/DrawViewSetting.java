@@ -2,7 +2,9 @@ package com.github.crazyatom.subsamplingscaleimagedrawview.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
+
+import com.github.crazyatom.subsamplingscaleimagedrawview.R;
 
 /**
  * Created by crazy on 2017-07-11.
@@ -58,6 +60,7 @@ public class DrawViewSetting {
         }
     }
 
+    private Context context;
     private SharedPreferences mPreferences;
 
     private static final String COLOR_KEY = "Color";
@@ -75,6 +78,7 @@ public class DrawViewSetting {
     }
 
     private DrawViewSetting(Context context) {
+        this.context = context;
         this.mPreferences = context.getSharedPreferences("drawview_setting", 0);
     }
 
@@ -95,7 +99,7 @@ public class DrawViewSetting {
      * @return
      */
     public int getColor() {
-        return mPreferences.getInt(COLOR_KEY, Color.RED);
+        return mPreferences.getInt(COLOR_KEY, ContextCompat.getColor(context, R.color.red));
     }
 
     /**
